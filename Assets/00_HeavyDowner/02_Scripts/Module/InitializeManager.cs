@@ -7,6 +7,11 @@ namespace HeavyDowner.Module
     {
         public event Action Initialized;
 
+        private void Awake()
+        {
+            Application.targetFrameRate = 60;
+        }
+
         private void Start()
         {
             Initialized?.Invoke();
