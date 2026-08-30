@@ -118,9 +118,7 @@ namespace HeavyDowner.UI
             try
             {
                 string idToken = await LoginHelper.GetIdTokenAsync();
-                await AuthenticationService.Instance.SignInWithOpenIdConnectAsync(
-                    LoginHelper.OIDC_PROVIDER_NAME,
-                    idToken);
+                await AuthenticationService.Instance.SignInWithGoogleAsync(idToken);
                 view.ShowCompleted();
                 await LoadMainAsync();
             }

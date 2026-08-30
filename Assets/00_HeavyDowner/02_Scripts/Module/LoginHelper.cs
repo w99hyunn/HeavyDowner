@@ -6,8 +6,6 @@ namespace HeavyDowner.Module
 {
     public static class LoginHelper
     {
-        public const string OIDC_PROVIDER_NAME = "oidc-google";
-
         private const string GOOGLE_WEB_CLIENT_ID = "1005757902027-qbnulidorjvf02tmtchf8jqulg32u3b0.apps.googleusercontent.com";
         private const string CALLBACK_OBJECT_NAME = "GoogleLoginCallback";
         private const string CALLBACK_METHOD_NAME = nameof(GoogleLoginCallback.OnGoogleSignInResult);
