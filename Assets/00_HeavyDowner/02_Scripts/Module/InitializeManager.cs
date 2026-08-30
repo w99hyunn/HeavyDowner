@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Module
 {
-    public sealed class InitializeHelper : MonoBehaviour
+    public sealed class InitializeManager : MonoBehaviour
     {
         public event Action Initialized;
 

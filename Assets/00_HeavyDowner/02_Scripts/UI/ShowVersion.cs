@@ -10,7 +10,7 @@ namespace HeavyDowner.UI
         private void Awake()
         {
             TryGetComponent<TMP_Text>(out versionText);
-            versionText.text = $"Ver {Application.version}";
+            versionText.text = $"ver {Application.version}";
         }
     }
 }

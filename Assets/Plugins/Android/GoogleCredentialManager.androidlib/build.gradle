@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    implementation 'androidx.credentials:credentials:1.6.0'
+    implementation 'androidx.credentials:credentials-play-services-auth:1.6.0'
+    implementation 'com.google.android.libraries.identity.googleid:googleid:1.2.0'
+    compileOnly files('../libs/unity-classes.jar')
+}
+
+android {
+    namespace 'com.heavydowner.auth'
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 25
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+        }
+    }
+}
