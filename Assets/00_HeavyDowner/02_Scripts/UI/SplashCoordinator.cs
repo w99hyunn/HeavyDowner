@@ -21,7 +21,7 @@ namespace HeavyDowner.UI
             await FadeModule.FadeInAsync(logoCanvasGroup, fadeInDuration);
             await Awaitable.WaitForSecondsAsync(displayDuration);
             await FadeModule.FadeOutAsync(logoCanvasGroup, fadeOutDuration);
-            await LoadingBridge.LoadSceneAsync(nextScene);
+            await LoadingBridge.LoadAsync(nextScene, LoadingMode.None);
         }
     }
 }
