@@ -1,44 +1,47 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneType
+namespace HeavyDowner.Module
 {
-    Splash,
-    Login
-}
-
-public static class LoadingBridge
-{
-    public static bool IsLoading { get; private set; }
-    public static float Progress { get; private set; }
-
-    public static async Awaitable LoadSceneAsync(SceneType sceneType)
+    public enum SceneType
     {
-        if (IsLoading)
+        Splash,
+        Login
+    }
+
+    public static class LoadingBridge
+    {
+        public static bool IsLoading { get; private set; }
+        public static float Progress { get; private set; }
+
+        public static async Awaitable LoadSceneAsync(SceneType sceneType)
         {
-            return;
-        }
-
-        IsLoading = true;
-        Progress = 0f;
-
-        try
-        {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(
-                sceneType.ToString(),
-                LoadSceneMode.Single);
-
-            while (!loadOperation.isDone)
+            if (IsLoading)
             {
-                Progress = Mathf.Clamp01(loadOperation.progress / 0.9f);
-                await Awaitable.NextFrameAsync();
+                return;
             }
 
-            Progress = 1f;
-        }
-        finally
-        {
-            IsLoading = false;
+            IsLoading = true;
+            Progress = 0f;
+
+            try
+            {
+                AsyncOperation loadOperation = SceneManager.LoadSceneAsync(
+                    sceneType.ToString(),
+                    LoadSceneMode.Single);
+
+                while (!loadOperation.isDone)
+                {
+                    Progress = Mathf.Clamp01(loadOperation.progress / 0.9f);
+                    await Awaitable.NextFrameAsync();
+                }
+
+                Progress = 1f;
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
     }
 }

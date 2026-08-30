@@ -1,23 +1,27 @@
 using UnityEngine;
+using HeavyDowner.Module;
 
-public sealed class SplashCoordinator : MonoBehaviour
+namespace HeavyDowner.UI
 {
-    [SerializeField] private CanvasGroup logoCanvasGroup;
-    [SerializeField] private float fadeInDuration = 1f;
-    [SerializeField] private float displayDuration = 1f;
-    [SerializeField] private float fadeOutDuration = 1f;
-    [SerializeField] private SceneType nextScene = SceneType.Login;
-
-    private void Awake()
+    public class SplashCoordinator : MonoBehaviour
     {
-        logoCanvasGroup.alpha = 0f;
-    }
+        [SerializeField] private CanvasGroup logoCanvasGroup;
+        [SerializeField] private float fadeInDuration = 1f;
+        [SerializeField] private float displayDuration = 1f;
+        [SerializeField] private float fadeOutDuration = 1f;
+        [SerializeField] private SceneType nextScene = SceneType.Login;
 
-    private async Awaitable Start()
-    {
-        await FadeModule.FadeInAsync(logoCanvasGroup, fadeInDuration);
-        await Awaitable.WaitForSecondsAsync(displayDuration);
-        await FadeModule.FadeOutAsync(logoCanvasGroup, fadeOutDuration);
-        await LoadingBridge.LoadSceneAsync(nextScene);
+        private void Awake()
+        {
+            logoCanvasGroup.alpha = 0f;
+        }
+
+        private async Awaitable Start()
+        {
+            await FadeModule.FadeInAsync(logoCanvasGroup, fadeInDuration);
+            await Awaitable.WaitForSecondsAsync(displayDuration);
+            await FadeModule.FadeOutAsync(logoCanvasGroup, fadeOutDuration);
+            await LoadingBridge.LoadSceneAsync(nextScene);
+        }
     }
 }
