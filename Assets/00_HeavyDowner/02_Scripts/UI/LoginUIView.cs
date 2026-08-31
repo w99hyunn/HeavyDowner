@@ -13,16 +13,19 @@ namespace HeavyDowner.UI
         public Button GoogleLoginButton => googleLoginButton;
         public Button GuestLoginButton => guestLoginButton;
 
+        public void SetMessage(string message)
+        {
+            loadingText.text = message;
+        }
+
         public void ShowPreparing()
         {
-            loadingText.text = "로그인 준비 중..";
             googleLoginButton.gameObject.SetActive(false);
             guestLoginButton.gameObject.SetActive(false);
         }
 
         public void ShowLogin()
         {
-            loadingText.text = "";
             googleLoginButton.gameObject.SetActive(true);
             googleLoginButton.interactable = true;
             guestLoginButton.gameObject.SetActive(true);
@@ -31,21 +34,12 @@ namespace HeavyDowner.UI
 
         public void ShowSigningIn()
         {
-            loadingText.text = "로그인 중..";
-            googleLoginButton.interactable = false;
-            guestLoginButton.interactable = false;
-        }
-
-        public void ShowGuestSigningIn()
-        {
-            loadingText.text = "로그인 중..";
             googleLoginButton.interactable = false;
             guestLoginButton.interactable = false;
         }
 
         public void ShowLoginFailed()
         {
-            loadingText.text = "";
             googleLoginButton.gameObject.SetActive(true);
             googleLoginButton.interactable = true;
             guestLoginButton.gameObject.SetActive(true);
@@ -55,7 +49,6 @@ namespace HeavyDowner.UI
 
         public void ShowCompleted()
         {
-            loadingText.text = "로그인 완료";
             googleLoginButton.gameObject.SetActive(false);
             guestLoginButton.gameObject.SetActive(false);
         }

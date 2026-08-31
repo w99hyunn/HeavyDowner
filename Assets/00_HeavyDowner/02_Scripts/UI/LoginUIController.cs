@@ -1,7 +1,4 @@
-using System;
 using HeavyDowner.Module;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 using UnityEngine;
 
 namespace HeavyDowner.UI
@@ -11,7 +8,6 @@ namespace HeavyDowner.UI
         [SerializeField] private InitializeManager initializer;
 
         private LoginUIView view;
-        private bool isSigningIn;
 
         private void Awake()
         {
@@ -20,120 +16,64 @@ namespace HeavyDowner.UI
 
         private void OnEnable()
         {
-            initializer.Initialized += OnInitialized;
+            initializer.StepChanged += OnStepChanged;
+            initializer.LoginRequired += OnLoginRequired;
+            initializer.Completed += OnCompleted;
             view.GoogleLoginButton.onClick.AddListener(OnGoogleLoginClicked);
             view.GuestLoginButton.onClick.AddListener(OnGuestLoginClicked);
             view.ShowPreparing();
         }
 
+        private void Start()
+        {
+            initializer.StartFlow();
+        }
+
         private void OnDisable()
         {
-            initializer.Initialized -= OnInitialized;
+            initializer.StepChanged -= OnStepChanged;
+            initializer.LoginRequired -= OnLoginRequired;
+            initializer.Completed -= OnCompleted;
             view.GoogleLoginButton.onClick.RemoveListener(OnGoogleLoginClicked);
             view.GuestLoginButton.onClick.RemoveListener(OnGuestLoginClicked);
         }
 
-        private void OnInitialized()
+        private void OnStepChanged(string message)
         {
-            _ = PrepareAuthenticationAsync();
+            view.SetMessage(message);
+        }
+
+        private void OnLoginRequired()
+        {
+            view.ShowLogin();
+        }
+
+        private void OnCompleted(bool success)
+        {
+            if (!success)
+            {
+                view.ShowLoginFailed();
+                return;
+            }
+
+            view.ShowCompleted();
+            _ = LoadMainAsync();
         }
 
         private void OnGoogleLoginClicked()
         {
-            if (isSigningIn)
-                return;
-
-            _ = SignInWithGoogleAsync();
+            view.ShowSigningIn();
+            initializer.SelectLogin(LoginMethod.Google);
         }
 
         private void OnGuestLoginClicked()
         {
-            if (isSigningIn)
-                return;
-
-            _ = SignInAsGuestAsync();
-        }
-
-        private async Awaitable PrepareAuthenticationAsync()
-        {
-            try
-            {
-                if (UnityServices.State != ServicesInitializationState.Initialized)
-                    await UnityServices.InitializeAsync();
-
-                if (await TryRestoreSessionAsync())
-                {
-                    await CompleteSignInAsync();
-                    return;
-                }
-
-                view.ShowLogin();
-            }
-            catch (Exception exception)
-            {
-                Debug.LogException(exception);
-                view.ShowLoginFailed();
-            }
-        }
-
-        private async Awaitable<bool> TryRestoreSessionAsync()
-        {
-            if (!AuthenticationService.Instance.SessionTokenExists)
-                return false;
-
-            if (!AuthenticationService.Instance.IsSignedIn)
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-            return AuthenticationService.Instance.IsSignedIn;
-        }
-
-        private async Awaitable SignInAsGuestAsync()
-        {
-            isSigningIn = true;
-            view.ShowGuestSigningIn();
-
-            try
-            {
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                await CompleteSignInAsync();
-            }
-            catch (Exception exception)
-            {
-                Debug.LogException(exception);
-                view.ShowLoginFailed();
-            }
-            finally
-            {
-                isSigningIn = false;
-            }
-        }
-
-        private async Awaitable SignInWithGoogleAsync()
-        {
-            isSigningIn = true;
             view.ShowSigningIn();
-
-            try
-            {
-                string idToken = await LoginService.GetIdTokenAsync();
-                await AuthenticationService.Instance.SignInWithGoogleAsync(idToken);
-                await CompleteSignInAsync();
-            }
-            catch (Exception exception)
-            {
-                Debug.LogException(exception);
-                view.ShowLoginFailed();
-            }
-            finally
-            {
-                isSigningIn = false;
-            }
+            initializer.SelectLogin(LoginMethod.Guest);
         }
 
-        private async Awaitable CompleteSignInAsync()
+        private async Awaitable LoadMainAsync()
         {
-            await PlayerDataService.LoadAsync();
-            view.ShowCompleted();
             await LoadingBridgeService.LoadAsync(SceneType.Main, LoadingMode.Overlay);
         }
     }

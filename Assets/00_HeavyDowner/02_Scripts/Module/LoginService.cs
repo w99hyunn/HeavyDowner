@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -11,7 +13,32 @@ namespace HeavyDowner.Module
 
         private static GoogleSignInCallback callback;
 
-        public static async Awaitable<string> GetIdTokenAsync()
+        public static bool HasSession => AuthenticationService.Instance.SessionTokenExists;
+
+        public static async Awaitable InitializeAsync()
+        {
+            if (UnityServices.State != ServicesInitializationState.Initialized)
+                await UnityServices.InitializeAsync();
+        }
+
+        public static async Awaitable RestoreAsync()
+        {
+            if (!AuthenticationService.Instance.IsSignedIn)
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+
+        public static async Awaitable SignInGoogleAsync()
+        {
+            string idToken = await GetIdTokenAsync();
+            await AuthenticationService.Instance.SignInWithGoogleAsync(idToken);
+        }
+
+        public static async Awaitable SignInGuestAsync()
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+
+        private static async Awaitable<string> GetIdTokenAsync()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             if (callback != null)
