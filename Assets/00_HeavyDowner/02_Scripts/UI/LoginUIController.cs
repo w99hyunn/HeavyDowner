@@ -63,8 +63,7 @@ namespace HeavyDowner.UI
 
                 if (await TryRestoreSessionAsync())
                 {
-                    view.ShowCompleted();
-                    await LoadMainAsync();
+                    await CompleteSignInAsync();
                     return;
                 }
 
@@ -96,8 +95,7 @@ namespace HeavyDowner.UI
             try
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                view.ShowCompleted();
-                await LoadMainAsync();
+                await CompleteSignInAsync();
             }
             catch (Exception exception)
             {
@@ -117,10 +115,9 @@ namespace HeavyDowner.UI
 
             try
             {
-                string idToken = await LoginHelper.GetIdTokenAsync();
+                string idToken = await LoginService.GetIdTokenAsync();
                 await AuthenticationService.Instance.SignInWithGoogleAsync(idToken);
-                view.ShowCompleted();
-                await LoadMainAsync();
+                await CompleteSignInAsync();
             }
             catch (Exception exception)
             {
@@ -133,9 +130,11 @@ namespace HeavyDowner.UI
             }
         }
 
-        private async Awaitable LoadMainAsync()
+        private async Awaitable CompleteSignInAsync()
         {
-            await LoadingBridge.LoadAsync(SceneType.Main, LoadingMode.Overlay);
+            await PlayerDataService.LoadAsync();
+            view.ShowCompleted();
+            await LoadingBridgeService.LoadAsync(SceneType.Main, LoadingMode.Overlay);
         }
     }
 }

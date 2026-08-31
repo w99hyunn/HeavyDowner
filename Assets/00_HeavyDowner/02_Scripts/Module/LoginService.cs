@@ -5,7 +5,7 @@ using UnityEngine.Scripting;
 
 namespace HeavyDowner.Module
 {
-    public static class LoginHelper
+    public static class LoginService
     {
         private const string GOOGLE_WEB_CLIENT_ID = "1005757902027-qbnulidorjvf02tmtchf8jqulg32u3b0.apps.googleusercontent.com";
 

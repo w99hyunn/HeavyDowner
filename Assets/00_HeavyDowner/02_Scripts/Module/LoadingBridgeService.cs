@@ -8,7 +8,8 @@ namespace HeavyDowner.Module
         Splash,
         Login,
         Loading,
-        Main
+        Main,
+        Ingame
     }
 
     public enum LoadingMode
@@ -17,7 +18,7 @@ namespace HeavyDowner.Module
         Overlay
     }
 
-    public static class LoadingBridge
+    public static class LoadingBridgeService
     {
         public static async Awaitable LoadAsync(SceneType scene, LoadingMode mode)
         {
