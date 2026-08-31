@@ -1,81 +1,69 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace HeavyDowner.Module
 {
     public static class LoginHelper
     {
         private const string GOOGLE_WEB_CLIENT_ID = "1005757902027-qbnulidorjvf02tmtchf8jqulg32u3b0.apps.googleusercontent.com";
-        private const string CALLBACK_OBJECT_NAME = "GoogleLoginCallback";
-        private const string CALLBACK_METHOD_NAME = nameof(GoogleLoginCallback.OnGoogleSignInResult);
-        private const string RESULT_OK_PREFIX = "OK:";
-        private const string RESULT_ERROR_PREFIX = "ERROR:";
 
-        private static TaskCompletionSource<string> completion;
-        private static GoogleLoginCallback callback;
+        private static GoogleSignInCallback callback;
 
         public static async Awaitable<string> GetIdTokenAsync()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            if (completion != null)
+            if (callback != null)
                 throw new InvalidOperationException("Google sign-in is already in progress.");
 
-            EnsureCallback();
-            completion = new TaskCompletionSource<string>();
+            var completion = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var currentCallback = new GoogleSignInCallback(completion);
+            callback = currentCallback;
 
-            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            using var credentialManager = new AndroidJavaClass("com.heavydowner.auth.GoogleCredentialManagerBridge");
-            credentialManager.CallStatic(
-                "signIn",
-                activity,
-                GOOGLE_WEB_CLIENT_ID,
-                CALLBACK_OBJECT_NAME,
-                CALLBACK_METHOD_NAME);
+            try
+            {
+                using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                using var credentialManager = new AndroidJavaClass("com.heavydowner.auth.GoogleCredentialManagerBridge");
+                credentialManager.CallStatic("signIn", activity, GOOGLE_WEB_CLIENT_ID, currentCallback);
 
-            return await completion.Task;
+                string idToken = await completion.Task;
+                await Awaitable.MainThreadAsync();
+                return idToken;
+            }
+            finally
+            {
+                if (ReferenceEquals(callback, currentCallback))
+                    callback = null;
+            }
 #else
             await Awaitable.NextFrameAsync();
             throw new PlatformNotSupportedException("Credential Manager Google sign-in is only available in an Android device build.");
 #endif
         }
 
-        private static void EnsureCallback()
+        [Preserve]
+        private sealed class GoogleSignInCallback : AndroidJavaProxy
         {
-            if (callback != null)
-                return;
+            private readonly TaskCompletionSource<string> completion;
 
-            var callbackObject = new GameObject(CALLBACK_OBJECT_NAME);
-            UnityEngine.Object.DontDestroyOnLoad(callbackObject);
-            callback = callbackObject.AddComponent<GoogleLoginCallback>();
-        }
-
-        private static void Complete(string payload)
-        {
-            var currentCompletion = completion;
-            completion = null;
-
-            if (currentCompletion == null)
-                return;
-
-            if (payload.StartsWith(RESULT_OK_PREFIX, StringComparison.Ordinal))
+            public GoogleSignInCallback(TaskCompletionSource<string> completion)
+                : base("com.heavydowner.auth.GoogleCredentialManagerBridge$SignInCallback")
             {
-                currentCompletion.TrySetResult(payload.Substring(RESULT_OK_PREFIX.Length));
-                return;
+                this.completion = completion;
             }
 
-            string message = payload.StartsWith(RESULT_ERROR_PREFIX, StringComparison.Ordinal)
-                ? payload.Substring(RESULT_ERROR_PREFIX.Length)
-                : "Google sign-in failed.";
-            currentCompletion.TrySetException(new InvalidOperationException(message));
-        }
-
-        private sealed class GoogleLoginCallback : MonoBehaviour
-        {
-            public void OnGoogleSignInResult(string payload)
+            [Preserve]
+            public void onSuccess(string idToken)
             {
-                Complete(payload ?? string.Empty);
+                completion.TrySetResult(idToken);
+            }
+
+            [Preserve]
+            public void onError(string message)
+            {
+                completion.TrySetException(new InvalidOperationException(message));
             }
         }
     }

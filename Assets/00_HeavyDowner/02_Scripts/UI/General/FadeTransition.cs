@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace HeavyDowner.Module
+namespace HeavyDowner.UI
 {
-    public static class FadeModule
+    public static class FadeTransition
     {
         public static Awaitable FadeInAsync(CanvasGroup canvasGroup, float duration)
         {
