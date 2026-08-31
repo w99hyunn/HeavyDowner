@@ -381,9 +381,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 344041046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 142.42216, y: -100}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &58658218
@@ -614,10 +614,10 @@ RectTransform:
   - {fileID: 1535054041}
   m_Father: {fileID: 1770676415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 509.11688, y: 0}
+  m_SizeDelta: {x: 1018.23376, y: 200}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &344041047
 MonoBehaviour:
@@ -953,10 +953,10 @@ RectTransform:
   - {fileID: 785496584}
   m_Father: {fileID: 1619472682}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 509.11688, y: -50}
+  m_SizeDelta: {x: 868.23376, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542126255
 MonoBehaviour:
@@ -1628,9 +1628,9 @@ RectTransform:
   - {fileID: 1953897640}
   m_Father: {fileID: 344041046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 751.53906, y: -32.906616}
   m_SizeDelta: {x: 398.5451, y: 134.18677}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1535054042
@@ -1703,10 +1703,10 @@ RectTransform:
   - {fileID: 542126254}
   m_Father: {fileID: 1770676415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 509.11688, y: -250}
+  m_SizeDelta: {x: 1018.23376, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1619472683
 MonoBehaviour:
@@ -2642,6 +2642,7 @@ GameObject:
   - component: {fileID: 3100000002}
   - component: {fileID: 3100000005}
   - component: {fileID: 3100000004}
+  - component: {fileID: 3100000006}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2739,8 +2740,7 @@ MonoBehaviour:
   world: {fileID: 3200000003}
   board: {fileID: 3200000004}
   joystick: {fileID: 1200000002}
-  attackPower: 1
-  maxHealth: 10
+  playerStats: {fileID: 3100000006}
   damageFlashDuration: 0.12
   damageColor: {r: 1, g: 0.52, b: 0.52, a: 1}
 --- !u!95 &3100000005
@@ -2765,6 +2765,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3100000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e5a3d1b9f24680ace13579bdf02468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.PlayerStatController
+  baseMaxHealth: 100
+  maxHealthPerUpgrade: 10
+  baseAttackPower: 1
+  attackPowerPerUpgrade: 1
 --- !u!1 &3200000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -2800,6 +2816,14 @@ Transform:
   - {fileID: 3300000001}
   - {fileID: 3100000001}
   - {fileID: 2113898843}
+  - {fileID: 3400000001}
+  - {fileID: 3410000001}
+  - {fileID: 3420000001}
+  - {fileID: 3430000001}
+  - {fileID: 3440000001}
+  - {fileID: 3450000001}
+  - {fileID: 3460000001}
+  - {fileID: 3470000001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &3200000002
@@ -2868,6 +2892,15 @@ MonoBehaviour:
   blockDamage: 1
   hitFlashDuration: 0.08
   hitColor: {r: 1, g: 0.72, b: 0.62, a: 1}
+  destroyedCellVisuals:
+  - {fileID: 3400000003}
+  - {fileID: 3410000003}
+  - {fileID: 3420000003}
+  - {fileID: 3430000003}
+  - {fileID: 3440000003}
+  - {fileID: 3450000003}
+  - {fileID: 3460000003}
+  - {fileID: 3470000003}
 --- !u!1 &3300000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,6 +3028,270 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
+--- !u!1001 &3400000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3400000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3400000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3400000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3400000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3410000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3410000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3410000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3410000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3410000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3420000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3420000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3420000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3420000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3420000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3430000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3430000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3430000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3430000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3430000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3440000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3440000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3440000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3440000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3440000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3450000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3450000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3450000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3450000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3450000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3460000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3460000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3460000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3460000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3460000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+--- !u!1001 &3470000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3200000001}
+    m_Modifications:
+    - target: {fileID: 1000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+      propertyPath: m_Name
+      value: DestroyedCellVisual_7
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+--- !u!4 &3470000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3470000000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3470000003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
+  m_PrefabInstance: {fileID: 3470000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -459,8 +459,9 @@ namespace HeavyDowner.Gameplay
                 MonsterVisual visual = monsterVisuals[index];
                 Vector3Int tilePosition = ToTilePosition(visual.Position);
                 float offset = (visual.Size - 1) * 0.5f;
+                Vector2 cellSize = world.CellSize;
                 Matrix4x4 transformMatrix = Matrix4x4.TRS(
-                    new Vector3(offset, -offset),
+                    new Vector3(offset * cellSize.x, -offset * cellSize.y),
                     Quaternion.identity,
                     new Vector3(visual.Size, visual.Size, 1f));
                 enemyTilemap.SetTileFlags(tilePosition, TileFlags.None);
