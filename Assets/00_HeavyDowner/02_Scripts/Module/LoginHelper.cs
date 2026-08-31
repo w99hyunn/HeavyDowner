@@ -39,7 +39,7 @@ namespace HeavyDowner.Module
             }
 #else
             await Awaitable.NextFrameAsync();
-            throw new PlatformNotSupportedException("Credential Manager Google sign-in is only available in an Android device build.");
+            throw new PlatformNotSupportedException("Google sign-in is only available in an Android device build.");
 #endif
         }
 
