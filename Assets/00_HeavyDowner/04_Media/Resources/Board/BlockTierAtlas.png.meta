@@ -1,0 +1,404 @@
+fileFormatVersion: 2
+guid: 1e7a95cf40f4ebe4f9833b2bc17e57a1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7939623475064674571
+    second: BlockTierAtlas_0
+  - first:
+      213: -29987091052012384
+    second: BlockTierAtlas_1
+  - first:
+      213: -3708479044603414502
+    second: BlockTierAtlas_2
+  - first:
+      213: -5810947077946472938
+    second: BlockTierAtlas_3
+  - first:
+      213: 6663537309869562024
+    second: BlockTierAtlas_4
+  - first:
+      213: 4227454216893990003
+    second: BlockTierAtlas_5
+  - first:
+      213: 4412715397558317783
+    second: BlockTierAtlas_6
+  - first:
+      213: -6761897509248790767
+    second: BlockTierAtlas_7
+  - first:
+      213: -3195475736571134015
+    second: BlockTierAtlas_8
+  - first:
+      213: 829021020986918110
+    second: BlockTierAtlas_9
+  - first:
+      213: -2044052758053490768
+    second: BlockTierAtlas_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 800
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Block_Tier_01
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 664
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc82ccad89dea3141a3b7f8213009b6b
+      internalID: -1457089321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_02
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 664
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44cb1bf889a5f0d4797531efcac67a39
+      internalID: -518689725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_03
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 664
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74b3f50aba39e1449b468bd55a8024e0
+      internalID: -772123760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_04
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 664
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70241ea0d026373469266cf5e41ec795
+      internalID: 1518161894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_05
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 332
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd718cecea3d60040bf3dcd3508b0ebd
+      internalID: -1139586009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_06
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 332
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbceba842075c37429156573586dfb7c
+      internalID: 1695392748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_07
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 332
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 486ef04406d6e9a419c00283389c2e9b
+      internalID: -1970847918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_08
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 332
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 791863b8ee62837479fc6b1a66072bf4
+      internalID: -323788936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_09
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d2e2b98b587d4241a16e60b87ce1bb2
+      internalID: 1495751781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_Tier_10
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b8b46b39e869ed4ba87e8015827108b
+      internalID: -1561061819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 28e0fc8c63f222a4ea651e44beb1094f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      BlockTierAtlas_0: 7939623475064674571
+      BlockTierAtlas_1: -29987091052012384
+      BlockTierAtlas_10: -2044052758053490768
+      BlockTierAtlas_2: -3708479044603414502
+      BlockTierAtlas_3: -5810947077946472938
+      BlockTierAtlas_4: 6663537309869562024
+      BlockTierAtlas_5: 4227454216893990003
+      BlockTierAtlas_6: 4412715397558317783
+      BlockTierAtlas_7: -6761897509248790767
+      BlockTierAtlas_8: -3195475736571134015
+      BlockTierAtlas_9: 829021020986918110
+      Block_Tier_01: -1457089321
+      Block_Tier_02: -518689725
+      Block_Tier_03: -772123760
+      Block_Tier_04: 1518161894
+      Block_Tier_05: -1139586009
+      Block_Tier_06: 1695392748
+      Block_Tier_07: -1970847918
+      Block_Tier_08: -323788936
+      Block_Tier_09: 1495751781
+      Block_Tier_10: -1561061819
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
