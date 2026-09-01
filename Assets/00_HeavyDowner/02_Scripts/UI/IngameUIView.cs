@@ -9,21 +9,51 @@ namespace HeavyDowner.UI
     {
         [SerializeField] private Slider healthSlider;
         [SerializeField] private Image healthFillImage;
+        [SerializeField] private RectTransform shieldFillRect;
         [SerializeField] private TMP_Text positionText;
+        [SerializeField] private SkillButtonView[] skillButtons;
 
         private float targetHealth;
+        private float targetShield;
+        private float displayedShield;
         private Color healthFillColor;
+
+        public int SkillButtonCount => skillButtons.Length;
+
+        public SkillButtonView GetSkillButton(int slotIndex)
+        {
+            return skillButtons[slotIndex];
+        }
 
         private void Awake()
         {
             targetHealth = healthSlider.value;
+            targetShield = 0f;
+            displayedShield = 0f;
             healthFillColor = healthFillImage.color;
+
+            Vector2 shieldAnchorMin = shieldFillRect.anchorMin;
+            Vector2 shieldAnchorMax = shieldFillRect.anchorMax;
+            shieldAnchorMin.x = targetHealth;
+            shieldAnchorMax.x = targetHealth;
+            shieldFillRect.anchorMin = shieldAnchorMin;
+            shieldFillRect.anchorMax = shieldAnchorMax;
         }
 
         private void Update()
         {
             float lerpAmount = 1f - Mathf.Exp(-8f * Time.deltaTime);
             healthSlider.value = Mathf.Lerp(healthSlider.value, targetHealth, lerpAmount);
+            displayedShield = Mathf.Lerp(displayedShield, targetShield, lerpAmount);
+
+            float shieldEnd = Mathf.Min(1f, healthSlider.value + displayedShield);
+            float shieldStart = shieldEnd - displayedShield;
+            Vector2 shieldAnchorMin = shieldFillRect.anchorMin;
+            Vector2 shieldAnchorMax = shieldFillRect.anchorMax;
+            shieldAnchorMin.x = shieldStart;
+            shieldAnchorMax.x = shieldEnd;
+            shieldFillRect.anchorMin = shieldAnchorMin;
+            shieldFillRect.anchorMax = shieldAnchorMax;
         }
 
         public void SetHealth(float normalizedHealth)
@@ -38,6 +68,21 @@ namespace HeavyDowner.UI
         public void SetDepth(int depth)
         {
             positionText.text = $"{depth}M";
+        }
+
+        public void SetShield(float normalizedShield)
+        {
+            targetShield = normalizedShield;
+        }
+
+        public void SetSkillIcon(int slotIndex, Sprite icon)
+        {
+            skillButtons[slotIndex].SetIcon(icon);
+        }
+
+        public void SetSkillState(int slotIndex, bool ready)
+        {
+            skillButtons[slotIndex].SetInteractable(ready);
         }
 
         private async Awaitable FlashHealthFillAsync()

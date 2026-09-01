@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c8599395e794e7288915d4992f0a09, type: 3}
+  m_Name: DefaultSkillLoadout
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillLoadoutDefinition
+  slots:
+  - slotId: 0
+    skill: {fileID: 11400000, guid: d101c4e72a9b4f01a234567890abcde1, type: 2}
+  - slotId: 1
+    skill: {fileID: 11400000, guid: d202c4e72a9b4f01a234567890abcde2, type: 2}
+  - slotId: 2
+    skill: {fileID: 11400000, guid: d303c4e72a9b4f01a234567890abcde3, type: 2}

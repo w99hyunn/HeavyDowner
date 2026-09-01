@@ -18,7 +18,7 @@ namespace HeavyDowner.Gameplay
         public int CounterDamage { get; }
     }
 
-    public sealed class DescentBoardController : MonoBehaviour
+    public sealed class DescentBoardController : MonoBehaviour, ISkillBoard
     {
         private const int MONSTER_BAND_HEIGHT = 4;
 
@@ -59,6 +59,7 @@ namespace HeavyDowner.Gameplay
         private readonly HashSet<int> loadedChunks = new();
         private readonly List<int> chunksToUnload = new();
         private readonly List<MonsterVisual> monsterVisuals = new();
+        private readonly HashSet<Vector2Int> skillAttackAnchors = new();
 
         private TileBase[] terrainChunkTiles;
         private TileBase[] enemyChunkTiles;
@@ -207,6 +208,45 @@ namespace HeavyDowner.Gameplay
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
             hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
             return new BoardActionResult(false, cell.CounterDamage);
+        }
+
+        public void AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage)
+        {
+            skillAttackAnchors.Clear();
+
+            for (int depth = 1; depth <= distance; depth++)
+            {
+                int row = origin.y - depth;
+                for (int offset = -halfWidth; offset <= halfWidth; offset++)
+                {
+                    AttackSkillCell(new Vector2Int(origin.x + offset, row), damage);
+                }
+            }
+        }
+
+        public void AttackArea(Vector2Int center, int radius, int damage)
+        {
+            skillAttackAnchors.Clear();
+
+            for (int y = -radius; y <= radius; y++)
+            {
+                int horizontalRadius = radius - Mathf.Abs(y);
+                for (int x = -horizontalRadius; x <= horizontalRadius; x++)
+                {
+                    AttackSkillCell(center + new Vector2Int(x, y), damage);
+                }
+            }
+        }
+
+        private void AttackSkillCell(Vector2Int position, int damage)
+        {
+            if (!TryGetCellDefinition(position, out CellDefinition cell)
+                || !skillAttackAnchors.Add(cell.AnchorPosition))
+            {
+                return;
+            }
+
+            Attack(cell.AnchorPosition, damage);
         }
 
         private void InitializeBoard()

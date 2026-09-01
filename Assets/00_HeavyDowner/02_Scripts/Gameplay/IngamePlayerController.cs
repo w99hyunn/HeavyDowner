@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public class IngamePlayerController : MonoBehaviour
+    public class IngamePlayerController : MonoBehaviour, ISkillActor
     {
         private static readonly int FALL_STATE_HASH = Animator.StringToHash("FallState");
 
@@ -23,16 +23,27 @@ namespace HeavyDowner.Gameplay
         private float nextStepTime;
         private float damageFlashEndTime;
         private int currentHealth;
+        private int currentShield;
         private int currentDepth;
         private FallAnimation currentAnimation;
         private bool isDead;
+        private bool isMovementLocked;
+        private bool isShieldActive;
+        private float damageReduction;
+        private float damageRemainder;
 
         public event Action<float> HealthChanged;
+        public event Action<float> ShieldChanged;
+        public event Action ShieldDepleted;
         public event Action<int> DepthChanged;
         public event Action Died;
 
         public float HealthNormalized => (float)currentHealth / maxHealth;
+        public float ShieldNormalized => (float)currentShield / maxHealth;
         public int CurrentDepth => currentDepth;
+        public bool IsDead => isDead;
+        public Vector2Int CurrentCell => world.WorldToCell(transform.position);
+        public Transform SkillTransform => transform;
 
         private enum FallAnimation
         {
@@ -52,6 +63,7 @@ namespace HeavyDowner.Gameplay
         private void Start()
         {
             HealthChanged?.Invoke(HealthNormalized);
+            ShieldChanged?.Invoke(ShieldNormalized);
             DepthChanged?.Invoke(currentDepth);
         }
 
@@ -63,7 +75,7 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            Vector2 direction = joystick.Direction;
+            Vector2 direction = isMovementLocked ? Vector2.zero : joystick.Direction;
             Move(direction);
             Animate(direction);
             RestoreDamageColor();
@@ -103,14 +115,7 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            transform.position = world.CellToWorld(targetCell);
-
-            int depth = Mathf.Max(0, -targetCell.y);
-            if (depth != currentDepth)
-            {
-                currentDepth = depth;
-                DepthChanged?.Invoke(currentDepth);
-            }
+            MoveToCell(targetCell);
         }
 
         private static Vector2Int ResolveStepDirection(Vector2 direction)
@@ -160,8 +165,37 @@ namespace HeavyDowner.Gameplay
 
         private void TakeDamage(int damage)
         {
-            currentHealth = Mathf.Max(0, currentHealth - damage);
-            HealthChanged?.Invoke(HealthNormalized);
+            float reducedDamageValue = damage * (1f - damageReduction) + damageRemainder;
+            int reducedDamage = Mathf.FloorToInt(reducedDamageValue);
+            damageRemainder = reducedDamageValue - reducedDamage;
+            if (reducedDamage == 0)
+            {
+                return;
+            }
+
+            int remainingDamage = reducedDamage;
+            if (currentShield > 0)
+            {
+                int absorbedDamage = Mathf.Min(currentShield, remainingDamage);
+                currentShield -= absorbedDamage;
+                remainingDamage -= absorbedDamage;
+                ShieldChanged?.Invoke(ShieldNormalized);
+
+                if (currentShield == 0)
+                {
+                    isShieldActive = false;
+                    damageReduction = 0f;
+                    damageRemainder = 0f;
+                    ShieldDepleted?.Invoke();
+                }
+            }
+
+            if (remainingDamage > 0)
+            {
+                currentHealth = Mathf.Max(0, currentHealth - remainingDamage);
+                HealthChanged?.Invoke(HealthNormalized);
+            }
+
             spriteRenderer.color = damageColor;
             damageFlashEndTime = Time.time + damageFlashDuration;
 
@@ -174,6 +208,54 @@ namespace HeavyDowner.Gameplay
             Died?.Invoke();
         }
 
+        public void SetMovementLocked(bool locked)
+        {
+            isMovementLocked = locked;
+            activeStepDirection = Vector2Int.zero;
+
+            if (!locked)
+            {
+                return;
+            }
+
+            currentAnimation = FallAnimation.Dive;
+            animator.SetInteger(FALL_STATE_HASH, (int)currentAnimation);
+        }
+
+        public void MoveToCell(Vector2Int targetCell)
+        {
+            transform.position = world.CellToWorld(targetCell);
+
+            int depth = Mathf.Max(0, -targetCell.y);
+            if (depth == currentDepth)
+            {
+                return;
+            }
+
+            currentDepth = depth;
+            DepthChanged?.Invoke(currentDepth);
+        }
+
+        public void ActivateShield(float reduction, float shieldHealthNormalized)
+        {
+            isShieldActive = true;
+            damageReduction = reduction;
+            damageRemainder = 0f;
+            currentShield = Mathf.Max(1, Mathf.CeilToInt(maxHealth * shieldHealthNormalized));
+            spriteRenderer.color = new Color(0.55f, 0.88f, 1f, 1f);
+            ShieldChanged?.Invoke(ShieldNormalized);
+        }
+
+        public void DeactivateShield()
+        {
+            isShieldActive = false;
+            damageReduction = 0f;
+            damageRemainder = 0f;
+            currentShield = 0;
+            spriteRenderer.color = Color.white;
+            ShieldChanged?.Invoke(ShieldNormalized);
+        }
+
         private void RestoreDamageColor()
         {
             if (damageFlashEndTime <= 0f || Time.time < damageFlashEndTime)
@@ -182,7 +264,9 @@ namespace HeavyDowner.Gameplay
             }
 
             damageFlashEndTime = 0f;
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = isShieldActive
+                ? new Color(0.55f, 0.88f, 1f, 1f)
+                : Color.white;
         }
 
         private static FallAnimation ResolveAnimation(Vector2 direction)

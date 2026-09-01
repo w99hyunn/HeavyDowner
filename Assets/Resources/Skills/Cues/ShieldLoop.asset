@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
+  m_Name: ShieldLoop
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCueDefinition
+  prefab: {fileID: 4942358598806187058, guid: 64b7048102a1dea4da533c700007d5fd, type: 3}
+  audioClips: []
+  audioOutput: {fileID: 0}
+  volume: 1
+  pitchRange: {x: 0.95, y: 1.05}
+  spatialBlend: 0
+  scale: {x: 0.12, y: 0.12, z: 0.12}
+  rotation: {x: 0, y: 0, z: 0}
+  overrideColor: 1
+  color: {r: 0.25, g: 0.78, b: 1, a: 0.85}
+  poolSize: 1
+  lifetime: 2
+  rotationSpeed: 70
+  sortingOrder: 11
