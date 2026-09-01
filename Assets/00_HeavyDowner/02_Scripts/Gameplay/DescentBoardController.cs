@@ -31,7 +31,7 @@ namespace HeavyDowner.Gameplay
         [Header("Block Tiers")]
         [SerializeField, Min(1)] private int metersPerBlockTier = 50;
         [SerializeField] private TileBase[] blockTiles = new TileBase[10];
-        [SerializeField] private int[] blockHealthByTier = { 1, 1, 2, 2, 3, 3, 4, 5, 6, 8 };
+        [SerializeField] private int[] blockHealthByTier = { 100, 100, 200, 200, 300, 300, 400, 500, 600, 800 };
 
         [Header("Enemy Tiles")]
         [SerializeField] private TileBase grubTile;
@@ -48,10 +48,11 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Range(0f, 1f)] private float monster4x4Chance = 0.08f;
 
         [Header("Damage")]
-        [SerializeField, Min(0)] private int blockDamage = 1;
+        [SerializeField, Min(0)] private int blockDamage = 100;
 
         [Header("Presentation")]
         [SerializeField] private CellHealthBarPool healthBarPool;
+        [SerializeField] private DamageTextPool damageTextPool;
         [SerializeField] private DestroyedCellVisualPool destroyedCellVisualPool;
         [SerializeField] private TileHitFlashController hitFlashController;
 
@@ -60,6 +61,7 @@ namespace HeavyDowner.Gameplay
         private readonly List<int> chunksToUnload = new();
         private readonly List<MonsterVisual> monsterVisuals = new();
         private readonly HashSet<Vector2Int> skillAttackAnchors = new();
+        private readonly Dictionary<Vector2Int, int> remainingHealthByCell = new();
 
         private TileBase[] terrainChunkTiles;
         private TileBase[] enemyChunkTiles;
@@ -151,7 +153,6 @@ namespace HeavyDowner.Gameplay
         {
             public ushort DestroyedMask;
             public ushort DamagedMask;
-            public ulong RemainingHealth;
         }
 
         private void Start()
@@ -186,15 +187,20 @@ namespace HeavyDowner.Gameplay
             }
 
             int currentHealth = (mutation.DamagedMask & cellMask) != 0
-                ? GetRemainingHealth(mutation, statePosition.x)
+                ? remainingHealthByCell[statePosition]
                 : cell.Health;
             int remainingHealth = currentHealth - damage;
+            int appliedDamage = Mathf.Min(damage, currentHealth);
+            if (appliedDamage > 0)
+            {
+                damageTextPool.PlayWorldDamage(appliedDamage, GetCellVisualCenter(cell));
+            }
 
             if (remainingHealth <= 0)
             {
                 mutation.DestroyedMask |= cellMask;
                 mutation.DamagedMask &= (ushort)~cellMask;
-                mutation.RemainingHealth = SetRemainingHealth(mutation.RemainingHealth, statePosition.x, 0);
+                remainingHealthByCell.Remove(statePosition);
                 SetRowMutation(statePosition.y, mutation);
                 ClearVisibleCell(cell);
                 int destructionDamage = cell.IsEnemy ? 0 : cell.CounterDamage;
@@ -202,7 +208,7 @@ namespace HeavyDowner.Gameplay
             }
 
             mutation.DamagedMask |= cellMask;
-            mutation.RemainingHealth = SetRemainingHealth(mutation.RemainingHealth, statePosition.x, remainingHealth);
+            remainingHealthByCell[statePosition] = remainingHealth;
             SetRowMutation(statePosition.y, mutation);
             ShowHealthBar(cell, remainingHealth);
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
@@ -254,11 +260,13 @@ namespace HeavyDowner.Gameplay
             terrainTilemap.ClearAllTiles();
             enemyTilemap.ClearAllTiles();
             rowMutations.Clear();
+            remainingHealthByCell.Clear();
             loadedChunks.Clear();
             chunksToUnload.Clear();
             hitFlashController.Clear();
             monsterVisuals.Clear();
             healthBarPool.HideAll();
+            damageTextPool.HideAll();
 
             int boardWidth = world.HorizontalCellCount;
             terrainChunkTiles = new TileBase[boardWidth * chunkHeight];
@@ -433,22 +441,22 @@ namespace HeavyDowner.Gameplay
             {
                 size = 4;
                 kind = CellKind.Golem;
-                health = 3;
-                counterDamage = 2;
+                health = 300;
+                counterDamage = 200;
             }
             else if (sizeRoll < monster4x4Chance + monster2x2Chance)
             {
                 size = 2;
                 kind = CellKind.Bat;
-                health = 2;
-                counterDamage = 1;
+                health = 200;
+                counterDamage = 100;
             }
             else
             {
                 size = 1;
                 kind = CellKind.Grub;
-                health = 1;
-                counterDamage = 1;
+                health = 100;
+                counterDamage = 100;
             }
 
             int verticalRange = MONSTER_BAND_HEIGHT - size + 1;
@@ -532,21 +540,6 @@ namespace HeavyDowner.Gameplay
         {
             int halfWidth = world.HorizontalCellCount / 2;
             return (ushort)(1 << column + halfWidth);
-        }
-
-        private int GetRemainingHealth(RowMutation mutation, int column)
-        {
-            int halfWidth = world.HorizontalCellCount / 2;
-            int shift = (column + halfWidth) * 4;
-            return (int)(mutation.RemainingHealth >> shift & 0xFUL);
-        }
-
-        private ulong SetRemainingHealth(ulong packedHealth, int column, int health)
-        {
-            int halfWidth = world.HorizontalCellCount / 2;
-            int shift = (column + halfWidth) * 4;
-            ulong cellBits = 0xFUL << shift;
-            return packedHealth & ~cellBits | (ulong)health << shift;
         }
 
         private float Random01(Vector2Int position, uint salt)

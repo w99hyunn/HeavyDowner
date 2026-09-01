@@ -21,7 +21,7 @@ MonoBehaviour:
   endCues: []
   distance: 10
   halfWidth: 1
-  damage: 8
+  damage: 800
   stepInterval: 0.045
   cueStepInterval: 3
   stepCue: {fileID: 11400000, guid: e101bb11cc22dd33ee44ff5566770001, type: 2}

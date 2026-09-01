@@ -6,7 +6,7 @@ namespace HeavyDowner.Gameplay
     public sealed class ShockwaveSkillDefinition : SkillDefinition
     {
         [SerializeField, Min(1)] private int radius = 2;
-        [SerializeField, Min(1)] private int damage = 3;
+        [SerializeField, Min(1)] private int damage = 300;
 
         public override void Execute(SkillExecutionContext context)
         {

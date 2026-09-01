@@ -12,8 +12,9 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private VerticalTilemapWorld world;
         [SerializeField] private DescentBoardController board;
         [SerializeField] private JoystickControl joystick;
-        [SerializeField] private int attackPower = 1;
-        [SerializeField] private int maxHealth = 10;
+        [SerializeField] private DamageTextPool damageTextPool;
+        [SerializeField] private int attackPower = 100;
+        [SerializeField] private int maxHealth = 10000;
         [SerializeField] private float damageFlashDuration = 0.12f;
         [SerializeField] private Color damageColor = new(1f, 0.52f, 0.52f, 1f);
 
@@ -194,6 +195,7 @@ namespace HeavyDowner.Gameplay
             {
                 currentHealth = Mathf.Max(0, currentHealth - remainingDamage);
                 HealthChanged?.Invoke(HealthNormalized);
+                damageTextPool.PlayPlayerDamage(remainingDamage, transform.position);
             }
 
             spriteRenderer.color = damageColor;

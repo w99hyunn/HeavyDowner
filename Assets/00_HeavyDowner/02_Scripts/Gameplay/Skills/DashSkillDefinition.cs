@@ -9,7 +9,7 @@ namespace HeavyDowner.Gameplay
     {
         [SerializeField, Min(1)] private int distance = 10;
         [SerializeField, Min(0)] private int halfWidth = 1;
-        [SerializeField, Min(1)] private int damage = 8;
+        [SerializeField, Min(1)] private int damage = 800;
         [SerializeField, Min(0.01f)] private float stepInterval = 0.045f;
         [SerializeField, Min(1)] private int cueStepInterval = 3;
         [SerializeField] private SkillCueDefinition stepCue;
