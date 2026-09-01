@@ -14,15 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCueDefinition
   prefab: {fileID: 1843352335680372643, guid: 2f1beb1e6e3b7c245985ccca821ac4ff, type: 3}
   audioClips: []
-  audioOutput: {fileID: 0}
-  volume: 1
   pitchRange: {x: 0.95, y: 1.05}
-  spatialBlend: 0
-  scale: {x: 0.18, y: 0.18, z: 0.18}
-  rotation: {x: 0, y: 0, z: 0}
-  overrideColor: 1
-  color: {r: 0.3, g: 0.85, b: 1, a: 1}
   poolSize: 1
   lifetime: 2
   rotationSpeed: 0
-  sortingOrder: 11

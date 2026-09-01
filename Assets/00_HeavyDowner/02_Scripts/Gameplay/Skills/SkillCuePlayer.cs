@@ -10,6 +10,7 @@ namespace HeavyDowner.Gameplay
             public GameObject Root;
             public ParticleSystem[] Particles;
             public AudioSource AudioSource;
+            public Quaternion InitialRotation;
         }
 
         private sealed class CuePool
@@ -98,9 +99,9 @@ namespace HeavyDowner.Gameplay
         public void PlayOneShot(SkillCueDefinition definition, Vector3 position)
         {
             CuePool pool = pools[definition];
-            CueObject cueObject = Rent(pool, position, false);
+            CueObject cueObject = Rent(pool, position);
             float lifetime = definition.Lifetime;
-            if (cueObject.AudioSource != null)
+            if (definition.HasAudio)
             {
                 float audioLifetime = cueObject.AudioSource.clip.length
                     / Mathf.Max(0.01f, Mathf.Abs(cueObject.AudioSource.pitch));
@@ -118,7 +119,7 @@ namespace HeavyDowner.Gameplay
         public SkillCueHandle PlayLoop(SkillCueDefinition definition, Transform anchor)
         {
             CuePool pool = pools[definition];
-            CueObject cueObject = Rent(pool, anchor.position, true);
+            CueObject cueObject = Rent(pool, anchor.position);
             int handleId = nextHandleId++;
             activeCues.Add(new ActiveCue
             {
@@ -142,7 +143,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        private CueObject Rent(CuePool pool, Vector3 position, bool loop)
+        private CueObject Rent(CuePool pool, Vector3 position)
         {
             if (pool.Available.Count == 0)
             {
@@ -154,7 +155,7 @@ namespace HeavyDowner.Gameplay
             CueObject cueObject = pool.Available.Dequeue();
             Transform cueTransform = cueObject.Root.transform;
             cueTransform.position = position;
-            cueTransform.localRotation = Quaternion.Euler(pool.Definition.Rotation);
+            cueTransform.localRotation = cueObject.InitialRotation;
             cueObject.Root.SetActive(true);
 
             foreach (ParticleSystem particle in cueObject.Particles)
@@ -163,11 +164,10 @@ namespace HeavyDowner.Gameplay
                 particle.Play(false);
             }
 
-            if (cueObject.AudioSource != null)
+            if (pool.Definition.HasAudio)
             {
                 cueObject.AudioSource.clip = pool.Definition.GetRandomAudioClip();
                 cueObject.AudioSource.pitch = pool.Definition.GetRandomPitch();
-                cueObject.AudioSource.loop = loop;
                 cueObject.AudioSource.Play();
             }
 
@@ -177,11 +177,8 @@ namespace HeavyDowner.Gameplay
         private void Release(int activeIndex)
         {
             ActiveCue activeCue = activeCues[activeIndex];
-            if (activeCue.CueObject.AudioSource != null)
-            {
-                activeCue.CueObject.AudioSource.Stop();
-                activeCue.CueObject.AudioSource.clip = null;
-            }
+            activeCue.CueObject.AudioSource.Stop();
+            activeCue.CueObject.AudioSource.clip = null;
 
             activeCue.CueObject.Root.SetActive(false);
             activeCue.Pool.Available.Enqueue(activeCue.CueObject);
@@ -190,58 +187,18 @@ namespace HeavyDowner.Gameplay
 
         private CueObject CreateCueObject(SkillCueDefinition definition)
         {
-            GameObject root;
-            if (definition.Prefab != null)
-            {
-                root = Instantiate(definition.Prefab, transform.parent);
-            }
-            else
-            {
-                root = new GameObject();
-                root.transform.SetParent(transform.parent, false);
-            }
-
-            root.name = $"SkillCue_{definition.name}";
-            root.transform.localScale = definition.Scale;
-            root.transform.localRotation = Quaternion.Euler(definition.Rotation);
+            GameObject root = Instantiate(definition.Prefab, transform.parent);
 
             ParticleSystem[] particles = root.GetComponentsInChildren<ParticleSystem>(true);
-            if (definition.OverrideColor)
-            {
-                foreach (ParticleSystem particle in particles)
-                {
-                    ParticleSystem.MainModule main = particle.main;
-                    main.startColor = definition.Color;
-                }
-            }
-
-            ParticleSystemRenderer[] renderers = root.GetComponentsInChildren<ParticleSystemRenderer>(true);
-            foreach (ParticleSystemRenderer particleRenderer in renderers)
-            {
-                particleRenderer.pivot = Vector3.zero;
-                particleRenderer.sortingOrder = definition.SortingOrder;
-            }
-
-            AudioSource audioSource = null;
-            if (definition.HasAudio)
-            {
-                if (!root.TryGetComponent<AudioSource>(out audioSource))
-                {
-                    audioSource = root.AddComponent<AudioSource>();
-                }
-
-                audioSource.playOnAwake = false;
-                audioSource.outputAudioMixerGroup = definition.AudioOutput;
-                audioSource.volume = definition.Volume;
-                audioSource.spatialBlend = definition.SpatialBlend;
-            }
+            root.TryGetComponent<AudioSource>(out AudioSource audioSource);
 
             root.SetActive(false);
             return new CueObject
             {
                 Root = root,
                 Particles = particles,
-                AudioSource = audioSource
+                AudioSource = audioSource,
+                InitialRotation = root.transform.localRotation
             };
         }
     }

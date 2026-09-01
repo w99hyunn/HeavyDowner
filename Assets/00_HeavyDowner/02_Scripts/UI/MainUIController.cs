@@ -1,5 +1,5 @@
-using System;
 using HeavyDowner.Module;
+using Unity.Services.Core;
 using UnityEngine;
 
 namespace HeavyDowner.UI
@@ -49,9 +49,9 @@ namespace HeavyDowner.UI
                 OnConfirmAddCurrency);
         }
 
-        private void OnConfirmAddCurrency()
+        private async void OnConfirmAddCurrency()
         {
-            _ = AddCurrencyAsync();
+            await AddCurrencyAsync();
         }
 
         private async Awaitable AddCurrencyAsync()
@@ -59,16 +59,18 @@ namespace HeavyDowner.UI
             try
             {
                 await PlayerDataService.AddCurrencyAsync(CURRENCY_RECOVERY_AMOUNT);
-                Refresh();
             }
-            catch (Exception exception)
+            catch (RequestFailedException exception)
             {
                 Debug.LogException(exception);
                 PopupSingleton.Instance.ShowMessage("기력 회복에 실패했습니다.\r\n다시 시도해주세요.");
+                return;
             }
+
+            Refresh();
         }
 
-        private void OnGameStartClicked()
+        private async void OnGameStartClicked()
         {
             if (isStartingGame)
                 return;
@@ -79,7 +81,7 @@ namespace HeavyDowner.UI
                 return;
             }
 
-            _ = StartGameAsync();
+            await StartGameAsync();
         }
 
         private async Awaitable StartGameAsync()
@@ -89,15 +91,17 @@ namespace HeavyDowner.UI
             try
             {
                 await PlayerDataService.SaveCurrencyAsync(PlayerDataService.Currency - GAME_START_COST);
-                Refresh();
-                await LoadingBridgeService.LoadAsync(SceneType.Ingame, LoadingMode.Overlay);
             }
-            catch (Exception exception)
+            catch (RequestFailedException exception)
             {
                 isStartingGame = false;
                 Debug.LogException(exception);
                 PopupSingleton.Instance.ShowMessage("게임 시작에 실패했습니다.\r\n다시 시도해주세요.");
+                return;
             }
+
+            Refresh();
+            await LoadingBridgeService.LoadAsync(SceneType.Ingame, LoadingMode.Overlay);
         }
     }
 }
