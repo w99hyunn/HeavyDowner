@@ -13,8 +13,6 @@ namespace HeavyDowner.UI
         private PopupUIView view;
         private Action confirmAction;
         private Action cancelAction;
-
-
         private void Awake()
         {
             TryGetComponent<PopupUIView>(out view);
@@ -56,13 +54,6 @@ namespace HeavyDowner.UI
             confirmAction = onConfirm;
             cancelAction = onCancel;
             view.Show(message, true);
-        }
-
-        public void Hide()
-        {
-            confirmAction = null;
-            cancelAction = null;
-            _ = view.HideAsync();
         }
 
         private void OnConfirmClicked()

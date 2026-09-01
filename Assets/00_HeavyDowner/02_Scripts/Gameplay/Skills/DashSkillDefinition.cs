@@ -14,8 +14,6 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int cueStepInterval = 3;
         [SerializeField] private SkillCueDefinition stepCue;
 
-        public override bool RunsAsynchronously => true;
-
         public override async Awaitable ExecuteAsync(
             SkillExecutionContext context,
             CancellationToken cancellationToken)

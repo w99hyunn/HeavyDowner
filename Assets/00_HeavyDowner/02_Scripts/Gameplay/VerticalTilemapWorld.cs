@@ -17,15 +17,6 @@ namespace HeavyDowner.Gameplay
             TryGetComponent<Grid>(out grid);
         }
 
-        public Vector3 SnapToCell(Vector3 position)
-        {
-            Vector2Int cell = WorldToCell(position);
-            Vector3 snappedPosition = CellToWorld(cell);
-            position.x = snappedPosition.x;
-            position.y = snappedPosition.y;
-            return position;
-        }
-
         public Vector2Int WorldToCell(Vector3 position)
         {
             Vector3 origin = transform.position;

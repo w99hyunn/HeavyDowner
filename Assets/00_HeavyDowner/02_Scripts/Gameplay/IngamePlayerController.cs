@@ -27,9 +27,7 @@ namespace HeavyDowner.Gameplay
         private int currentShield;
         private int currentDepth;
         private FallAnimation currentAnimation;
-        private bool isDead;
         private bool isMovementLocked;
-        private bool isShieldActive;
         private float damageReduction;
         private float damageRemainder;
 
@@ -42,7 +40,7 @@ namespace HeavyDowner.Gameplay
         public float HealthNormalized => (float)currentHealth / maxHealth;
         public float ShieldNormalized => (float)currentShield / maxHealth;
         public int CurrentDepth => currentDepth;
-        public bool IsDead => isDead;
+        public bool IsDead => currentHealth <= 0;
         public Vector2Int CurrentCell => world.WorldToCell(transform.position);
         public Transform SkillTransform => transform;
 
@@ -70,7 +68,7 @@ namespace HeavyDowner.Gameplay
 
         private void Update()
         {
-            if (isDead)
+            if (IsDead)
             {
                 RestoreDamageColor();
                 return;
@@ -105,7 +103,7 @@ namespace HeavyDowner.Gameplay
             if (action.CounterDamage > 0)
             {
                 TakeDamage(action.CounterDamage);
-                if (isDead)
+                if (IsDead)
                 {
                     return;
                 }
@@ -184,7 +182,6 @@ namespace HeavyDowner.Gameplay
 
                 if (currentShield == 0)
                 {
-                    isShieldActive = false;
                     damageReduction = 0f;
                     damageRemainder = 0f;
                     ShieldDepleted?.Invoke();
@@ -206,7 +203,6 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            isDead = true;
             Died?.Invoke();
         }
 
@@ -240,7 +236,6 @@ namespace HeavyDowner.Gameplay
 
         public void ActivateShield(float reduction, float shieldHealthNormalized)
         {
-            isShieldActive = true;
             damageReduction = reduction;
             damageRemainder = 0f;
             currentShield = Mathf.Max(1, Mathf.CeilToInt(maxHealth * shieldHealthNormalized));
@@ -250,7 +245,6 @@ namespace HeavyDowner.Gameplay
 
         public void DeactivateShield()
         {
-            isShieldActive = false;
             damageReduction = 0f;
             damageRemainder = 0f;
             currentShield = 0;
@@ -266,7 +260,7 @@ namespace HeavyDowner.Gameplay
             }
 
             damageFlashEndTime = 0f;
-            spriteRenderer.color = isShieldActive
+            spriteRenderer.color = currentShield > 0
                 ? new Color(0.55f, 0.88f, 1f, 1f)
                 : Color.white;
         }

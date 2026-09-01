@@ -74,14 +74,7 @@ namespace HeavyDowner.Gameplay
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
-                if (Definition.RunsAsynchronously)
-                {
-                    await Definition.ExecuteAsync(context, cancellationToken);
-                }
-                else
-                {
-                    Definition.Execute(context);
-                }
+                await Definition.ExecuteAsync(context, cancellationToken);
             }
             catch (OperationCanceledException)
             {

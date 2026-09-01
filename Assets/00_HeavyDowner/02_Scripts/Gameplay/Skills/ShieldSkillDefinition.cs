@@ -10,8 +10,6 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Range(0f, 1f)] private float healthNormalized = 0.25f;
         [SerializeField, Min(0.1f)] private float duration = 5f;
 
-        public override bool RunsAsynchronously => true;
-
         public override async Awaitable ExecuteAsync(
             SkillExecutionContext context,
             CancellationToken cancellationToken)

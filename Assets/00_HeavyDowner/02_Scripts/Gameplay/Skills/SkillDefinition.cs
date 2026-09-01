@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -23,19 +22,9 @@ namespace HeavyDowner.Gameplay
         public SkillCueDefinition LoopCue => loopCue;
         public IReadOnlyList<SkillCueDefinition> EndCues => endCues;
 
-        public virtual bool RunsAsynchronously => false;
-
-        public virtual void Execute(SkillExecutionContext context)
-        {
-            throw new NotSupportedException($"{name} must implement synchronous execution.");
-        }
-
-        public virtual Awaitable ExecuteAsync(
+        public abstract Awaitable ExecuteAsync(
             SkillExecutionContext context,
-            CancellationToken cancellationToken)
-        {
-            throw new NotSupportedException($"{name} must implement asynchronous execution.");
-        }
+            CancellationToken cancellationToken);
 
         public virtual void CollectCues(List<SkillCueDefinition> cues)
         {

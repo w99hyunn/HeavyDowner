@@ -5,7 +5,6 @@ namespace HeavyDowner.Module
 {
     public enum SceneType
     {
-        Splash,
         Login,
         Loading,
         Main,

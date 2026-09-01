@@ -2955,21 +2955,42 @@ MonoBehaviour:
   terrainTilemap: {fileID: 3300000002}
   enemyTilemap: {fileID: 2113898841}
   metersPerBlockTier: 50
-  blockTiles:
-  - {fileID: 11400000, guid: 6ea1abc324502e64db1690ad52a31e3d, type: 2}
-  - {fileID: 11400000, guid: 92fadb93dcd922043a53203efd37e8f4, type: 2}
-  - {fileID: 11400000, guid: 84a8f1565304f76499068378e60206d6, type: 2}
-  - {fileID: 11400000, guid: 70631213bdbf56642a197cc34f568ab0, type: 2}
-  - {fileID: 11400000, guid: afbcca25e5b335c42b61e4aa41960b0d, type: 2}
-  - {fileID: 11400000, guid: f8646db0ef936ec469474ea41121929f, type: 2}
-  - {fileID: 11400000, guid: 5e5daeff8e0a2fc41826f5075908bbd8, type: 2}
-  - {fileID: 11400000, guid: cd996c0154c600648bcf5e6d28ef5cc3, type: 2}
-  - {fileID: 11400000, guid: 5b15089ec8aee4c4aa807c681b01d590, type: 2}
-  - {fileID: 11400000, guid: a84efe2fb9be95d48aae301f1ccd41f8, type: 2}
-  blockHealthByTier: 6400000064000000c8000000c80000002c0100002c01000090010000f40100005802000020030000
-  grubTile: {fileID: 11400000, guid: 00807b6ead0d21b45b9159e87ca8833b, type: 2}
-  batTile: {fileID: 11400000, guid: 3fdc24d05c836c740a7ec761b613f490, type: 2}
-  golemTile: {fileID: 11400000, guid: 4a60e34549562fd40a396c2ff77666fb, type: 2}
+  blockTiers:
+  - tile: {fileID: 11400000, guid: 6ea1abc324502e64db1690ad52a31e3d, type: 2}
+    health: 100
+  - tile: {fileID: 11400000, guid: 92fadb93dcd922043a53203efd37e8f4, type: 2}
+    health: 100
+  - tile: {fileID: 11400000, guid: 84a8f1565304f76499068378e60206d6, type: 2}
+    health: 200
+  - tile: {fileID: 11400000, guid: 70631213bdbf56642a197cc34f568ab0, type: 2}
+    health: 200
+  - tile: {fileID: 11400000, guid: afbcca25e5b335c42b61e4aa41960b0d, type: 2}
+    health: 300
+  - tile: {fileID: 11400000, guid: f8646db0ef936ec469474ea41121929f, type: 2}
+    health: 300
+  - tile: {fileID: 11400000, guid: 5e5daeff8e0a2fc41826f5075908bbd8, type: 2}
+    health: 400
+  - tile: {fileID: 11400000, guid: cd996c0154c600648bcf5e6d28ef5cc3, type: 2}
+    health: 500
+  - tile: {fileID: 11400000, guid: 5b15089ec8aee4c4aa807c681b01d590, type: 2}
+    health: 600
+  - tile: {fileID: 11400000, guid: a84efe2fb9be95d48aae301f1ccd41f8, type: 2}
+    health: 800
+  grub:
+    tile: {fileID: 11400000, guid: 00807b6ead0d21b45b9159e87ca8833b, type: 2}
+    size: 1
+    health: 100
+    counterDamage: 100
+  bat:
+    tile: {fileID: 11400000, guid: 3fdc24d05c836c740a7ec761b613f490, type: 2}
+    size: 2
+    health: 200
+    counterDamage: 100
+  golem:
+    tile: {fileID: 11400000, guid: 4a60e34549562fd40a396c2ff77666fb, type: 2}
+    size: 4
+    health: 300
+    counterDamage: 200
   chunkHeight: 32
   loadedChunkRadius: 1
   monsterSpawnChance: 0.45

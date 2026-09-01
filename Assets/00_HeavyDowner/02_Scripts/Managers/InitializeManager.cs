@@ -17,6 +17,7 @@ namespace HeavyDowner.Module
         public event Action<bool> Completed;
 
         private LoginMethod loginMethod;
+        private bool isRunning;
 
         private void Awake()
         {
@@ -25,12 +26,22 @@ namespace HeavyDowner.Module
 
         public void StartFlow()
         {
+            if (isRunning)
+            {
+                return;
+            }
+
+            isRunning = true;
             _ = StartFlowAsync();
         }
 
         public void SelectLogin(LoginMethod method)
         {
             loginMethod = method;
+            if (!isRunning)
+            {
+                StartFlow();
+            }
         }
 
         private async Awaitable StartFlowAsync()
@@ -70,6 +81,10 @@ namespace HeavyDowner.Module
             {
                 Fail(exception);
             }
+            finally
+            {
+                isRunning = false;
+            }
         }
 
         private void SetStep(string message)
@@ -80,6 +95,7 @@ namespace HeavyDowner.Module
         private void Fail(Exception exception)
         {
             Debug.LogException(exception);
+            loginMethod = LoginMethod.None;
             Completed?.Invoke(false);
         }
     }

@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 namespace HeavyDowner.Gameplay
@@ -8,8 +9,12 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int radius = 2;
         [SerializeField, Min(1)] private int damage = 300;
 
-        public override void Execute(SkillExecutionContext context)
+        public override async Awaitable ExecuteAsync(
+            SkillExecutionContext context,
+            CancellationToken cancellationToken)
         {
+            await Awaitable.MainThreadAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             context.Board.AttackArea(context.Actor.CurrentCell, radius, damage);
         }
     }

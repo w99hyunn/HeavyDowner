@@ -34,7 +34,7 @@ namespace HeavyDowner.UI
             view.GameStartButton.onClick.RemoveListener(OnGameStartClicked);
         }
 
-        public void Refresh()
+        private void Refresh()
         {
             view.SetPlayerData(
                 PlayerDataService.Nickname,

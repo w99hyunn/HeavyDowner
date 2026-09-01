@@ -21,19 +21,42 @@ namespace HeavyDowner.Gameplay
     {
         private const int MONSTER_BAND_HEIGHT = 4;
 
+        [Serializable]
+        private struct BlockTierDefinition
+        {
+            [SerializeField] private TileBase tile;
+            [SerializeField, Min(1)] private int health;
+
+            public TileBase Tile => tile;
+            public int Health => health;
+        }
+
+        [Serializable]
+        private struct MonsterDefinition
+        {
+            [SerializeField] private TileBase tile;
+            [SerializeField, Min(1)] private int size;
+            [SerializeField, Min(1)] private int health;
+            [SerializeField, Min(0)] private int counterDamage;
+
+            public TileBase Tile => tile;
+            public int Size => size;
+            public int Health => health;
+            public int CounterDamage => counterDamage;
+        }
+
         [SerializeField] private Transform streamingCamera;
         [SerializeField] private Tilemap terrainTilemap;
         [SerializeField] private Tilemap enemyTilemap;
 
         [Header("Block Tiers")]
         [SerializeField, Min(1)] private int metersPerBlockTier = 50;
-        [SerializeField] private TileBase[] blockTiles = new TileBase[10];
-        [SerializeField] private int[] blockHealthByTier = { 100, 100, 200, 200, 300, 300, 400, 500, 600, 800 };
+        [SerializeField] private BlockTierDefinition[] blockTiers = new BlockTierDefinition[10];
 
-        [Header("Enemy Tiles")]
-        [SerializeField] private TileBase grubTile;
-        [SerializeField] private TileBase batTile;
-        [SerializeField] private TileBase golemTile;
+        [Header("Enemies")]
+        [SerializeField] private MonsterDefinition grub;
+        [SerializeField] private MonsterDefinition bat;
+        [SerializeField] private MonsterDefinition golem;
 
         [Header("Streaming")]
         [SerializeField, Min(8)] private int chunkHeight = 32;
@@ -67,69 +90,37 @@ namespace HeavyDowner.Gameplay
         private int currentStreamingChunk = int.MaxValue;
         private int randomSeed;
 
-        private enum CellKind
-        {
-            Block,
-            Grub,
-            Bat,
-            Golem
-        }
-
         private readonly struct CellDefinition
         {
             public CellDefinition(
-                CellKind kind,
+                bool isEnemy,
+                TileBase tile,
                 int health,
                 int counterDamage,
                 Vector2Int anchorPosition,
-                int footprintSize,
-                int blockTier)
+                int footprintSize)
             {
-                Kind = kind;
+                IsEnemy = isEnemy;
+                Tile = tile;
                 Health = health;
                 CounterDamage = counterDamage;
                 AnchorPosition = anchorPosition;
                 FootprintSize = footprintSize;
-                BlockTier = blockTier;
             }
 
-            public CellKind Kind { get; }
+            public bool IsEnemy { get; }
+            public TileBase Tile { get; }
             public int Health { get; }
             public int CounterDamage { get; }
             public Vector2Int AnchorPosition { get; }
             public int FootprintSize { get; }
-            public int BlockTier { get; }
-            public bool IsEnemy => Kind is CellKind.Grub or CellKind.Bat or CellKind.Golem;
-        }
-
-        private readonly struct MonsterPlacement
-        {
-            public MonsterPlacement(
-                CellKind kind,
-                int health,
-                int counterDamage,
-                Vector2Int anchorPosition,
-                int size)
-            {
-                Kind = kind;
-                Health = health;
-                CounterDamage = counterDamage;
-                AnchorPosition = anchorPosition;
-                Size = size;
-            }
-
-            public CellKind Kind { get; }
-            public int Health { get; }
-            public int CounterDamage { get; }
-            public Vector2Int AnchorPosition { get; }
-            public int Size { get; }
 
             public bool Contains(Vector2Int position)
             {
                 return position.x >= AnchorPosition.x
-                    && position.x < AnchorPosition.x + Size
+                    && position.x < AnchorPosition.x + FootprintSize
                     && position.y <= AnchorPosition.y
-                    && position.y > AnchorPosition.y - Size;
+                    && position.y > AnchorPosition.y - FootprintSize;
             }
         }
 
@@ -148,7 +139,6 @@ namespace HeavyDowner.Gameplay
         private struct RowMutation
         {
             public ushort DestroyedMask;
-            public ushort DamagedMask;
         }
 
         private void Awake()
@@ -189,8 +179,8 @@ namespace HeavyDowner.Gameplay
                 return new BoardActionResult(true, 0);
             }
 
-            int currentHealth = (mutation.DamagedMask & cellMask) != 0
-                ? remainingHealthByCell[statePosition]
+            int currentHealth = remainingHealthByCell.TryGetValue(statePosition, out int savedHealth)
+                ? savedHealth
                 : cell.Health;
             int remainingHealth = currentHealth - damage;
             int appliedDamage = Mathf.Min(damage, currentHealth);
@@ -202,7 +192,6 @@ namespace HeavyDowner.Gameplay
             if (remainingHealth <= 0)
             {
                 mutation.DestroyedMask |= cellMask;
-                mutation.DamagedMask &= (ushort)~cellMask;
                 remainingHealthByCell.Remove(statePosition);
                 SetRowMutation(statePosition.y, mutation);
                 ClearVisibleCell(cell);
@@ -210,7 +199,6 @@ namespace HeavyDowner.Gameplay
                 return new BoardActionResult(true, destructionDamage);
             }
 
-            mutation.DamagedMask |= cellMask;
             remainingHealthByCell[statePosition] = remainingHealth;
             SetRowMutation(statePosition.y, mutation);
             ShowHealthBar(cell, remainingHealth);
@@ -353,12 +341,12 @@ namespace HeavyDowner.Gameplay
                             continue;
                         }
 
-                        enemyChunkTiles[tileIndex] = GetTile(cell);
+                        enemyChunkTiles[tileIndex] = cell.Tile;
                         monsterVisuals.Add(new MonsterVisual(cell.AnchorPosition, cell.FootprintSize));
                     }
                     else
                     {
-                        terrainChunkTiles[tileIndex] = GetTile(cell);
+                        terrainChunkTiles[tileIndex] = cell.Tile;
                     }
                 }
             }
@@ -395,104 +383,75 @@ namespace HeavyDowner.Gameplay
                 return false;
             }
 
-            if (TryGetMonsterPlacement(position, out MonsterPlacement monster))
+            if (TryGetMonsterCell(position, out cell))
             {
-                cell = new CellDefinition(
-                    monster.Kind,
-                    monster.Health,
-                    monster.CounterDamage,
-                    monster.AnchorPosition,
-                    monster.Size,
-                    -1);
                 return true;
             }
 
             int blockTier = GetBlockTier(-position.y);
+            BlockTierDefinition block = blockTiers[blockTier];
             cell = new CellDefinition(
-                CellKind.Block,
-                blockHealthByTier[blockTier],
+                false,
+                block.Tile,
+                block.Health,
                 blockDamage,
                 position,
-                1,
-                blockTier);
+                1);
             return true;
         }
 
         private int GetBlockTier(int depth)
         {
-            return Mathf.Min(blockTiles.Length - 1, (depth - 1) / metersPerBlockTier);
+            return Mathf.Min(blockTiers.Length - 1, (depth - 1) / metersPerBlockTier);
         }
 
-        private bool TryGetMonsterPlacement(Vector2Int position, out MonsterPlacement monster)
+        private bool TryGetMonsterCell(Vector2Int position, out CellDefinition cell)
         {
             int depth = -position.y;
             int band = (depth - 1) / MONSTER_BAND_HEIGHT;
             Vector2Int bandSeed = new(band, 0);
             if (Random01(bandSeed, 0x63D83595u) >= monsterSpawnChance)
             {
-                monster = default;
+                cell = default;
                 return false;
             }
 
             float sizeRoll = Random01(bandSeed, 0xC2B2AE35u);
-            int size;
-            CellKind kind;
-            int health;
-            int counterDamage;
+            MonsterDefinition monster;
 
             if (sizeRoll < monster4x4Chance)
             {
-                size = 4;
-                kind = CellKind.Golem;
-                health = 300;
-                counterDamage = 200;
+                monster = golem;
             }
             else if (sizeRoll < monster4x4Chance + monster2x2Chance)
             {
-                size = 2;
-                kind = CellKind.Bat;
-                health = 200;
-                counterDamage = 100;
+                monster = bat;
             }
             else
             {
-                size = 1;
-                kind = CellKind.Grub;
-                health = 100;
-                counterDamage = 100;
+                monster = grub;
             }
 
-            int verticalRange = MONSTER_BAND_HEIGHT - size + 1;
+            int verticalRange = MONSTER_BAND_HEIGHT - monster.Size + 1;
             int verticalOffset = Mathf.Min(
                 verticalRange - 1,
                 Mathf.FloorToInt(Random01(bandSeed, 0x165667B1u) * verticalRange));
             int topRow = -(band * MONSTER_BAND_HEIGHT + 1 + verticalOffset);
 
             int halfWidth = world.HorizontalCellCount / 2;
-            int horizontalRange = world.HorizontalCellCount - size + 1;
+            int horizontalRange = world.HorizontalCellCount - monster.Size + 1;
             int leftColumn = -halfWidth + Mathf.Min(
                 horizontalRange - 1,
                 Mathf.FloorToInt(Random01(bandSeed, 0x27D4EB2Fu) * horizontalRange));
 
-            monster = new MonsterPlacement(
-                kind,
-                health,
-                counterDamage,
+            cell = new CellDefinition(
+                true,
+                monster.Tile,
+                monster.Health,
+                monster.CounterDamage,
                 new Vector2Int(leftColumn, topRow),
-                size);
-            return monster.Contains(position);
-        }
-
-        private TileBase GetTile(CellDefinition cell)
-        {
-            return cell.Kind switch
-            {
-                CellKind.Block => blockTiles[cell.BlockTier],
-                CellKind.Grub => grubTile,
-                CellKind.Bat => batTile,
-                CellKind.Golem => golemTile,
-                _ => blockTiles[0]
-            };
+                monster.Size);
+            return cell.Contains(position);
         }
 
         private void ApplyMonsterTransforms()

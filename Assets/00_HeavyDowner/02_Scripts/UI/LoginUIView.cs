@@ -38,15 +38,6 @@ namespace HeavyDowner.UI
             guestLoginButton.interactable = false;
         }
 
-        public void ShowLoginFailed()
-        {
-            googleLoginButton.gameObject.SetActive(true);
-            googleLoginButton.interactable = true;
-            guestLoginButton.gameObject.SetActive(true);
-            guestLoginButton.interactable = true;
-            PopupSingleton.Instance.ShowMessage("로그인에 실패했습니다.\r\n다시 시도해주세요.");
-        }
-
         public void ShowCompleted()
         {
             googleLoginButton.gameObject.SetActive(false);

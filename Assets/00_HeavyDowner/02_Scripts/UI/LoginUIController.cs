@@ -52,7 +52,8 @@ namespace HeavyDowner.UI
         {
             if (!success)
             {
-                view.ShowLoginFailed();
+                view.ShowLogin();
+                PopupSingleton.Instance.ShowMessage("로그인에 실패했습니다.\r\n다시 시도해주세요.");
                 return;
             }
 
