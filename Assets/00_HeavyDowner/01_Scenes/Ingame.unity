@@ -2339,7 +2339,7 @@ MonoBehaviour:
   target: {fileID: 3100000001}
   verticalOffset: 1.5
   followSpeed: 5
-  scrollToTopSpeed: 3
+  scrollToTopSpeed: 10
 --- !u!1 &2026776926
 GameObject:
   m_ObjectHideFlags: 0
