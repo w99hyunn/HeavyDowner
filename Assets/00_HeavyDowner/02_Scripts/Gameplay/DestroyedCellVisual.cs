@@ -23,12 +23,8 @@ namespace HeavyDowner.Gameplay
 
         public void Initialize()
         {
-            if (velocities == null || velocities.Length != shardPivots.Length)
-            {
-                velocities = new Vector2[shardPivots.Length];
-            }
-
-            propertyBlock ??= new MaterialPropertyBlock();
+            velocities = new Vector2[shardPivots.Length];
+            propertyBlock = new MaterialPropertyBlock();
             IsPlaying = false;
             gameObject.SetActive(false);
         }

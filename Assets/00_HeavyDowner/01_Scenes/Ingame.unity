@@ -2465,7 +2465,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.IngameUIView
   healthSlider: {fileID: 542126255}
-  healthFillImage: {fileID: 1526948494}
   shieldFillRect: {fileID: 3500000001}
   positionText: {fileID: 1741146031}
   skillButtons:
@@ -2952,7 +2951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019dc4fc5a8a55e45a06634ac41e216d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DescentBoardController
-  world: {fileID: 3200000003}
   streamingCamera: {fileID: 1962251563}
   terrainTilemap: {fileID: 3300000002}
   enemyTilemap: {fileID: 2113898841}
@@ -2980,8 +2978,6 @@ MonoBehaviour:
   blockDamage: 100
   healthBarPool: {fileID: 3480000003}
   damageTextPool: {fileID: 3480000004}
-  destroyedCellVisualPool: {fileID: 3200000005}
-  hitFlashController: {fileID: 3200000006}
 --- !u!114 &3200000005
 MonoBehaviour:
   m_ObjectHideFlags: 0

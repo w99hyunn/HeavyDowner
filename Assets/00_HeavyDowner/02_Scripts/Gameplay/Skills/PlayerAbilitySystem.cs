@@ -10,7 +10,6 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private DescentBoardController board;
 
         private readonly Dictionary<SkillSlotId, SkillRuntime> skillsBySlot = new();
-        private readonly List<SkillRuntime> skillRuntimes = new();
         private IngamePlayerController player;
         private SkillCuePlayer cuePlayer;
 
@@ -39,13 +38,12 @@ namespace HeavyDowner.Gameplay
                     destroyCancellationToken,
                     HandleSkillStateChanged);
                 skillsBySlot.Add(slot.SlotId, runtime);
-                skillRuntimes.Add(runtime);
             }
         }
 
         private void OnDisable()
         {
-            foreach (SkillRuntime runtime in skillRuntimes)
+            foreach (SkillRuntime runtime in skillsBySlot.Values)
             {
                 runtime.Cancel();
             }
@@ -53,7 +51,7 @@ namespace HeavyDowner.Gameplay
 
         private void OnDestroy()
         {
-            foreach (SkillRuntime runtime in skillRuntimes)
+            foreach (SkillRuntime runtime in skillsBySlot.Values)
             {
                 runtime.Dispose();
             }
@@ -105,7 +103,7 @@ namespace HeavyDowner.Gameplay
         private SkillCapability GetOccupiedCapabilities()
         {
             SkillCapability occupiedCapabilities = SkillCapability.None;
-            foreach (SkillRuntime runtime in skillRuntimes)
+            foreach (SkillRuntime runtime in skillsBySlot.Values)
             {
                 if (runtime.IsActive)
                 {

@@ -5,8 +5,6 @@ namespace HeavyDowner.Gameplay
 {
     public sealed class DamageTextVisual : MonoBehaviour
     {
-        [SerializeField] private TMP_Text damageText;
-
         [Header("Block / Enemy")]
         [SerializeField] private Color worldDamageColor = new(1f, 0.72f, 0.15f, 1f);
         [SerializeField] private float jumpSpeed = 0.75f;
@@ -18,12 +16,18 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private float playerHoldDuration = 0.12f;
         [SerializeField] private float playerFadeDuration = 0.45f;
 
+        private TMP_Text damageText;
         private Vector2 velocity;
         private Color activeColor;
         private float elapsedTime;
         private bool isBallistic;
 
         public bool IsPlaying { get; private set; }
+
+        private void Awake()
+        {
+            TryGetComponent<TMP_Text>(out damageText);
+        }
 
         public void Initialize()
         {

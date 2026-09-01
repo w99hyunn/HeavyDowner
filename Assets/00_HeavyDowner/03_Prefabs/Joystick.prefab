@@ -90,8 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: HeavyDowner.UI::HeavyDowner.UI.JoystickControl
   joystickBackground: {fileID: 2004}
-  stickHandler: {fileID: 3000}
-  movementRange: 75
+  onScreenStick: {fileID: 3004}
 --- !u!1 &2000
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ namespace HeavyDowner.Module
         {
             AsyncOperation op = SceneManager.LoadSceneAsync(scene.ToString(), LoadSceneMode.Single);
 
-            await TrackAsync(op);
+            await WaitAsync(op);
         }
 
         private static async Awaitable LoadOverlayAsync(SceneType scene)
@@ -73,14 +73,6 @@ namespace HeavyDowner.Module
             Scene loadingScene = SceneManager.GetSceneByName(SceneType.Loading.ToString());
             op = SceneManager.UnloadSceneAsync(loadingScene);
             await WaitAsync(op);
-        }
-
-        private static async Awaitable TrackAsync(AsyncOperation op)
-        {
-            while (!op.isDone)
-            {
-                await Awaitable.NextFrameAsync();
-            }
         }
 
         private static async Awaitable<float> WaitAsync(AsyncOperation op)

@@ -102,9 +102,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7e04a23c5694c278a1db0386e5f7a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.CellHealthBar
-  barRect: {fileID: 1001}
-  healthSlider: {fileID: 1003}
-  pixelsPerUnit: 100
 --- !u!1 &2000
 GameObject:
   m_ObjectHideFlags: 0

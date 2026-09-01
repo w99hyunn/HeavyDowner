@@ -102,18 +102,5 @@ namespace HeavyDowner.Module
             HighScore = score;
         }
 
-        public static async Awaitable SaveAsync(string nickname, int currency)
-        {
-            string nicknameValue = string.IsNullOrWhiteSpace(nickname) ? DEFAULT_NICKNAME : nickname.Trim();
-            var data = new Dictionary<string, object>
-            {
-                [NICKNAME_KEY] = nicknameValue,
-                [CURRENCY_KEY] = currency
-            };
-
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
-            Nickname = nicknameValue;
-            Currency = currency;
-        }
     }
 }

@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.OnScreen;
 
 namespace HeavyDowner.UI
 {
     public class JoystickControl : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [SerializeField] private CanvasGroup joystickBackground;
-        [SerializeField] private GameObject stickHandler;
-        [SerializeField] private float movementRange = 75f;
+        [SerializeField] private OnScreenStick onScreenStick;
 
         public Vector2 Direction { get; private set; }
 
@@ -20,19 +20,19 @@ namespace HeavyDowner.UI
         {
             joystickBackground.transform.position = eventData.position;
             joystickBackground.alpha = 1f;
-            ExecuteEvents.Execute(stickHandler, eventData, ExecuteEvents.pointerDownHandler);
+            ExecuteEvents.Execute(onScreenStick.gameObject, eventData, ExecuteEvents.pointerDownHandler);
             UpdateDirection(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            ExecuteEvents.Execute(stickHandler, eventData, ExecuteEvents.dragHandler);
+            ExecuteEvents.Execute(onScreenStick.gameObject, eventData, ExecuteEvents.dragHandler);
             UpdateDirection(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            ExecuteEvents.Execute(stickHandler, eventData, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(onScreenStick.gameObject, eventData, ExecuteEvents.pointerUpHandler);
             Direction = Vector2.zero;
             joystickBackground.alpha = 0f;
         }
@@ -46,7 +46,7 @@ namespace HeavyDowner.UI
                 eventData.pressEventCamera,
                 out Vector2 localPoint);
 
-            Direction = Vector2.ClampMagnitude(localPoint / movementRange, 1f);
+            Direction = Vector2.ClampMagnitude(localPoint / onScreenStick.movementRange, 1f);
         }
     }
 }

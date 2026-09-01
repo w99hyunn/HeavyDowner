@@ -375,7 +375,6 @@ MonoBehaviour:
   fadeInDuration: 1
   displayDuration: 1
   fadeOutDuration: 1
-  nextScene: 1
 --- !u!1 &910457756
 GameObject:
   m_ObjectHideFlags: 0

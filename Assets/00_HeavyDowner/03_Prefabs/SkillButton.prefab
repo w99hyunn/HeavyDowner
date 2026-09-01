@@ -138,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7048691b0e694596bbd45c1d3601690b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.SkillButtonView
-  button: {fileID: 1004}
   iconImage: {fileID: 2003}
   cooldownOverlay: {fileID: 3003}
   readyAnimator: {fileID: 4005}

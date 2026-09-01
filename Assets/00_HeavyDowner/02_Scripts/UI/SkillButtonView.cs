@@ -1,3 +1,4 @@
+using System;
 using HeavyDowner.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,16 +9,32 @@ namespace HeavyDowner.UI
     {
         private static readonly int READY_STATE_HASH = Animator.StringToHash("Ready");
 
-        [SerializeField] private Button button;
         [SerializeField] private Image iconImage;
         [SerializeField] private Image cooldownOverlay;
         [SerializeField] private Animator readyAnimator;
         [SerializeField] private SkillSlotId slotId;
 
+        private Button button;
         private bool wasCoolingDown;
 
-        public Button Button => button;
+        public event Action<SkillSlotId> Clicked;
+
         public SkillSlotId SlotId => slotId;
+
+        private void Awake()
+        {
+            TryGetComponent<Button>(out button);
+        }
+
+        private void OnEnable()
+        {
+            button.onClick.AddListener(OnClicked);
+        }
+
+        private void OnDisable()
+        {
+            button.onClick.RemoveListener(OnClicked);
+        }
 
         public void SetIcon(Sprite icon)
         {
@@ -42,6 +59,11 @@ namespace HeavyDowner.UI
             }
 
             wasCoolingDown = isCoolingDown;
+        }
+
+        private void OnClicked()
+        {
+            Clicked?.Invoke(slotId);
         }
     }
 }

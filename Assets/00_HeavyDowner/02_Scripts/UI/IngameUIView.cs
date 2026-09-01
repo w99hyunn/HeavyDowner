@@ -8,11 +8,11 @@ namespace HeavyDowner.UI
     public sealed class IngameUIView : MonoBehaviour
     {
         [SerializeField] private Slider healthSlider;
-        [SerializeField] private Image healthFillImage;
         [SerializeField] private RectTransform shieldFillRect;
         [SerializeField] private TMP_Text positionText;
         [SerializeField] private SkillButtonView[] skillButtons;
 
+        private Image healthFillImage;
         private float targetHealth;
         private float targetShield;
         private float displayedShield;
@@ -27,6 +27,7 @@ namespace HeavyDowner.UI
 
         private void Awake()
         {
+            healthSlider.fillRect.TryGetComponent<Image>(out healthFillImage);
             targetHealth = healthSlider.value;
             targetShield = 0f;
             displayedShield = 0f;

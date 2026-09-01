@@ -5,30 +5,28 @@ namespace HeavyDowner.Gameplay
 {
     public sealed class CellHealthBar : MonoBehaviour
     {
-        [SerializeField] private RectTransform barRect;
-        [SerializeField] private Slider healthSlider;
-        [SerializeField] private float pixelsPerUnit = 100f;
-
+        private Slider healthSlider;
         private float width;
+
+        private void Awake()
+        {
+            TryGetComponent<Slider>(out healthSlider);
+        }
 
         public void Show(Vector3 position, float barWidth, float normalizedHealth)
         {
             transform.position = position;
-            if (!Mathf.Approximately(width, barWidth))
+            float rectWidth = barWidth / Mathf.Abs(transform.lossyScale.x);
+            if (!Mathf.Approximately(width, rectWidth))
             {
-                width = barWidth;
-                barRect.SetSizeWithCurrentAnchors(
+                width = rectWidth;
+                ((RectTransform)transform).SetSizeWithCurrentAnchors(
                     RectTransform.Axis.Horizontal,
-                    width * pixelsPerUnit);
+                    width);
             }
 
-            SetValue(normalizedHealth);
-            gameObject.SetActive(true);
-        }
-
-        public void SetValue(float normalizedHealth)
-        {
             healthSlider.SetValueWithoutNotify(normalizedHealth);
+            gameObject.SetActive(true);
         }
 
         public void Hide()

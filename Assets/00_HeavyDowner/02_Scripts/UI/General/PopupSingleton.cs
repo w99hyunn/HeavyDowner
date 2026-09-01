@@ -10,14 +10,15 @@ namespace HeavyDowner.UI
         private static PopupSingleton instance;
         public static PopupSingleton Instance => instance;
 
-        [SerializeField] private PopupUIView view;
-
+        private PopupUIView view;
         private Action confirmAction;
         private Action cancelAction;
 
 
         private void Awake()
         {
+            TryGetComponent<PopupUIView>(out view);
+
             if (instance != null && instance != this)
             {
                 Destroy(gameObject);

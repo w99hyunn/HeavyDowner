@@ -7,15 +7,9 @@ namespace HeavyDowner.UI
 {
     public class LoadingVisual : MonoBehaviour
     {
-        private TMP_Text loadingText;
-
-        private void Awake()
-        {
-            TryGetComponent<TMP_Text>(out loadingText);
-        }
-
         private async Awaitable Start()
         {
+            TryGetComponent<TMP_Text>(out TMP_Text loadingText);
             CancellationToken cancellationToken = destroyCancellationToken;
             bool showThreeDots = false;
 

@@ -48,12 +48,5 @@ namespace HeavyDowner.Gameplay
             return Mathf.Abs(column) <= horizontalCellCount / 2;
         }
 
-        public float ClampHorizontalCell(float position)
-        {
-            float origin = transform.position.x;
-            float halfCellRange = (horizontalCellCount - 1) * grid.cellSize.x * 0.5f;
-            float snappedPosition = origin + Mathf.Round((position - origin) / grid.cellSize.x) * grid.cellSize.x;
-            return Mathf.Clamp(snappedPosition, origin - halfCellRange, origin + halfCellRange);
-        }
     }
 }

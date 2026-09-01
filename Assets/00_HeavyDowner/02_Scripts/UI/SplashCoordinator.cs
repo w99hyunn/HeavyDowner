@@ -9,7 +9,6 @@ namespace HeavyDowner.UI
         [SerializeField] private float fadeInDuration = 1f;
         [SerializeField] private float displayDuration = 1f;
         [SerializeField] private float fadeOutDuration = 1f;
-        [SerializeField] private SceneType nextScene = SceneType.Login;
 
         private void Awake()
         {
@@ -21,7 +20,7 @@ namespace HeavyDowner.UI
             await FadeTransition.FadeInAsync(logoCanvasGroup, fadeInDuration);
             await Awaitable.WaitForSecondsAsync(displayDuration);
             await FadeTransition.FadeOutAsync(logoCanvasGroup, fadeOutDuration);
-            await LoadingBridgeService.LoadAsync(nextScene, LoadingMode.None);
+            await LoadingBridgeService.LoadAsync(SceneType.Login, LoadingMode.None);
         }
     }
 }

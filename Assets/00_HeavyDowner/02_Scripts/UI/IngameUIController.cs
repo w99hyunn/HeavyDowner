@@ -1,7 +1,6 @@
-using System.Threading;
 using HeavyDowner.Gameplay;
+using System.Threading;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace HeavyDowner.UI
 {
@@ -11,18 +10,11 @@ namespace HeavyDowner.UI
 
         private IngameUIView view;
         private PlayerAbilitySystem abilitySystem;
-        private UnityAction[] skillButtonActions;
 
         private void Awake()
         {
             TryGetComponent<IngameUIView>(out view);
             player.TryGetComponent<PlayerAbilitySystem>(out abilitySystem);
-            skillButtonActions = new UnityAction[view.SkillButtonCount];
-            for (int i = 0; i < skillButtonActions.Length; i++)
-            {
-                SkillSlotId slotId = view.GetSkillButton(i).SlotId;
-                skillButtonActions[i] = () => abilitySystem.TryActivate(slotId);
-            }
         }
 
         private void OnEnable()
@@ -30,9 +22,9 @@ namespace HeavyDowner.UI
             player.HealthChanged += view.SetHealth;
             player.ShieldChanged += view.SetShield;
             player.DepthChanged += view.SetDepth;
-            for (int i = 0; i < skillButtonActions.Length; i++)
+            for (int i = 0; i < view.SkillButtonCount; i++)
             {
-                view.GetSkillButton(i).Button.onClick.AddListener(skillButtonActions[i]);
+                view.GetSkillButton(i).Clicked += HandleSkillClicked;
             }
 
             abilitySystem.AvailabilityChanged += RefreshSkillState;
@@ -58,13 +50,18 @@ namespace HeavyDowner.UI
             player.HealthChanged -= view.SetHealth;
             player.ShieldChanged -= view.SetShield;
             player.DepthChanged -= view.SetDepth;
-            for (int i = 0; i < skillButtonActions.Length; i++)
+            for (int i = 0; i < view.SkillButtonCount; i++)
             {
-                view.GetSkillButton(i).Button.onClick.RemoveListener(skillButtonActions[i]);
+                view.GetSkillButton(i).Clicked -= HandleSkillClicked;
             }
 
             abilitySystem.AvailabilityChanged -= RefreshSkillState;
             abilitySystem.CooldownStarted -= HandleCooldownStarted;
+        }
+
+        private void HandleSkillClicked(SkillSlotId slotId)
+        {
+            abilitySystem.TryActivate(slotId);
         }
 
         private void RefreshSkillState()

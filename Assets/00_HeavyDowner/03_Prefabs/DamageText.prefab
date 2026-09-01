@@ -150,7 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e1f018b10b4bcd9d080de39b724fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DamageTextVisual
-  damageText: {fileID: 7332824305788114725}
   worldDamageColor: {r: 1, g: 0.72, b: 0.15, a: 1}
   jumpSpeed: 0.75
   horizontalSpeed: 0.45

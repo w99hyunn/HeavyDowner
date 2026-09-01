@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 namespace HeavyDowner.Gameplay
@@ -22,8 +21,6 @@ namespace HeavyDowner.Gameplay
     {
         private const int MONSTER_BAND_HEIGHT = 4;
 
-        [SerializeField] private VerticalTilemapWorld world;
-        [FormerlySerializedAs("rewindCamera")]
         [SerializeField] private Transform streamingCamera;
         [SerializeField] private Tilemap terrainTilemap;
         [SerializeField] private Tilemap enemyTilemap;
@@ -53,8 +50,10 @@ namespace HeavyDowner.Gameplay
         [Header("Presentation")]
         [SerializeField] private CellHealthBarPool healthBarPool;
         [SerializeField] private DamageTextPool damageTextPool;
-        [SerializeField] private DestroyedCellVisualPool destroyedCellVisualPool;
-        [SerializeField] private TileHitFlashController hitFlashController;
+
+        private VerticalTilemapWorld world;
+        private DestroyedCellVisualPool destroyedCellVisualPool;
+        private TileHitFlashController hitFlashController;
 
         private readonly List<RowMutation> rowMutations = new();
         private readonly HashSet<int> loadedChunks = new();
@@ -67,9 +66,6 @@ namespace HeavyDowner.Gameplay
         private TileBase[] enemyChunkTiles;
         private int currentStreamingChunk = int.MaxValue;
         private int randomSeed;
-
-        public int RecordedRowCount => rowMutations.Count;
-        public int LoadedChunkCount => loadedChunks.Count;
 
         private enum CellKind
         {
@@ -153,6 +149,13 @@ namespace HeavyDowner.Gameplay
         {
             public ushort DestroyedMask;
             public ushort DamagedMask;
+        }
+
+        private void Awake()
+        {
+            TryGetComponent<VerticalTilemapWorld>(out world);
+            TryGetComponent<DestroyedCellVisualPool>(out destroyedCellVisualPool);
+            TryGetComponent<TileHitFlashController>(out hitFlashController);
         }
 
         private void Start()

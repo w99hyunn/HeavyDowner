@@ -26,8 +26,6 @@ namespace HeavyDowner.Gameplay
             public CueObject CueObject;
             public Transform Anchor;
             public float EndTime;
-            public bool FollowsAnchor;
-            public bool IsLoop;
         }
 
         private readonly Dictionary<SkillCueDefinition, CuePool> pools = new();
@@ -39,7 +37,7 @@ namespace HeavyDowner.Gameplay
             for (int i = activeCues.Count - 1; i >= 0; i--)
             {
                 ActiveCue activeCue = activeCues[i];
-                if (activeCue.FollowsAnchor)
+                if (activeCue.Anchor != null)
                 {
                     activeCue.CueObject.Root.transform.position = activeCue.Anchor.position;
                 }
@@ -50,7 +48,7 @@ namespace HeavyDowner.Gameplay
                     activeCue.Pool.Definition.RotationSpeed * Time.deltaTime,
                     Space.Self);
 
-                if (!activeCue.IsLoop && Time.time >= activeCue.EndTime)
+                if (activeCue.Anchor == null && Time.time >= activeCue.EndTime)
                 {
                     Release(i);
                 }
@@ -127,9 +125,7 @@ namespace HeavyDowner.Gameplay
                 Id = handleId,
                 Pool = pool,
                 CueObject = cueObject,
-                Anchor = anchor,
-                FollowsAnchor = true,
-                IsLoop = true
+                Anchor = anchor
             });
             return new SkillCueHandle(handleId);
         }
