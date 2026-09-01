@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class SkillRuntime : IDisposable
+    public sealed class SkillRuntime
     {
         private readonly SkillExecutionContext context;
         private readonly CancellationToken lifetimeToken;
@@ -49,11 +49,6 @@ namespace HeavyDowner.Gameplay
             }
 
             activationCancellation.Cancel();
-        }
-
-        public void Dispose()
-        {
-            Cancel();
         }
 
         private async Awaitable ExecuteAsync(CancellationTokenSource cancellationSource)

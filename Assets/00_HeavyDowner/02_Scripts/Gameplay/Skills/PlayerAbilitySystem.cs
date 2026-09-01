@@ -6,7 +6,7 @@ namespace HeavyDowner.Gameplay
 {
     public sealed class PlayerAbilitySystem : MonoBehaviour
     {
-        [SerializeField] private SkillLoadoutDefinition loadout;
+        [SerializeField] private SkillSlotDefinition[] slots;
         [SerializeField] private DescentBoardController board;
 
         private readonly Dictionary<SkillSlotId, SkillRuntime> skillsBySlot = new();
@@ -23,7 +23,7 @@ namespace HeavyDowner.Gameplay
 
             SkillExecutionContext context = new(player, board, cuePlayer);
             List<SkillCueDefinition> cues = new();
-            foreach (SkillSlotDefinition slot in loadout.Slots)
+            foreach (SkillSlotDefinition slot in slots)
             {
                 slot.Skill.CollectCues(cues);
                 foreach (SkillCueDefinition cue in cues)
@@ -46,14 +46,6 @@ namespace HeavyDowner.Gameplay
             foreach (SkillRuntime runtime in skillsBySlot.Values)
             {
                 runtime.Cancel();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            foreach (SkillRuntime runtime in skillsBySlot.Values)
-            {
-                runtime.Dispose();
             }
         }
 

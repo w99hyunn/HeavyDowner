@@ -9,8 +9,7 @@ namespace HeavyDowner.Gameplay
         None = 0,
         Movement = 1 << 0,
         Attack = 1 << 1,
-        Defense = 1 << 2,
-        All = Movement | Attack | Defense
+        Defense = 1 << 2
     }
 
     public enum SkillSlotId
@@ -18,6 +17,16 @@ namespace HeavyDowner.Gameplay
         Left,
         Center,
         Right
+    }
+
+    [Serializable]
+    public struct SkillSlotDefinition
+    {
+        [SerializeField] private SkillSlotId slotId;
+        [SerializeField] private SkillDefinition skill;
+
+        public SkillSlotId SlotId => slotId;
+        public SkillDefinition Skill => skill;
     }
 
     public interface ISkillActor

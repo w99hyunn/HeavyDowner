@@ -2339,7 +2339,7 @@ MonoBehaviour:
   target: {fileID: 3100000001}
   verticalOffset: 1.5
   followSpeed: 5
-  scrollToTopSpeed: 10
+  scrollToTopSpeed: 20
 --- !u!1 &2026776926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2852,7 +2852,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ea7bb5b719b6094aab37f6bb412c11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.PlayerAbilitySystem
-  loadout: {fileID: 11400000, guid: f101cc11dd22ee33ff44556677880001, type: 2}
+  slots:
+  - slotId: 0
+    skill: {fileID: 11400000, guid: d101c4e72a9b4f01a234567890abcde1, type: 2}
+  - slotId: 1
+    skill: {fileID: 11400000, guid: d202c4e72a9b4f01a234567890abcde2, type: 2}
+  - slotId: 2
+    skill: {fileID: 11400000, guid: d303c4e72a9b4f01a234567890abcde3, type: 2}
   board: {fileID: 3200000004}
 --- !u!114 &3100000007
 MonoBehaviour:
