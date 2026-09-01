@@ -21,42 +21,23 @@ namespace HeavyDowner.Gameplay
     {
         private const int MONSTER_BAND_HEIGHT = 4;
 
-        [Serializable]
-        private struct BlockTierDefinition
-        {
-            [SerializeField] private TileBase tile;
-            [SerializeField, Min(1)] private int health;
-
-            public TileBase Tile => tile;
-            public int Health => health;
-        }
-
-        [Serializable]
-        private struct MonsterDefinition
-        {
-            [SerializeField] private TileBase tile;
-            [SerializeField, Min(1)] private int size;
-            [SerializeField, Min(1)] private int health;
-            [SerializeField, Min(0)] private int counterDamage;
-
-            public TileBase Tile => tile;
-            public int Size => size;
-            public int Health => health;
-            public int CounterDamage => counterDamage;
-        }
-
         [SerializeField] private Transform streamingCamera;
         [SerializeField] private Tilemap terrainTilemap;
         [SerializeField] private Tilemap enemyTilemap;
 
         [Header("Block Tiers")]
         [SerializeField, Min(1)] private int metersPerBlockTier = 50;
-        [SerializeField] private BlockTierDefinition[] blockTiers = new BlockTierDefinition[10];
+        [SerializeField] private TileBase[] blockTiles = new TileBase[10];
+        [SerializeField] private int[] blockHealthByTier =
+        {
+            100, 100, 200, 200, 300,
+            300, 400, 500, 600, 800
+        };
 
         [Header("Enemies")]
-        [SerializeField] private MonsterDefinition grub;
-        [SerializeField] private MonsterDefinition bat;
-        [SerializeField] private MonsterDefinition golem;
+        [SerializeField] private TileBase grubTile;
+        [SerializeField] private TileBase batTile;
+        [SerializeField] private TileBase golemTile;
 
         [Header("Streaming")]
         [SerializeField, Min(8)] private int chunkHeight = 32;
@@ -389,11 +370,10 @@ namespace HeavyDowner.Gameplay
             }
 
             int blockTier = GetBlockTier(-position.y);
-            BlockTierDefinition block = blockTiers[blockTier];
             cell = new CellDefinition(
                 false,
-                block.Tile,
-                block.Health,
+                blockTiles[blockTier],
+                blockHealthByTier[blockTier],
                 blockDamage,
                 position,
                 1);
@@ -402,7 +382,7 @@ namespace HeavyDowner.Gameplay
 
         private int GetBlockTier(int depth)
         {
-            return Mathf.Min(blockTiers.Length - 1, (depth - 1) / metersPerBlockTier);
+            return Mathf.Min(blockTiles.Length - 1, (depth - 1) / metersPerBlockTier);
         }
 
         private bool TryGetMonsterCell(Vector2Int position, out CellDefinition cell)
@@ -417,40 +397,52 @@ namespace HeavyDowner.Gameplay
             }
 
             float sizeRoll = Random01(bandSeed, 0xC2B2AE35u);
-            MonsterDefinition monster;
+            TileBase monsterTile;
+            int monsterSize;
+            int monsterHealth;
+            int monsterCounterDamage;
 
             if (sizeRoll < monster4x4Chance)
             {
-                monster = golem;
+                monsterTile = golemTile;
+                monsterSize = 4;
+                monsterHealth = 300;
+                monsterCounterDamage = 200;
             }
             else if (sizeRoll < monster4x4Chance + monster2x2Chance)
             {
-                monster = bat;
+                monsterTile = batTile;
+                monsterSize = 2;
+                monsterHealth = 200;
+                monsterCounterDamage = 100;
             }
             else
             {
-                monster = grub;
+                monsterTile = grubTile;
+                monsterSize = 1;
+                monsterHealth = 100;
+                monsterCounterDamage = 100;
             }
 
-            int verticalRange = MONSTER_BAND_HEIGHT - monster.Size + 1;
+            int verticalRange = MONSTER_BAND_HEIGHT - monsterSize + 1;
             int verticalOffset = Mathf.Min(
                 verticalRange - 1,
                 Mathf.FloorToInt(Random01(bandSeed, 0x165667B1u) * verticalRange));
             int topRow = -(band * MONSTER_BAND_HEIGHT + 1 + verticalOffset);
 
             int halfWidth = world.HorizontalCellCount / 2;
-            int horizontalRange = world.HorizontalCellCount - monster.Size + 1;
+            int horizontalRange = world.HorizontalCellCount - monsterSize + 1;
             int leftColumn = -halfWidth + Mathf.Min(
                 horizontalRange - 1,
                 Mathf.FloorToInt(Random01(bandSeed, 0x27D4EB2Fu) * horizontalRange));
 
             cell = new CellDefinition(
                 true,
-                monster.Tile,
-                monster.Health,
-                monster.CounterDamage,
+                monsterTile,
+                monsterHealth,
+                monsterCounterDamage,
                 new Vector2Int(leftColumn, topRow),
-                monster.Size);
+                monsterSize);
             return cell.Contains(position);
         }
 

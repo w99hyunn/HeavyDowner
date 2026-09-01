@@ -25,8 +25,8 @@ namespace HeavyDowner.Gameplay
                     width);
             }
 
-            healthSlider.SetValueWithoutNotify(normalizedHealth);
             gameObject.SetActive(true);
+            healthSlider.SetValueWithoutNotify(normalizedHealth);
         }
 
         public void Hide()
