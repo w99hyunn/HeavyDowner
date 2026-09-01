@@ -1,34 +1,43 @@
 fileFormatVersion: 2
-guid: 1cb51d080b0b47b4089ec9f94d3aff42
+guid: fa91c0d8b5d94a338e6c7f201a4bd652
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9072271683839697207
-    second: Enemy_Grub_0
+      213: 840100001
+    second: Enemy_Grub_Idle_0
   - first:
-      213: -8976260257623093492
-    second: Enemy_Grub_1
+      213: 840100002
+    second: Enemy_Grub_Idle_1
   - first:
-      213: -4757987081789267282
-    second: Enemy_Grub_2
+      213: 840100003
+    second: Enemy_Grub_Idle_2
   - first:
-      213: 999175960550359185
-    second: Enemy_Grub_3
+      213: 840100004
+    second: Enemy_Grub_Idle_3
   - first:
-      213: -1802755056842606527
-    second: Enemy_Grub_4
+      213: 840200001
+    second: Enemy_Bat_Idle_0
   - first:
-      213: 8624503432853515659
-    second: Enemy_Grub_5
+      213: 840200002
+    second: Enemy_Bat_Idle_1
   - first:
-      213: -680313332172410135
-    second: Enemy_Grub_6
+      213: 840200003
+    second: Enemy_Bat_Idle_2
   - first:
-      213: -2964026005282767008
-    second: Enemy_Grub_7
+      213: 840200004
+    second: Enemy_Bat_Idle_3
   - first:
-      213: 7301676125930325412
-    second: Enemy_Grub_8
+      213: 840300001
+    second: Enemy_Golem_Idle_0
+  - first:
+      213: 840300002
+    second: Enemy_Golem_Idle_1
+  - first:
+      213: 840300003
+    second: Enemy_Golem_Idle_2
+  - first:
+      213: 840300004
+    second: Enemy_Golem_Idle_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -70,14 +79,14 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 2786.6667
+  spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -99,7 +108,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -137,199 +146,205 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Enemy_Grub_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1237
-        height: 1226
+      name: Enemy_Grub_Idle_0
+      rect: {serializedVersion: 2, x: 0, y: 1024, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9ce56e278f0d81280800000000000000
-      internalID: -9072271683839697207
+      spriteID: a1010000000000000000000000000001
+      internalID: 840100001
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_1
-      rect:
-        serializedVersion: 2
-        x: 305
-        y: 1205
-        width: 18
-        height: 20
+      name: Enemy_Grub_Idle_1
+      rect: {serializedVersion: 2, x: 512, y: 1024, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c0f4bec9adaed6380800000000000000
-      internalID: -8976260257623093492
+      spriteID: a1010000000000000000000000000002
+      internalID: 840100002
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_2
-      rect:
-        serializedVersion: 2
-        x: 325
-        y: 1219
-        width: 24
-        height: 17
+      name: Enemy_Grub_Idle_2
+      rect: {serializedVersion: 2, x: 1024, y: 1024, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ea2ad0045fb38fdb0800000000000000
-      internalID: -4757987081789267282
+      spriteID: a1010000000000000000000000000003
+      internalID: 840100003
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_3
-      rect:
-        serializedVersion: 2
-        x: 731
-        y: 1207
-        width: 8
-        height: 7
+      name: Enemy_Grub_Idle_3
+      rect: {serializedVersion: 2, x: 1536, y: 1024, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 190c6b40e39cddd00800000000000000
-      internalID: 999175960550359185
+      spriteID: a1010000000000000000000000000004
+      internalID: 840100004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_4
-      rect:
-        serializedVersion: 2
-        x: 667
-        y: 1199
-        width: 7
-        height: 6
+      name: Enemy_Bat_Idle_0
+      rect: {serializedVersion: 2, x: 0, y: 512, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1487bd3c3d35bf6e0800000000000000
-      internalID: -1802755056842606527
+      spriteID: b2010000000000000000000000000001
+      internalID: 840200001
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1003
-        width: 33
-        height: 52
+      name: Enemy_Bat_Idle_1
+      rect: {serializedVersion: 2, x: 512, y: 512, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b8dee577d2460b770800000000000000
-      internalID: 8624503432853515659
+      spriteID: b2010000000000000000000000000002
+      internalID: 840200002
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_6
-      rect:
-        serializedVersion: 2
-        x: 1238
-        y: 134
-        width: 14
-        height: 11
+      name: Enemy_Bat_Idle_2
+      rect: {serializedVersion: 2, x: 1024, y: 512, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9e2b6ebf0aa0f86f0800000000000000
-      internalID: -680313332172410135
+      spriteID: b2010000000000000000000000000003
+      internalID: 840200003
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_7
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 61
-        width: 6
-        height: 21
+      name: Enemy_Bat_Idle_3
+      rect: {serializedVersion: 2, x: 1536, y: 512, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 06fb9126d0aadd6d0800000000000000
-      internalID: -2964026005282767008
+      spriteID: b2010000000000000000000000000004
+      internalID: 840200004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy_Grub_8
-      rect:
-        serializedVersion: 2
-        x: 1135
-        y: 17
-        width: 8
-        height: 7
+      name: Enemy_Golem_Idle_0
+      rect: {serializedVersion: 2, x: 0, y: 0, width: 512, height: 512}
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4a5070720c3c45560800000000000000
-      internalID: 7301676125930325412
+      spriteID: c3010000000000000000000000000001
+      internalID: 840300001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Golem_Idle_1
+      rect: {serializedVersion: 2, x: 512, y: 0, width: 512, height: 512}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3010000000000000000000000000002
+      internalID: 840300002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Golem_Idle_2
+      rect: {serializedVersion: 2, x: 1024, y: 0, width: 512, height: 512}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3010000000000000000000000000003
+      internalID: 840300003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy_Golem_Idle_3
+      rect: {serializedVersion: 2, x: 1536, y: 0, width: 512, height: 512}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3010000000000000000000000000004
+      internalID: 840300004
       vertices: []
       indices: 
       edges: []
@@ -338,7 +353,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: d4010000000000000000000000000001
     internalID: 0
     vertices: []
     indices: 
@@ -348,15 +363,18 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Enemy_Grub_0: -9072271683839697207
-      Enemy_Grub_1: -8976260257623093492
-      Enemy_Grub_2: -4757987081789267282
-      Enemy_Grub_3: 999175960550359185
-      Enemy_Grub_4: -1802755056842606527
-      Enemy_Grub_5: 8624503432853515659
-      Enemy_Grub_6: -680313332172410135
-      Enemy_Grub_7: -2964026005282767008
-      Enemy_Grub_8: 7301676125930325412
+      Enemy_Grub_Idle_0: 840100001
+      Enemy_Grub_Idle_1: 840100002
+      Enemy_Grub_Idle_2: 840100003
+      Enemy_Grub_Idle_3: 840100004
+      Enemy_Bat_Idle_0: 840200001
+      Enemy_Bat_Idle_1: 840200002
+      Enemy_Bat_Idle_2: 840200003
+      Enemy_Bat_Idle_3: 840200004
+      Enemy_Golem_Idle_0: 840300001
+      Enemy_Golem_Idle_1: 840300002
+      Enemy_Golem_Idle_2: 840300003
+      Enemy_Golem_Idle_3: 840300004
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

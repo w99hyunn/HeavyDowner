@@ -381,9 +381,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 344041046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 142.42216, y: -100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &58658218
@@ -614,10 +614,10 @@ RectTransform:
   - {fileID: 1535054041}
   m_Father: {fileID: 1770676415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 509.11688, y: 0}
-  m_SizeDelta: {x: 1018.23376, y: 200}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &344041047
 MonoBehaviour:
@@ -953,10 +953,10 @@ RectTransform:
   - {fileID: 785496584}
   m_Father: {fileID: 1619472682}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 509.11688, y: -50}
-  m_SizeDelta: {x: 868.23376, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &542126255
 MonoBehaviour:
@@ -1628,9 +1628,9 @@ RectTransform:
   - {fileID: 1953897640}
   m_Father: {fileID: 344041046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 751.53906, y: -32.906616}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 398.5451, y: 134.18677}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1535054042
@@ -1703,10 +1703,10 @@ RectTransform:
   - {fileID: 542126254}
   m_Father: {fileID: 1770676415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 509.11688, y: -250}
-  m_SizeDelta: {x: 1018.23376, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1619472683
 MonoBehaviour:
@@ -2398,6 +2398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.IngameUIView
   healthSlider: {fileID: 542126255}
+  healthFillImage: {fileID: 1526948494}
   positionText: {fileID: 1741146031}
 --- !u!114 &2100000002
 MonoBehaviour:
@@ -2642,7 +2643,6 @@ GameObject:
   - component: {fileID: 3100000002}
   - component: {fileID: 3100000005}
   - component: {fileID: 3100000004}
-  - component: {fileID: 3100000006}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2740,7 +2740,8 @@ MonoBehaviour:
   world: {fileID: 3200000003}
   board: {fileID: 3200000004}
   joystick: {fileID: 1200000002}
-  playerStats: {fileID: 3100000006}
+  attackPower: 1
+  maxHealth: 100
   damageFlashDuration: 0.12
   damageColor: {r: 1, g: 0.52, b: 0.52, a: 1}
 --- !u!95 &3100000005
@@ -2765,22 +2766,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3100000006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100000000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7e5a3d1b9f24680ace13579bdf02468, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.PlayerStatController
-  baseMaxHealth: 100
-  maxHealthPerUpgrade: 10
-  baseAttackPower: 1
-  attackPowerPerUpgrade: 1
 --- !u!1 &3200000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -2793,6 +2778,8 @@ GameObject:
   - component: {fileID: 3200000002}
   - component: {fileID: 3200000003}
   - component: {fileID: 3200000004}
+  - component: {fileID: 3200000005}
+  - component: {fileID: 3200000006}
   m_Layer: 0
   m_Name: WorldGrid
   m_TagString: Untagged
@@ -2824,6 +2811,7 @@ Transform:
   - {fileID: 3450000001}
   - {fileID: 3460000001}
   - {fileID: 3470000001}
+  - {fileID: 3480000001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &3200000002
@@ -2880,27 +2868,46 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5b15089ec8aee4c4aa807c681b01d590, type: 2}
   - {fileID: 11400000, guid: a84efe2fb9be95d48aae301f1ccd41f8, type: 2}
   blockHealthByTier: 01000000010000000200000002000000030000000300000004000000050000000600000008000000
-  grubTile: {fileID: 11400000, guid: 1aa58f708a8013b4fa1307cdf03eb0da, type: 2}
-  batTile: {fileID: 11400000, guid: a249adcf27bdcf143be561ed6da05d28, type: 2}
-  golemTile: {fileID: 11400000, guid: 5aff5105877282f4a8b14242860f72b5, type: 2}
+  grubTile: {fileID: 11400000, guid: 00807b6ead0d21b45b9159e87ca8833b, type: 2}
+  batTile: {fileID: 11400000, guid: 3fdc24d05c836c740a7ec761b613f490, type: 2}
+  golemTile: {fileID: 11400000, guid: 4a60e34549562fd40a396c2ff77666fb, type: 2}
   chunkHeight: 32
   loadedChunkRadius: 1
-  randomSeed: 1655
   monsterSpawnChance: 0.45
   monster2x2Chance: 0.28
   monster4x4Chance: 0.08
   blockDamage: 1
-  hitFlashDuration: 0.08
-  hitColor: {r: 1, g: 0.72, b: 0.62, a: 1}
-  destroyedCellVisuals:
-  - {fileID: 3400000003}
-  - {fileID: 3410000003}
-  - {fileID: 3420000003}
-  - {fileID: 3430000003}
-  - {fileID: 3440000003}
-  - {fileID: 3450000003}
-  - {fileID: 3460000003}
-  - {fileID: 3470000003}
+  healthBarPool: {fileID: 3480000003}
+  destroyedCellVisualPool: {fileID: 3200000005}
+  hitFlashController: {fileID: 3200000006}
+--- !u!114 &3200000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab37d56f89c4f5abd41e36b92720dc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisualPool
+  streamingCamera: {fileID: 1962251562}
+  despawnPadding: 0.45
+--- !u!114 &3200000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3200000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc48e6709ad406bce52f47ca3831ed5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.TileHitFlashController
+  duration: 0.08
+  color: {r: 1, g: 0.72, b: 0.62, a: 1}
 --- !u!1 &3300000000
 GameObject:
   m_ObjectHideFlags: 0
@@ -3050,17 +3057,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3400000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3400000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3400000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3410000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3083,17 +3079,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3410000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3410000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3410000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3420000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3116,17 +3101,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3420000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3420000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3420000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3430000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3149,17 +3123,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3430000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3430000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3430000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3440000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3182,17 +3145,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3440000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3440000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3440000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3450000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3215,17 +3167,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3450000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3450000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3450000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3460000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3248,17 +3189,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3460000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3460000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3460000000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
 --- !u!1001 &3470000000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3281,17 +3211,80 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1001, guid: f1e2d3c4b5a697887766554433221100, type: 3}
   m_PrefabInstance: {fileID: 3470000000}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3470000003 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1003, guid: f1e2d3c4b5a697887766554433221100, type: 3}
-  m_PrefabInstance: {fileID: 3470000000}
+--- !u!1 &3480000000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3480000001}
+  - component: {fileID: 3480000002}
+  - component: {fileID: 3480000003}
+  m_Layer: 5
+  m_Name: CellHealthBarCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3480000001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3480000000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3200000001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1000, y: 2000}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &3480000002
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3480000000}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 0
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 8
+  m_TargetDisplay: 0
+--- !u!114 &3480000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3480000000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f6b4a2901c4e7f8a6b5c3d1e2f4098, type: 3}
+  m_Script: {fileID: 11500000, guid: d9a26c45e78b4e49ac30d25a81619cb3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisual
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.CellHealthBarPool
+  healthBarPrefab: {fileID: 1004, guid: c8f15b34d67a4d389b2ec1497f608ba2, type: 3}
+  initialCapacity: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

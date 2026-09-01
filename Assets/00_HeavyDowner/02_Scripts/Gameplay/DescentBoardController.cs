@@ -43,25 +43,27 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int loadedChunkRadius = 1;
 
         [Header("Generation")]
-        [SerializeField] private int randomSeed = 1655;
         [SerializeField, Range(0f, 1f)] private float monsterSpawnChance = 0.45f;
         [SerializeField, Range(0f, 1f)] private float monster2x2Chance = 0.28f;
         [SerializeField, Range(0f, 1f)] private float monster4x4Chance = 0.08f;
 
         [Header("Damage")]
         [SerializeField, Min(0)] private int blockDamage = 1;
-        [SerializeField] private float hitFlashDuration = 0.08f;
-        [SerializeField] private Color hitColor = new(1f, 0.72f, 0.62f, 1f);
+
+        [Header("Presentation")]
+        [SerializeField] private CellHealthBarPool healthBarPool;
+        [SerializeField] private DestroyedCellVisualPool destroyedCellVisualPool;
+        [SerializeField] private TileHitFlashController hitFlashController;
 
         private readonly List<RowMutation> rowMutations = new();
         private readonly HashSet<int> loadedChunks = new();
         private readonly List<int> chunksToUnload = new();
-        private readonly List<HitFlash> hitFlashes = new();
         private readonly List<MonsterVisual> monsterVisuals = new();
 
         private TileBase[] terrainChunkTiles;
         private TileBase[] enemyChunkTiles;
         private int currentStreamingChunk = int.MaxValue;
+        private int randomSeed;
 
         public int RecordedRowCount => rowMutations.Count;
         public int LoadedChunkCount => loadedChunks.Count;
@@ -151,28 +153,14 @@ namespace HeavyDowner.Gameplay
             public ulong RemainingHealth;
         }
 
-        private struct HitFlash
-        {
-            public HitFlash(Tilemap tilemap, Vector3Int position, float restoreTime)
-            {
-                Tilemap = tilemap;
-                Position = position;
-                RestoreTime = restoreTime;
-            }
-
-            public Tilemap Tilemap { get; }
-            public Vector3Int Position { get; }
-            public float RestoreTime { get; set; }
-        }
-
         private void Start()
         {
+            randomSeed = UnityEngine.Random.Range(1, int.MaxValue);
             InitializeBoard();
         }
 
         private void Update()
         {
-            RestoreHitFlashes();
             StreamAround(world.WorldToCell(streamingCamera.position));
         }
 
@@ -215,7 +203,9 @@ namespace HeavyDowner.Gameplay
             mutation.DamagedMask |= cellMask;
             mutation.RemainingHealth = SetRemainingHealth(mutation.RemainingHealth, statePosition.x, remainingHealth);
             SetRowMutation(statePosition.y, mutation);
-            FlashCell(cell, cell.IsEnemy ? enemyTilemap : terrainTilemap);
+            ShowHealthBar(cell, remainingHealth);
+            Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
+            hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
             return new BoardActionResult(false, cell.CounterDamage);
         }
 
@@ -226,8 +216,9 @@ namespace HeavyDowner.Gameplay
             rowMutations.Clear();
             loadedChunks.Clear();
             chunksToUnload.Clear();
-            hitFlashes.Clear();
+            hitFlashController.Clear();
             monsterVisuals.Clear();
+            healthBarPool.HideAll();
 
             int boardWidth = world.HorizontalCellCount;
             terrainChunkTiles = new TileBase[boardWidth * chunkHeight];
@@ -334,7 +325,8 @@ namespace HeavyDowner.Gameplay
             int halfWidth = boardWidth / 2;
             int firstRow = chunk * chunkHeight;
 
-            RemoveFlashesInChunk(firstRow);
+            hitFlashController.RemoveRows(firstRow, chunkHeight);
+            healthBarPool.HideRows(firstRow, chunkHeight);
             Array.Clear(terrainChunkTiles, 0, terrainChunkTiles.Length);
             Array.Clear(enemyChunkTiles, 0, enemyChunkTiles.Length);
 
@@ -543,77 +535,40 @@ namespace HeavyDowner.Gameplay
 
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
             Vector3Int tilePosition = ToTilePosition(cell.AnchorPosition);
+            Sprite sprite = tilemap.GetSprite(tilePosition);
+            PlayDestroyedCellVisual(cell, sprite);
+            healthBarPool.Hide(cell.AnchorPosition);
             tilemap.SetTile(tilePosition, null);
             tilemap.SetColor(tilePosition, Color.white);
-            RemoveFlash(tilemap, tilePosition);
+            hitFlashController.Remove(tilemap, tilePosition);
         }
 
-        private void FlashCell(CellDefinition cell, Tilemap tilemap)
+        private void PlayDestroyedCellVisual(CellDefinition cell, Sprite sprite)
         {
-            if (!loadedChunks.Contains(GetChunkIndex(cell.AnchorPosition.y)))
-            {
-                return;
-            }
-
-            Vector3Int tilePosition = ToTilePosition(cell.AnchorPosition);
-            tilemap.SetTileFlags(tilePosition, TileFlags.None);
-            tilemap.SetColor(tilePosition, hitColor);
-
-            for (int index = 0; index < hitFlashes.Count; index++)
-            {
-                HitFlash flash = hitFlashes[index];
-                if (flash.Tilemap == tilemap && flash.Position == tilePosition)
-                {
-                    flash.RestoreTime = Time.time + hitFlashDuration;
-                    hitFlashes[index] = flash;
-                    return;
-                }
-            }
-
-            hitFlashes.Add(new HitFlash(tilemap, tilePosition, Time.time + hitFlashDuration));
+            Vector3 scale = new(cell.FootprintSize, cell.FootprintSize, 1f);
+            destroyedCellVisualPool.Play(sprite, GetCellVisualCenter(cell), scale);
         }
 
-        private void RestoreHitFlashes()
+        private void ShowHealthBar(CellDefinition cell, int currentHealth)
         {
-            for (int index = hitFlashes.Count - 1; index >= 0; index--)
-            {
-                HitFlash flash = hitFlashes[index];
-                if (Time.time < flash.RestoreTime)
-                {
-                    continue;
-                }
-
-                flash.Tilemap.SetColor(flash.Position, Color.white);
-                hitFlashes.RemoveAt(index);
-            }
+            float footprint = cell.FootprintSize;
+            Vector2 cellSize = world.CellSize;
+            Vector3 position = GetCellVisualCenter(cell)
+                + Vector3.up * (footprint * cellSize.y * 0.38f);
+            healthBarPool.Show(
+                cell.AnchorPosition,
+                position,
+                footprint * cellSize.x * 0.78f,
+                (float)currentHealth / cell.Health);
         }
 
-        private void RemoveFlash(Tilemap tilemap, Vector3Int position)
+        private Vector3 GetCellVisualCenter(CellDefinition cell)
         {
-            for (int index = hitFlashes.Count - 1; index >= 0; index--)
-            {
-                HitFlash flash = hitFlashes[index];
-                if (flash.Tilemap == tilemap && flash.Position == position)
-                {
-                    hitFlashes.RemoveAt(index);
-                }
-            }
-        }
-
-        private void RemoveFlashesInChunk(int firstRow)
-        {
-            int lastRow = firstRow + chunkHeight;
-            for (int index = hitFlashes.Count - 1; index >= 0; index--)
-            {
-                HitFlash flash = hitFlashes[index];
-                if (flash.Position.y < firstRow || flash.Position.y >= lastRow)
-                {
-                    continue;
-                }
-
-                flash.Tilemap.SetColor(flash.Position, Color.white);
-                hitFlashes.RemoveAt(index);
-            }
+            float offset = (cell.FootprintSize - 1) * 0.5f;
+            Vector2 cellSize = world.CellSize;
+            return world.CellToWorld(cell.AnchorPosition) + new Vector3(
+                offset * cellSize.x,
+                -offset * cellSize.y);
         }
 
         private static Vector3Int ToTilePosition(Vector2Int position)

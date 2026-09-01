@@ -10,6 +10,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private Transform[] shardPivots;
         [SerializeField] private SpriteRenderer[] shardRenderers;
         [SerializeField] private Vector2[] shardOrigins;
+        [SerializeField] private float shardScale = 1.3f;
         [SerializeField] private float jumpSpeed = 0.75f;
         [SerializeField] private float horizontalSpeed = 0.45f;
         [SerializeField] private float gravity = 5.5f;
@@ -62,7 +63,7 @@ namespace HeavyDowner.Gameplay
                 pivot.localPosition = origin;
                 pivot.localRotation = Quaternion.identity;
                 shardRenderer.transform.localPosition = -origin;
-                shardRenderer.transform.localScale = scale;
+                shardRenderer.transform.localScale = scale * shardScale;
                 shardRenderer.sprite = sprite;
                 shardRenderer.color = Color.white;
 

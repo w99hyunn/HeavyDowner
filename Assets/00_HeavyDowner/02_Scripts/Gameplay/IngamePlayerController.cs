@@ -46,11 +46,11 @@ namespace HeavyDowner.Gameplay
         {
             TryGetComponent<Animator>(out animator);
             TryGetComponent<SpriteRenderer>(out spriteRenderer);
+            currentHealth = maxHealth;
         }
 
         private void Start()
         {
-            currentHealth = maxHealth;
             HealthChanged?.Invoke(HealthNormalized);
             DepthChanged?.Invoke(currentDepth);
         }
