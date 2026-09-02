@@ -26,6 +26,11 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
+            DropEquipment(worldPosition);
+        }
+
+        public void DropEquipment(Vector3 worldPosition)
+        {
             dropCandidates.Clear();
             int totalWeight = 0;
             for (int index = 0; index < catalog.Items.Count; index++)

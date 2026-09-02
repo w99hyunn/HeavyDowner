@@ -54,7 +54,9 @@ namespace HeavyDowner.Gameplay
             Front,
             Left,
             Right,
-            Dive
+            Dive,
+            DownLeft,
+            DownRight
         }
 
         private void Awake()
@@ -216,6 +218,11 @@ namespace HeavyDowner.Gameplay
             Died?.Invoke();
         }
 
+        public void TakeBossSkillDamage(int damage)
+        {
+            TakeDamage(damage);
+        }
+
         public void SetMovementLocked(bool locked)
         {
             isMovementLocked = locked;
@@ -277,8 +284,18 @@ namespace HeavyDowner.Gameplay
 
         private static FallAnimation ResolveAnimation(Vector2 direction)
         {
-            if (direction.y < -0.4f && Mathf.Abs(direction.x) < 0.35f)
+            if (direction.y < -0.4f)
             {
+                if (direction.x < -0.4f)
+                {
+                    return FallAnimation.DownLeft;
+                }
+
+                if (direction.x > 0.4f)
+                {
+                    return FallAnimation.DownRight;
+                }
+
                 return FallAnimation.Dive;
             }
 

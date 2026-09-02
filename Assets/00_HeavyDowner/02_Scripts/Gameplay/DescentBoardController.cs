@@ -40,6 +40,23 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private TileBase golemTile;
         [SerializeField, Min(0f)] private float monsterHealthGrowthPerTier = 0.25f;
 
+        [Header("Bosses")]
+        [SerializeField] private TileBase abyssBurrowerTile;
+        [SerializeField] private TileBase crystalWardenTile;
+        [SerializeField, Min(1)] private int bossIntervalMeters = 50;
+        [SerializeField, Min(1)] private int abyssBurrowerBaseHealth = 1400;
+        [SerializeField, Min(1)] private int crystalWardenBaseHealth = 1600;
+        [SerializeField, Min(0)] private int abyssBurrowerDamage = 180;
+        [SerializeField, Min(0)] private int crystalWardenDamage = 200;
+        [SerializeField, Min(1)] private int abyssSlamHitInterval = 3;
+        [SerializeField, Min(1f)] private float abyssSlamDamageMultiplier = 2f;
+        [SerializeField, Range(0f, 1f)] private float crystalShieldDamageReduction = 0.5f;
+        [SerializeField, Min(1)] private int crystalBurstHitInterval = 4;
+        [SerializeField, Min(1f)] private float crystalBurstDamageMultiplier = 1.75f;
+        [SerializeField] private Color abyssSlamFlashColor = new(1f, 0.34f, 0.08f, 1f);
+        [SerializeField] private Color crystalShieldFlashColor = new(0.1f, 0.9f, 1f, 1f);
+        [SerializeField] private Color crystalBurstFlashColor = new(0.52f, 0.3f, 1f, 1f);
+
         [Header("Enhancement Orbs")]
         [SerializeField] private TileBase enhancementOrbTile;
         [SerializeField, Range(0f, 1f)] private float enhancementOrbSpawnChance = 0.04f;
@@ -64,6 +81,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private CellHealthBarPool healthBarPool;
         [SerializeField] private DamageTextPool damageTextPool;
         [SerializeField] private RunRewardSession rewardSession;
+        [SerializeField] private BossSkillController bossSkillController;
 
         private VerticalTilemapWorld world;
         private DestroyedCellVisualPool destroyedCellVisualPool;
@@ -75,6 +93,7 @@ namespace HeavyDowner.Gameplay
         private readonly List<MonsterVisual> monsterVisuals = new();
         private readonly HashSet<Vector2Int> skillAttackAnchors = new();
         private readonly Dictionary<Vector2Int, int> remainingHealthByCell = new();
+        private readonly Dictionary<Vector2Int, int> bossHitCountByCell = new();
 
         private TileBase[] terrainChunkTiles;
         private TileBase[] enemyChunkTiles;
@@ -85,7 +104,15 @@ namespace HeavyDowner.Gameplay
         {
             Block,
             Enemy,
+            Boss,
             EnhancementOrb
+        }
+
+        private enum BossKind
+        {
+            None,
+            AbyssBurrower,
+            CrystalWarden
         }
 
         private readonly struct CellDefinition
@@ -96,7 +123,8 @@ namespace HeavyDowner.Gameplay
                 int health,
                 int counterDamage,
                 Vector2Int anchorPosition,
-                int footprintSize)
+                int footprintSize,
+                BossKind bossKind = BossKind.None)
             {
                 Type = type;
                 Tile = tile;
@@ -104,16 +132,19 @@ namespace HeavyDowner.Gameplay
                 CounterDamage = counterDamage;
                 AnchorPosition = anchorPosition;
                 FootprintSize = footprintSize;
+                BossKind = bossKind;
             }
 
             public CellType Type { get; }
-            public bool IsEnemy => Type == CellType.Enemy;
+            public bool IsEnemy => Type == CellType.Enemy || Type == CellType.Boss;
+            public bool IsBoss => Type == CellType.Boss;
             public bool IsEnhancementOrb => Type == CellType.EnhancementOrb;
             public TileBase Tile { get; }
             public int Health { get; }
             public int CounterDamage { get; }
             public Vector2Int AnchorPosition { get; }
             public int FootprintSize { get; }
+            public BossKind BossKind { get; }
 
             public bool Contains(Vector2Int position)
             {
@@ -179,11 +210,13 @@ namespace HeavyDowner.Gameplay
                 return new BoardActionResult(true, 0);
             }
 
+            int hitCount = cell.IsBoss ? GetNextBossHitCount(statePosition) : 0;
+            int appliedAttackPower = GetAppliedAttackPower(cell, damage, hitCount);
             int currentHealth = remainingHealthByCell.TryGetValue(statePosition, out int savedHealth)
                 ? savedHealth
                 : cell.Health;
-            int remainingHealth = currentHealth - damage;
-            int appliedDamage = Mathf.Min(damage, currentHealth);
+            int remainingHealth = currentHealth - appliedAttackPower;
+            int appliedDamage = Mathf.Min(appliedAttackPower, currentHealth);
             if (appliedDamage > 0)
             {
                 damageTextPool.PlayWorldDamage(appliedDamage, GetCellVisualCenter(cell));
@@ -193,10 +226,19 @@ namespace HeavyDowner.Gameplay
             {
                 mutation.DestroyedMask |= cellMask;
                 remainingHealthByCell.Remove(statePosition);
+                bossHitCountByCell.Remove(statePosition);
+                if (cell.IsBoss)
+                {
+                    bossSkillController.Cancel(statePosition);
+                }
                 SetRowMutation(statePosition.y, mutation);
                 Vector3 visualCenter = GetCellVisualCenter(cell);
                 ClearVisibleCell(cell);
-                if (cell.IsEnemy)
+                if (cell.IsBoss)
+                {
+                    rewardSession.DropEquipment(visualCenter);
+                }
+                else if (cell.IsEnemy)
                 {
                     rewardSession.TryDropEquipment(visualCenter);
                 }
@@ -215,8 +257,20 @@ namespace HeavyDowner.Gameplay
             SetRowMutation(statePosition.y, mutation);
             ShowHealthBar(cell, remainingHealth);
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
-            hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
-            int counterDamage = cell.CounterDamage;
+            int counterDamage = GetCounterDamage(cell, hitCount, out Color bossFlashColor);
+            if (cell.IsBoss && bossFlashColor != default)
+            {
+                hitFlashController.Flash(
+                    tilemap,
+                    ToTilePosition(cell.AnchorPosition),
+                    bossFlashColor,
+                    0.2f);
+            }
+            else
+            {
+                hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
+            }
+
             if (cell.Type == CellType.Block)
             {
                 float remainingHealthRatio = (float)remainingHealth / cell.Health;
@@ -295,6 +349,7 @@ namespace HeavyDowner.Gameplay
             enemyTilemap.ClearAllTiles();
             rowMutations.Clear();
             remainingHealthByCell.Clear();
+            bossHitCountByCell.Clear();
             loadedChunks.Clear();
             chunksToUnload.Clear();
             hitFlashController.Clear();
@@ -426,7 +481,8 @@ namespace HeavyDowner.Gameplay
                 return false;
             }
 
-            if (TryGetMonsterCell(position, out cell))
+            if (TryGetBossCell(position, out cell)
+                || TryGetMonsterCell(position, out cell))
             {
                 return true;
             }
@@ -519,6 +575,107 @@ namespace HeavyDowner.Gameplay
                 new Vector2Int(leftColumn, topRow),
                 monsterSize);
             return cell.Contains(position);
+        }
+
+        private bool TryGetBossCell(Vector2Int position, out CellDefinition cell)
+        {
+            int depth = -position.y;
+            int encounterNumber = depth / bossIntervalMeters;
+            if (encounterNumber < 1)
+            {
+                cell = default;
+                return false;
+            }
+
+            int bossDepth = encounterNumber * bossIntervalMeters;
+            int bossSize = world.HorizontalCellCount;
+            if (depth < bossDepth || depth >= bossDepth + bossSize)
+            {
+                cell = default;
+                return false;
+            }
+
+            BossKind bossKind = encounterNumber % 2 == 1
+                ? BossKind.AbyssBurrower
+                : BossKind.CrystalWarden;
+            TileBase bossTile = bossKind == BossKind.AbyssBurrower
+                ? abyssBurrowerTile
+                : crystalWardenTile;
+            int baseHealth = bossKind == BossKind.AbyssBurrower
+                ? abyssBurrowerBaseHealth
+                : crystalWardenBaseHealth;
+            int counterDamage = bossKind == BossKind.AbyssBurrower
+                ? abyssBurrowerDamage
+                : crystalWardenDamage;
+            int halfWidth = world.HorizontalCellCount / 2;
+
+            cell = new CellDefinition(
+                CellType.Boss,
+                bossTile,
+                GetMonsterHealth(baseHealth, bossDepth),
+                counterDamage,
+                new Vector2Int(-halfWidth, -bossDepth),
+                bossSize,
+                bossKind);
+            return cell.Contains(position);
+        }
+
+        private int GetNextBossHitCount(Vector2Int position)
+        {
+            int hitCount = bossHitCountByCell.TryGetValue(position, out int savedHitCount)
+                ? savedHitCount + 1
+                : 1;
+            bossHitCountByCell[position] = hitCount;
+            return hitCount;
+        }
+
+        private int GetAppliedAttackPower(CellDefinition cell, int attackPower, int hitCount)
+        {
+            if (cell.BossKind != BossKind.CrystalWarden || hitCount % 2 == 0)
+            {
+                return attackPower;
+            }
+
+            return Mathf.Max(1, Mathf.CeilToInt(attackPower * (1f - crystalShieldDamageReduction)));
+        }
+
+        private int GetCounterDamage(CellDefinition cell, int hitCount, out Color bossFlashColor)
+        {
+            bossFlashColor = default;
+            if (cell.BossKind == BossKind.AbyssBurrower
+                && hitCount % abyssSlamHitInterval == 0)
+            {
+                bossFlashColor = abyssSlamFlashColor;
+                int skillDamage = Mathf.CeilToInt(
+                    cell.CounterDamage * abyssSlamDamageMultiplier);
+                return bossSkillController.TryPlayAbyssFire(
+                    cell.AnchorPosition,
+                    skillDamage)
+                    ? 0
+                    : cell.CounterDamage;
+            }
+
+            if (cell.BossKind == BossKind.CrystalWarden)
+            {
+                if (hitCount % crystalBurstHitInterval == 0)
+                {
+                    bossFlashColor = crystalBurstFlashColor;
+                    int skillDamage = Mathf.CeilToInt(
+                        cell.CounterDamage * crystalBurstDamageMultiplier);
+                    return bossSkillController.TryPlayCrystalLightning(
+                        cell.AnchorPosition,
+                        skillDamage)
+                        ? 0
+                        : cell.CounterDamage;
+                }
+
+                if (hitCount % 2 == 1)
+                {
+                    bossFlashColor = crystalShieldFlashColor;
+                }
+            }
+
+            return cell.CounterDamage;
         }
 
         private int GetMonsterHealth(int baseHealth, int depth)

@@ -52,22 +52,31 @@ namespace HeavyDowner.Gameplay
 
         public void Flash(Tilemap tilemap, Vector3Int position)
         {
+            Flash(tilemap, position, color, duration);
+        }
+
+        public void Flash(
+            Tilemap tilemap,
+            Vector3Int position,
+            Color flashColor,
+            float flashDuration)
+        {
             tilemap.SetTileFlags(position, TileFlags.None);
-            tilemap.SetColor(position, color);
+            tilemap.SetColor(position, flashColor);
 
             for (int index = 0; index < flashes.Count; index++)
             {
                 HitFlash flash = flashes[index];
                 if (flash.Tilemap == tilemap && flash.Position == position)
                 {
-                    flash.RestoreTime = Time.time + duration;
+                    flash.RestoreTime = Time.time + flashDuration;
                     flashes[index] = flash;
                     enabled = true;
                     return;
                 }
             }
 
-            flashes.Add(new HitFlash(tilemap, position, Time.time + duration));
+            flashes.Add(new HitFlash(tilemap, position, Time.time + flashDuration));
             enabled = true;
         }
 
