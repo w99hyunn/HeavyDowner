@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace HeavyDowner.Gameplay
 {
@@ -10,13 +11,28 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private Vector3 worldDamageOffset = new(0f, 0.2f, 0f);
         [SerializeField] private Vector3 playerDamageOffset = new(0f, 0.75f, 0f);
 
-        private readonly List<DamageTextVisual> visuals = new();
+        private readonly List<DamageTextVisual> activeVisuals = new();
+        private ObjectPool<DamageTextVisual> visualPool;
 
         private void Awake()
         {
-            for (int index = 0; index < 12; index++)
+            int initialCapacity = 12;
+            visualPool = new ObjectPool<DamageTextVisual>(
+                () => Instantiate(damageTextPrefab, transform),
+                null,
+                visual => visual.Initialize(),
+                visual => Destroy(visual.gameObject),
+                true,
+                initialCapacity);
+
+            DamageTextVisual[] prewarmedVisuals = new DamageTextVisual[initialCapacity];
+            for (int index = 0; index < prewarmedVisuals.Length; index++)
             {
-                CreateVisual();
+                prewarmedVisuals[index] = visualPool.Get();
+            }
+            for (int index = 0; index < prewarmedVisuals.Length; index++)
+            {
+                visualPool.Release(prewarmedVisuals[index]);
             }
 
             enabled = false;
@@ -28,63 +44,53 @@ namespace HeavyDowner.Gameplay
                 - streamingCamera.orthographicSize
                 - 0.45f;
 
-            bool hasPlayingVisual = false;
-            for (int index = 0; index < visuals.Count; index++)
+            for (int index = activeVisuals.Count - 1; index >= 0; index--)
             {
-                DamageTextVisual visual = visuals[index];
-                if (!visual.IsPlaying)
+                DamageTextVisual visual = activeVisuals[index];
+                visual.Tick(Time.deltaTime, despawnHeight);
+                if (visual.IsPlaying)
                 {
                     continue;
                 }
 
-                visual.Tick(Time.deltaTime, despawnHeight);
-                hasPlayingVisual |= visual.IsPlaying;
+                activeVisuals.RemoveAt(index);
+                visualPool.Release(visual);
             }
 
-            enabled = hasPlayingVisual;
+            enabled = activeVisuals.Count > 0;
         }
 
         public void PlayWorldDamage(int damage, Vector3 worldPosition)
         {
-            GetAvailableVisual().PlayWorldDamage(damage, worldPosition + worldDamageOffset);
+            DamageTextVisual visual = visualPool.Get();
+            activeVisuals.Add(visual);
+            visual.PlayWorldDamage(damage, worldPosition + worldDamageOffset);
             enabled = true;
         }
 
         public void PlayPlayerDamage(int damage, Vector3 worldPosition)
         {
-            GetAvailableVisual().PlayPlayerDamage(damage, worldPosition + playerDamageOffset);
+            DamageTextVisual visual = visualPool.Get();
+            activeVisuals.Add(visual);
+            visual.PlayPlayerDamage(damage, worldPosition + playerDamageOffset);
             enabled = true;
         }
 
         public void HideAll()
         {
-            for (int index = 0; index < visuals.Count; index++)
+            for (int index = activeVisuals.Count - 1; index >= 0; index--)
             {
-                visuals[index].Initialize();
+                visualPool.Release(activeVisuals[index]);
             }
 
+            activeVisuals.Clear();
             enabled = false;
         }
 
-        private DamageTextVisual GetAvailableVisual()
+        private void OnDestroy()
         {
-            for (int index = 0; index < visuals.Count; index++)
-            {
-                if (!visuals[index].IsPlaying)
-                {
-                    return visuals[index];
-                }
-            }
-
-            return CreateVisual();
-        }
-
-        private DamageTextVisual CreateVisual()
-        {
-            DamageTextVisual visual = Instantiate(damageTextPrefab, transform);
-            visual.Initialize();
-            visuals.Add(visual);
-            return visual;
+            HideAll();
+            visualPool.Clear();
         }
     }
 }

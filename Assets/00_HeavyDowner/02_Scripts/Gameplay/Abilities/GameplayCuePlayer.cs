@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace HeavyDowner.Gameplay
 {
@@ -17,8 +18,7 @@ namespace HeavyDowner.Gameplay
         private class CuePool
         {
             public GameplayCueDefinition Definition;
-            public readonly Queue<CueObject> Available = new();
-            public readonly List<CueObject> All = new();
+            public ObjectPool<CueObject> Objects;
         }
 
         private class ActiveCue
@@ -68,10 +68,7 @@ namespace HeavyDowner.Gameplay
         {
             foreach (CuePool pool in pools.Values)
             {
-                foreach (CueObject cueObject in pool.All)
-                {
-                    Destroy(cueObject.Root);
-                }
+                pool.Objects.Clear();
             }
         }
 
@@ -86,13 +83,23 @@ namespace HeavyDowner.Gameplay
             {
                 Definition = definition
             };
+            pool.Objects = new ObjectPool<CueObject>(
+                () => CreateCueObject(definition),
+                null,
+                ResetCueObject,
+                cueObject => Destroy(cueObject.Root),
+                true,
+                definition.PoolSize);
             pools.Add(definition, pool);
 
-            for (int i = 0; i < definition.PoolSize; i++)
+            CueObject[] prewarmedObjects = new CueObject[definition.PoolSize];
+            for (int index = 0; index < prewarmedObjects.Length; index++)
             {
-                CueObject cueObject = CreateCueObject(definition);
-                pool.All.Add(cueObject);
-                pool.Available.Enqueue(cueObject);
+                prewarmedObjects[index] = pool.Objects.Get();
+            }
+            for (int index = 0; index < prewarmedObjects.Length; index++)
+            {
+                pool.Objects.Release(prewarmedObjects[index]);
             }
         }
 
@@ -171,14 +178,7 @@ namespace HeavyDowner.Gameplay
 
         private CueObject Rent(CuePool pool, Vector3 position)
         {
-            if (pool.Available.Count == 0)
-            {
-                CueObject expandedCueObject = CreateCueObject(pool.Definition);
-                pool.All.Add(expandedCueObject);
-                pool.Available.Enqueue(expandedCueObject);
-            }
-
-            CueObject cueObject = pool.Available.Dequeue();
+            CueObject cueObject = pool.Objects.Get();
             Transform cueTransform = cueObject.Root.transform;
             cueTransform.position = position;
             cueTransform.localRotation = cueObject.InitialRotation;
@@ -204,12 +204,15 @@ namespace HeavyDowner.Gameplay
         private void Release(int activeIndex)
         {
             ActiveCue activeCue = activeCues[activeIndex];
-            activeCue.CueObject.AudioSource.Stop();
-            activeCue.CueObject.AudioSource.clip = null;
-
-            activeCue.CueObject.Root.SetActive(false);
-            activeCue.Pool.Available.Enqueue(activeCue.CueObject);
+            activeCue.Pool.Objects.Release(activeCue.CueObject);
             activeCues.RemoveAt(activeIndex);
+        }
+
+        private static void ResetCueObject(CueObject cueObject)
+        {
+            cueObject.AudioSource.Stop();
+            cueObject.AudioSource.clip = null;
+            cueObject.Root.SetActive(false);
         }
 
         private CueObject CreateCueObject(GameplayCueDefinition definition)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace HeavyDowner.Gameplay
 {
@@ -8,16 +9,28 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private CellHealthBar healthBarPrefab;
 
         private readonly Dictionary<Vector2Int, CellHealthBar> activeHealthBars = new();
-        private readonly Stack<CellHealthBar> inactiveHealthBars = new();
         private readonly List<Vector2Int> healthBarsToHide = new();
+        private ObjectPool<CellHealthBar> healthBarPool;
 
         private void Awake()
         {
-            for (int index = 0; index < 4; index++)
+            int initialCapacity = 4;
+            healthBarPool = new ObjectPool<CellHealthBar>(
+                () => Instantiate(healthBarPrefab, transform),
+                null,
+                healthBar => healthBar.Hide(),
+                healthBar => Destroy(healthBar.gameObject),
+                true,
+                initialCapacity);
+
+            CellHealthBar[] prewarmedHealthBars = new CellHealthBar[initialCapacity];
+            for (int index = 0; index < prewarmedHealthBars.Length; index++)
             {
-                CellHealthBar healthBar = Instantiate(healthBarPrefab, transform);
-                healthBar.Hide();
-                inactiveHealthBars.Push(healthBar);
+                prewarmedHealthBars[index] = healthBarPool.Get();
+            }
+            for (int index = 0; index < prewarmedHealthBars.Length; index++)
+            {
+                healthBarPool.Release(prewarmedHealthBars[index]);
             }
         }
 
@@ -25,9 +38,7 @@ namespace HeavyDowner.Gameplay
         {
             if (!activeHealthBars.TryGetValue(cellPosition, out CellHealthBar healthBar))
             {
-                healthBar = inactiveHealthBars.Count > 0
-                    ? inactiveHealthBars.Pop()
-                    : Instantiate(healthBarPrefab, transform);
+                healthBar = healthBarPool.Get();
                 activeHealthBars.Add(cellPosition, healthBar);
             }
 
@@ -42,8 +53,7 @@ namespace HeavyDowner.Gameplay
             }
 
             activeHealthBars.Remove(cellPosition);
-            healthBar.Hide();
-            inactiveHealthBars.Push(healthBar);
+            healthBarPool.Release(healthBar);
         }
 
         public void HideRows(int firstRow, int rowCount)
@@ -68,11 +78,16 @@ namespace HeavyDowner.Gameplay
         {
             foreach (CellHealthBar healthBar in activeHealthBars.Values)
             {
-                healthBar.Hide();
-                inactiveHealthBars.Push(healthBar);
+                healthBarPool.Release(healthBar);
             }
 
             activeHealthBars.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            HideAll();
+            healthBarPool.Clear();
         }
     }
 }

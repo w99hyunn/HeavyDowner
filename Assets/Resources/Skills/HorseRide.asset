@@ -17,7 +17,7 @@ MonoBehaviour:
   occupiedCapabilities: 3
   cooldown: 0
   activationCues:
-  - {fileID: 11400000, guid: fb724c712a5a4f64aa49d2ccb4c54f19, type: 2}
+  - {fileID: 11400000, guid: 21e1524c15be41a19d884d25894e4dfd, type: 2}
   loopCue: {fileID: 0}
   endCues: []
   attackCue: {fileID: 11400000, guid: f0df97254db142aabd7b5218f324fcbc, type: 2}
