@@ -63,6 +63,12 @@ namespace HeavyDowner.UI
 
         private void OnGoogleLoginClicked()
         {
+            if (Application.platform != RuntimePlatform.Android)
+            {
+                PopupSingleton.Instance.ShowMessage("Google 로그인은 안드로이드 기기에서만 지원됩니다.");
+                return;
+            }
+
             view.ShowSigningIn();
             initializer.SelectLogin(LoginMethod.Google);
         }
