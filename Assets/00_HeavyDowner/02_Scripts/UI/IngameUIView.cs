@@ -10,6 +10,7 @@ namespace HeavyDowner.UI
         [SerializeField] private Slider healthSlider;
         [SerializeField] private RectTransform shieldFillRect;
         [SerializeField] private TMP_Text positionText;
+        [SerializeField] private Button menuButton;
         [SerializeField] private SkillButtonView[] skillButtons;
 
         private Image healthFillImage;
@@ -18,6 +19,7 @@ namespace HeavyDowner.UI
         private float displayedShield;
         private Color healthFillColor;
 
+        public Button MenuButton => menuButton;
         public int SkillButtonCount => skillButtons.Length;
 
         public SkillButtonView GetSkillButton(int slotIndex)

@@ -6712,6 +6712,7 @@ MonoBehaviour:
   healthSlider: {fileID: 542126255}
   shieldFillRect: {fileID: 3500000001}
   positionText: {fileID: 1741146031}
+  menuButton: {fileID: 58658219}
   skillButtons:
   - {fileID: 3600000002}
   - {fileID: 3610000002}

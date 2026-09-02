@@ -1,4 +1,5 @@
 using HeavyDowner.Gameplay;
+using HeavyDowner.Module;
 using System.Threading;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace HeavyDowner.UI
             player.HealthChanged += view.SetHealth;
             player.ShieldChanged += view.SetShield;
             player.DepthChanged += view.SetDepth;
+            view.MenuButton.onClick.AddListener(HandleMenuClicked);
             for (int i = 0; i < view.SkillButtonCount; i++)
             {
                 view.GetSkillButton(i).Clicked += HandleSkillClicked;
@@ -49,6 +51,7 @@ namespace HeavyDowner.UI
             player.HealthChanged -= view.SetHealth;
             player.ShieldChanged -= view.SetShield;
             player.DepthChanged -= view.SetDepth;
+            view.MenuButton.onClick.RemoveListener(HandleMenuClicked);
             for (int i = 0; i < view.SkillButtonCount; i++)
             {
                 view.GetSkillButton(i).Clicked -= HandleSkillClicked;
@@ -56,6 +59,17 @@ namespace HeavyDowner.UI
 
             abilitySystem.AvailabilityChanged -= RefreshSkillState;
             abilitySystem.CooldownStarted -= HandleCooldownStarted;
+        }
+
+        private void HandleMenuClicked()
+        {
+            PopupSingleton.Instance.ShowConfirm("메인으로 이동하시겠습니까?", LoadMain);
+        }
+
+        private async void LoadMain()
+        {
+            view.MenuButton.interactable = false;
+            await LoadingBridgeService.LoadAsync(SceneType.Main, LoadingMode.Overlay);
         }
 
         private void HandleSkillClicked(SkillSlotId slotId)
