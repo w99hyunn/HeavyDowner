@@ -8,7 +8,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private Tilemap enemyTilemap;
         [SerializeField] private IngamePlayerController player;
         [SerializeField] private Transform screenAnchor;
-        [SerializeField] private SkillCuePlayer cuePlayer;
+        [SerializeField] private GameplayCuePlayer cuePlayer;
 
         private VerticalTilemapWorld world;
 
@@ -21,7 +21,11 @@ namespace HeavyDowner.Gameplay
         {
             GameplayAbilitySystem abilitySystem = new(cuePlayer);
             BossEntity entity = new(definition, anchor, health, abilitySystem);
-            entity.InitializeAbility(abilitySystem.GrantAbility(new SkillRuntime(definition.Ability, new BossAbilityContext(entity, world, enemyTilemap, player, screenAnchor, cuePlayer), destroyCancellationToken)));
+            entity.InitializeAbility(abilitySystem.GrantAbility(
+                new GameplayAbilityRuntime(
+                    definition.Ability,
+                    new BossAbilityContext(entity, world, enemyTilemap, player, screenAnchor, cuePlayer),
+                    destroyCancellationToken)));
             return entity;
         }
     }

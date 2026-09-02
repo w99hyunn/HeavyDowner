@@ -9,10 +9,10 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private SkillSlotDefinition[] slots;
         [SerializeField] private DescentBoardController board;
 
-        private readonly Dictionary<SkillSlotId, SkillRuntime> skillsBySlot = new();
+        private readonly Dictionary<SkillSlotId, GameplayAbilityRuntime> skillsBySlot = new();
         private GameplayAbilitySystem abilitySystem;
         private IngamePlayerController player;
-        private SkillCuePlayer cuePlayer;
+        private GameplayCuePlayer cuePlayer;
 
         public event Action AvailabilityChanged;
         public event Action<SkillSlotId> CooldownStarted;
@@ -20,13 +20,14 @@ namespace HeavyDowner.Gameplay
         private void Awake()
         {
             TryGetComponent<IngamePlayerController>(out player);
-            TryGetComponent<SkillCuePlayer>(out cuePlayer);
+            TryGetComponent<GameplayCuePlayer>(out cuePlayer);
 
             SkillExecutionContext context = new(player, board, cuePlayer);
             abilitySystem = new GameplayAbilitySystem(cuePlayer);
             foreach (SkillSlotDefinition slot in slots)
             {
-                SkillRuntime runtime = abilitySystem.GrantAbility(new SkillRuntime(slot.Skill, context, destroyCancellationToken));
+                GameplayAbilityRuntime runtime = abilitySystem.GrantAbility(
+                    new GameplayAbilityRuntime(slot.Skill, context, destroyCancellationToken));
                 runtime.StateChanged += HandleSkillStateChanged;
                 skillsBySlot.Add(slot.SlotId, runtime);
             }
@@ -44,7 +45,7 @@ namespace HeavyDowner.Gameplay
 
         public float GetCooldownRemainingNormalized(SkillSlotId slotId)
         {
-            SkillRuntime runtime = skillsBySlot[slotId];
+            GameplayAbilityRuntime runtime = skillsBySlot[slotId];
             if (runtime.Definition.Cooldown <= 0f)
             {
                 return 0f;
@@ -55,7 +56,7 @@ namespace HeavyDowner.Gameplay
 
         public bool CanActivate(SkillSlotId slotId)
         {
-            SkillRuntime runtime = skillsBySlot[slotId];
+            GameplayAbilityRuntime runtime = skillsBySlot[slotId];
             if (player.IsDead || !runtime.IsReady)
             {
                 return false;
@@ -71,7 +72,7 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            SkillRuntime runtime = skillsBySlot[slotId];
+            GameplayAbilityRuntime runtime = skillsBySlot[slotId];
             runtime.Activate();
             if (runtime.Definition.Cooldown > 0f)
             {
@@ -82,7 +83,7 @@ namespace HeavyDowner.Gameplay
         private SkillCapability GetOccupiedCapabilities()
         {
             SkillCapability occupiedCapabilities = SkillCapability.None;
-            foreach (SkillRuntime runtime in skillsBySlot.Values)
+            foreach (GameplayAbilityRuntime runtime in skillsBySlot.Values)
             {
                 if (runtime.IsActive)
                 {

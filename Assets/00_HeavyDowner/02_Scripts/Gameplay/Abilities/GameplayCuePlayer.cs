@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public class SkillCuePlayer : MonoBehaviour
+    public class GameplayCuePlayer : MonoBehaviour
     {
         private class CueObject
         {
@@ -16,7 +16,7 @@ namespace HeavyDowner.Gameplay
 
         private class CuePool
         {
-            public SkillCueDefinition Definition;
+            public GameplayCueDefinition Definition;
             public readonly Queue<CueObject> Available = new();
             public readonly List<CueObject> All = new();
         }
@@ -32,7 +32,7 @@ namespace HeavyDowner.Gameplay
             public bool IsLooping;
         }
 
-        private readonly Dictionary<SkillCueDefinition, CuePool> pools = new();
+        private readonly Dictionary<GameplayCueDefinition, CuePool> pools = new();
         private readonly List<ActiveCue> activeCues = new();
         private int nextHandleId = 1;
 
@@ -75,7 +75,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public void Prewarm(SkillCueDefinition definition)
+        public void Prewarm(GameplayCueDefinition definition)
         {
             if (pools.ContainsKey(definition))
             {
@@ -96,7 +96,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public SkillCueHandle PlayOneShot(SkillCueDefinition definition, Vector3 position)
+        public GameplayCueHandle PlayOneShot(GameplayCueDefinition definition, Vector3 position)
         {
             CuePool pool = pools[definition];
             CueObject cueObject = Rent(pool, position);
@@ -109,10 +109,10 @@ namespace HeavyDowner.Gameplay
                 CueObject = cueObject,
                 EndTime = Time.time + GetLifetime(definition, cueObject)
             });
-            return new SkillCueHandle(handleId);
+            return new GameplayCueHandle(handleId);
         }
 
-        public SkillCueHandle PlayOneShot(SkillCueDefinition definition, Transform anchor, Vector3 localPosition)
+        public GameplayCueHandle PlayOneShot(GameplayCueDefinition definition, Transform anchor, Vector3 localPosition)
         {
             CuePool pool = pools[definition];
             CueObject cueObject = Rent(pool, anchor.TransformPoint(localPosition));
@@ -126,10 +126,10 @@ namespace HeavyDowner.Gameplay
                 AnchorOffset = localPosition,
                 EndTime = Time.time + GetLifetime(definition, cueObject)
             });
-            return new SkillCueHandle(handleId);
+            return new GameplayCueHandle(handleId);
         }
 
-        public SkillCueHandle PlayLoop(SkillCueDefinition definition, Transform anchor)
+        public GameplayCueHandle PlayLoop(GameplayCueDefinition definition, Transform anchor)
         {
             CuePool pool = pools[definition];
             int handleId = nextHandleId++;
@@ -141,10 +141,10 @@ namespace HeavyDowner.Gameplay
                 Anchor = anchor,
                 IsLooping = true
             });
-            return new SkillCueHandle(handleId);
+            return new GameplayCueHandle(handleId);
         }
 
-        public void Stop(SkillCueHandle handle)
+        public void Stop(GameplayCueHandle handle)
         {
             for (int i = activeCues.Count - 1; i >= 0; i--)
             {
@@ -156,7 +156,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public void SetScale(SkillCueHandle handle, float scale)
+        public void SetScale(GameplayCueHandle handle, float scale)
         {
             for (int index = activeCues.Count - 1; index >= 0; index--)
             {
@@ -212,7 +212,7 @@ namespace HeavyDowner.Gameplay
             activeCues.RemoveAt(activeIndex);
         }
 
-        private CueObject CreateCueObject(SkillCueDefinition definition)
+        private CueObject CreateCueObject(GameplayCueDefinition definition)
         {
             GameObject root = Instantiate(definition.Prefab, transform.parent);
 
@@ -233,7 +233,7 @@ namespace HeavyDowner.Gameplay
             };
         }
 
-        private static float GetLifetime(SkillCueDefinition definition, CueObject cueObject)
+        private static float GetLifetime(GameplayCueDefinition definition, CueObject cueObject)
         {
             float lifetime = definition.Lifetime;
             if (definition.HasAudio)

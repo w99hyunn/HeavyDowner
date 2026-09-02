@@ -51,7 +51,7 @@ namespace HeavyDowner.Gameplay
 
     public readonly struct SkillExecutionContext : IGameplayAbilityContext
     {
-        public SkillExecutionContext(ISkillActor actor, ISkillBoard board, SkillCuePlayer cues)
+        public SkillExecutionContext(ISkillActor actor, ISkillBoard board, GameplayCuePlayer cues)
         {
             Actor = actor;
             Board = board;
@@ -60,18 +60,9 @@ namespace HeavyDowner.Gameplay
 
         public ISkillActor Actor { get; }
         public ISkillBoard Board { get; }
-        public SkillCuePlayer Cues { get; }
+        public GameplayCuePlayer Cues { get; }
         public Vector3 CuePosition => Actor.SkillTransform.position;
         public Transform LoopCueAnchor => Actor.SkillTransform;
     }
 
-    public readonly struct SkillCueHandle
-    {
-        internal SkillCueHandle(int id)
-        {
-            Id = id;
-        }
-
-        internal int Id { get; }
-    }
 }

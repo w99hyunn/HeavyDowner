@@ -7030,7 +7030,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85b7488284d683d6177804c3881ef908, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCuePlayer
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCuePlayer
 --- !u!1 &3200000000
 GameObject:
   m_ObjectHideFlags: 0

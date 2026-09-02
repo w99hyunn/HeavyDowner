@@ -22,7 +22,7 @@ namespace HeavyDowner.Gameplay
 
     public readonly struct BossAbilityContext : IGameplayAbilityContext
     {
-        public BossAbilityContext(BossEntity entity, VerticalTilemapWorld world, Tilemap enemyTilemap, IngamePlayerController player, Transform screenAnchor, SkillCuePlayer cues)
+        public BossAbilityContext(BossEntity entity, VerticalTilemapWorld world, Tilemap enemyTilemap, IngamePlayerController player, Transform screenAnchor, GameplayCuePlayer cues)
         {
             Entity = entity;
             World = world;
@@ -37,7 +37,7 @@ namespace HeavyDowner.Gameplay
         public Tilemap EnemyTilemap { get; }
         public IngamePlayerController Player { get; }
         public Transform ScreenAnchor { get; }
-        public SkillCuePlayer Cues { get; }
+        public GameplayCuePlayer Cues { get; }
         public Vector3 CuePosition => World.CellToWorld(Entity.Anchor);
         public Transform LoopCueAnchor => ScreenAnchor;
 
@@ -63,7 +63,7 @@ namespace HeavyDowner.Gameplay
 
     public class BossEntity
     {
-        private SkillRuntime abilityRuntime;
+        private GameplayAbilityRuntime abilityRuntime;
         private readonly GameplayAbilitySystem abilitySystem;
 
         public BossEntity(BossDefinition definition, Vector2Int anchor, int health, GameplayAbilitySystem abilitySystem)
@@ -79,7 +79,7 @@ namespace HeavyDowner.Gameplay
         public int Health { get; private set; }
         public int HitCount { get; private set; }
 
-        internal void InitializeAbility(SkillRuntime runtime)
+        internal void InitializeAbility(GameplayAbilityRuntime runtime)
         {
             abilityRuntime = runtime;
         }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public class SkillRuntime
+    public class GameplayAbilityRuntime
     {
         private readonly IGameplayAbilityContext context;
         private readonly CancellationToken lifetimeToken;
         private CancellationTokenSource activationCancellation;
         private float cooldownEndTime;
 
-        public SkillRuntime(GameplayAbilityDefinition ability, IGameplayAbilityContext context, CancellationToken lifetimeToken)
+        public GameplayAbilityRuntime(GameplayAbilityDefinition ability, IGameplayAbilityContext context, CancellationToken lifetimeToken)
         {
             Definition = ability;
             this.context = context;
@@ -59,11 +59,11 @@ namespace HeavyDowner.Gameplay
 
         private async Awaitable ExecuteAsync(int magnitude, CancellationTokenSource cancellationSource)
         {
-            SkillCueHandle loopCueHandle = default;
+            GameplayCueHandle loopCueHandle = default;
 
             try
             {
-                foreach (SkillCueDefinition cue in Definition.ActivationCues)
+                foreach (GameplayCueDefinition cue in Definition.ActivationCues)
                 {
                     context.Cues.PlayOneShot(cue, context.CuePosition);
                 }
@@ -90,7 +90,7 @@ namespace HeavyDowner.Gameplay
                     context.Cues.Stop(loopCueHandle);
                 }
 
-                foreach (SkillCueDefinition cue in Definition.EndCues)
+                foreach (GameplayCueDefinition cue in Definition.EndCues)
                 {
                     context.Cues.PlayOneShot(cue, context.CuePosition);
                 }

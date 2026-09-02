@@ -12,7 +12,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int damage = 800;
         [SerializeField, Min(0.01f)] private float stepInterval = 0.045f;
         [SerializeField, Min(1)] private int cueStepInterval = 3;
-        [SerializeField] private SkillCueDefinition stepCue;
+        [SerializeField] private GameplayCueDefinition stepCue;
 
         public override async Awaitable ExecuteAsync(SkillExecutionContext context, CancellationToken cancellationToken)
         {
@@ -43,7 +43,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public override void CollectCues(List<SkillCueDefinition> cues)
+        public override void CollectCues(List<GameplayCueDefinition> cues)
         {
             base.CollectCues(cues);
             cues.Add(stepCue);

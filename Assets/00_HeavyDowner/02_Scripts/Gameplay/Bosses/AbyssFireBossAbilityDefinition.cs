@@ -7,7 +7,7 @@ namespace HeavyDowner.Gameplay
     [CreateAssetMenu(menuName = "Heavy Downer/Bosses/Abilities/Abyss Fire", fileName = "AbyssFire")]
     public class AbyssFireBossAbilityDefinition : BossAbilityDefinition
     {
-        [SerializeField] private SkillCueDefinition fireCue;
+        [SerializeField] private GameplayCueDefinition fireCue;
         [SerializeField, Min(0f)] private float windup = 0.55f;
         [SerializeField, Min(0f)] private float aftermathDuration = 1.1f;
         [SerializeField, Min(2)] private int waveStepCount = 7;
@@ -45,7 +45,7 @@ namespace HeavyDowner.Gameplay
             await Awaitable.WaitForSecondsAsync(aftermathDuration, cancellationToken);
         }
 
-        public override void CollectCues(List<SkillCueDefinition> cues)
+        public override void CollectCues(List<GameplayCueDefinition> cues)
         {
             base.CollectCues(cues);
             cues.Add(fireCue);

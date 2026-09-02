@@ -7,9 +7,9 @@ namespace HeavyDowner.Gameplay
     [CreateAssetMenu(menuName = "Heavy Downer/Bosses/Abilities/Crystal Lightning", fileName = "CrystalLightning")]
     public class CrystalLightningBossAbilityDefinition : BossAbilityDefinition
     {
-        [SerializeField] private SkillCueDefinition warningCue;
-        [SerializeField] private SkillCueDefinition screenCue;
-        [SerializeField] private SkillCueDefinition strikeCue;
+        [SerializeField] private GameplayCueDefinition warningCue;
+        [SerializeField] private GameplayCueDefinition screenCue;
+        [SerializeField] private GameplayCueDefinition strikeCue;
         [SerializeField, Min(0f)] private float warningDuration = 2f;
         [SerializeField, Min(0f)] private float strikeDuration = 0.45f;
         [SerializeField] private Vector2 warningScaleRange = new(0.78f, 1.05f);
@@ -20,7 +20,7 @@ namespace HeavyDowner.Gameplay
         {
             context.Cues.PlayOneShot(screenCue, context.ScreenAnchor, screenLocalPosition);
             Vector2Int[] targetCells = GetTargetCells(context);
-            SkillCueHandle[] warnings = new SkillCueHandle[targetCells.Length];
+            GameplayCueHandle[] warnings = new GameplayCueHandle[targetCells.Length];
             for (int index = 0; index < targetCells.Length; index++)
             {
                 warnings[index] = context.Cues.PlayOneShot(warningCue, context.World.CellToWorld(targetCells[index]));
@@ -63,7 +63,7 @@ namespace HeavyDowner.Gameplay
             await Awaitable.WaitForSecondsAsync(strikeDuration, cancellationToken);
         }
 
-        public override void CollectCues(List<SkillCueDefinition> cues)
+        public override void CollectCues(List<GameplayCueDefinition> cues)
         {
             base.CollectCues(cues);
             cues.Add(warningCue);

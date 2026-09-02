@@ -4,16 +4,16 @@ namespace HeavyDowner.Gameplay
 {
     public class GameplayAbilitySystem
     {
-        private readonly SkillCuePlayer cuePlayer;
-        private readonly List<SkillRuntime> abilities = new();
-        private readonly List<SkillCueDefinition> collectedCues = new();
+        private readonly GameplayCuePlayer cuePlayer;
+        private readonly List<GameplayAbilityRuntime> abilities = new();
+        private readonly List<GameplayCueDefinition> collectedCues = new();
 
-        public GameplayAbilitySystem(SkillCuePlayer cuePlayer)
+        public GameplayAbilitySystem(GameplayCuePlayer cuePlayer)
         {
             this.cuePlayer = cuePlayer;
         }
 
-        public SkillRuntime GrantAbility(SkillRuntime runtime)
+        public GameplayAbilityRuntime GrantAbility(GameplayAbilityRuntime runtime)
         {
             collectedCues.Clear();
             runtime.Definition.CollectCues(collectedCues);

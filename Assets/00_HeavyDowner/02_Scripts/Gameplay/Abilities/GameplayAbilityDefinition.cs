@@ -7,7 +7,7 @@ namespace HeavyDowner.Gameplay
 {
     public interface IGameplayAbilityContext
     {
-        SkillCuePlayer Cues { get; }
+        GameplayCuePlayer Cues { get; }
         Vector3 CuePosition { get; }
         Transform LoopCueAnchor { get; }
     }
@@ -15,18 +15,18 @@ namespace HeavyDowner.Gameplay
     public abstract class GameplayAbilityDefinition : ScriptableObject
     {
         [SerializeField, Min(0f)] private float cooldown;
-        [SerializeField] private SkillCueDefinition[] activationCues = Array.Empty<SkillCueDefinition>();
-        [SerializeField] private SkillCueDefinition loopCue;
-        [SerializeField] private SkillCueDefinition[] endCues = Array.Empty<SkillCueDefinition>();
+        [SerializeField] private GameplayCueDefinition[] activationCues = Array.Empty<GameplayCueDefinition>();
+        [SerializeField] private GameplayCueDefinition loopCue;
+        [SerializeField] private GameplayCueDefinition[] endCues = Array.Empty<GameplayCueDefinition>();
 
         public float Cooldown => cooldown;
-        public IReadOnlyList<SkillCueDefinition> ActivationCues => activationCues;
-        public SkillCueDefinition LoopCue => loopCue;
-        public IReadOnlyList<SkillCueDefinition> EndCues => endCues;
+        public IReadOnlyList<GameplayCueDefinition> ActivationCues => activationCues;
+        public GameplayCueDefinition LoopCue => loopCue;
+        public IReadOnlyList<GameplayCueDefinition> EndCues => endCues;
 
         public abstract Awaitable ExecuteAsync(IGameplayAbilityContext context, int magnitude, CancellationToken cancellationToken);
 
-        public virtual void CollectCues(List<SkillCueDefinition> cues)
+        public virtual void CollectCues(List<GameplayCueDefinition> cues)
         {
             cues.AddRange(activationCues);
             if (loopCue != null)
