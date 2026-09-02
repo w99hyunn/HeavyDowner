@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Skills/Shield", fileName = "Shield")]
-    public sealed class ShieldSkillDefinition : SkillDefinition
+    public class ShieldSkillDefinition : SkillDefinition
     {
         [SerializeField, Range(0f, 1f)] private float damageReduction = 0.5f;
         [SerializeField, Range(0f, 1f)] private float healthNormalized = 0.25f;

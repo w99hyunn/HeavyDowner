@@ -35,7 +35,7 @@ namespace HeavyDowner.Gameplay
     }
 
     [Serializable]
-    public sealed class EquipmentDefinition
+    public class EquipmentDefinition
     {
         [SerializeField] private EquipmentId id;
         [SerializeField] private string displayName;
@@ -90,7 +90,7 @@ namespace HeavyDowner.Gameplay
     }
 
     [Serializable]
-    public sealed class EquipmentProgress
+    public class EquipmentProgress
     {
         public EquipmentId Id;
         public int Level;
@@ -103,7 +103,7 @@ namespace HeavyDowner.Gameplay
     }
 
     [Serializable]
-    public sealed class EquipmentSaveData
+    public class EquipmentSaveData
     {
         public int EnhancementOrbs;
         public EquipmentId EquippedWeapon;

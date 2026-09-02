@@ -3,7 +3,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [RequireComponent(typeof(Grid))]
-    public sealed class VerticalTilemapWorld : MonoBehaviour
+    public class VerticalTilemapWorld : MonoBehaviour
     {
         [SerializeField] private int horizontalCellCount = 9;
 

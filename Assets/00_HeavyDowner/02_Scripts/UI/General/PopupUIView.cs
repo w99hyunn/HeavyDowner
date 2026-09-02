@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.UI
 {
-    public sealed class PopupUIView : MonoBehaviour
+    public class PopupUIView : MonoBehaviour
     {
         [SerializeField] private GameObject background;
         [SerializeField] private TMP_Text messageText;

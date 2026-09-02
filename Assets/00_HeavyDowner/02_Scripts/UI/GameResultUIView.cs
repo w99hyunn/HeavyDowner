@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.UI
 {
-    public sealed class GameResultUIView : MonoBehaviour
+    public class GameResultUIView : MonoBehaviour
     {
         [SerializeField] private GameObject panel;
         [SerializeField] private TMP_Text depthText;

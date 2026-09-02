@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.UI
 {
-    public sealed class IngameUIView : MonoBehaviour
+    public class IngameUIView : MonoBehaviour
     {
         [SerializeField] private Slider healthSlider;
         [SerializeField] private RectTransform shieldFillRect;

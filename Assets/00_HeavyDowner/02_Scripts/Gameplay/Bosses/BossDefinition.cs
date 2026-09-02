@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Bosses/Boss", fileName = "Boss")]
-    public sealed class BossDefinition : ScriptableObject
+    public class BossDefinition : ScriptableObject
     {
         [SerializeField] private TileBase idleTile;
         [SerializeField] private TileBase castTile;

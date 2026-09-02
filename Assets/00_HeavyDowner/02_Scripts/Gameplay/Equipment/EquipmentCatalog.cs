@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Equipment/Catalog", fileName = "EquipmentCatalog")]
-    public sealed class EquipmentCatalog : ScriptableObject
+    public class EquipmentCatalog : ScriptableObject
     {
         [SerializeField] private Sprite enhancementOrbIcon;
         [SerializeField] private EquipmentDefinition[] items;

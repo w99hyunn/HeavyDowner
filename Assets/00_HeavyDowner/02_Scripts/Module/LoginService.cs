@@ -71,7 +71,7 @@ namespace HeavyDowner.Module
         }
 
         [Preserve]
-        private sealed class GoogleSignInCallback : AndroidJavaProxy
+        private class GoogleSignInCallback : AndroidJavaProxy
         {
             private readonly TaskCompletionSource<string> completion;
 

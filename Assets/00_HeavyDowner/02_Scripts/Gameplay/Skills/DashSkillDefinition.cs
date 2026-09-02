@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Skills/Dash", fileName = "Dash")]
-    public sealed class DashSkillDefinition : SkillDefinition
+    public class DashSkillDefinition : SkillDefinition
     {
         [SerializeField, Min(1)] private int distance = 10;
         [SerializeField, Min(0)] private int halfWidth = 1;

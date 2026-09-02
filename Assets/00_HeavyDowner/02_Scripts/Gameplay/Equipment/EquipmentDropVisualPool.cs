@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class EquipmentDropVisualPool : MonoBehaviour
+    public class EquipmentDropVisualPool : MonoBehaviour
     {
         [Serializable]
-        private sealed class VisualSlot
+        private class VisualSlot
         {
             [SerializeField] private Transform root;
             [SerializeField] private SpriteRenderer icon;

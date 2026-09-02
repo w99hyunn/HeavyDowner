@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class DamageTextPool : MonoBehaviour
+    public class DamageTextPool : MonoBehaviour
     {
         [SerializeField] private DamageTextVisual damageTextPrefab;
         [SerializeField] private Camera streamingCamera;

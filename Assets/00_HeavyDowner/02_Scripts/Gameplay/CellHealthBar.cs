@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class CellHealthBar : MonoBehaviour
+    public class CellHealthBar : MonoBehaviour
     {
         private Slider healthSlider;
         private float width;

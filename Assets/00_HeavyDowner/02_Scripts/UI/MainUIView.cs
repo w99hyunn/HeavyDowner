@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.UI
 {
-    public sealed class MainUIView : MonoBehaviour
+    public class MainUIView : MonoBehaviour
     {
         [SerializeField] private TMP_Text nicknameText;
         [SerializeField] private TMP_Text currencyText;

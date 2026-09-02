@@ -4,7 +4,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Skills/Shockwave", fileName = "Shockwave")]
-    public sealed class ShockwaveSkillDefinition : SkillDefinition
+    public class ShockwaveSkillDefinition : SkillDefinition
     {
         [SerializeField, Min(1)] private int radius = 2;
         [SerializeField, Min(1)] private int damage = 300;

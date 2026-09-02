@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class RunRewardSession : MonoBehaviour
+    public class RunRewardSession : MonoBehaviour
     {
         [SerializeField] private EquipmentCatalog catalog;
         [SerializeField] private EquipmentDropVisualPool dropVisualPool;

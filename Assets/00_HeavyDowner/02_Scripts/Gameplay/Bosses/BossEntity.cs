@@ -61,7 +61,7 @@ namespace HeavyDowner.Gameplay
         }
     }
 
-    public sealed class BossEntity
+    public class BossEntity
     {
         private SkillRuntime abilityRuntime;
         private readonly GameplayAbilitySystem abilitySystem;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class DestroyedCellVisual : MonoBehaviour
+    public class DestroyedCellVisual : MonoBehaviour
     {
         private static readonly int SHARD_INDEX_ID = Shader.PropertyToID("_ShardIndex");
         private static readonly int SPRITE_UV_RECT_ID = Shader.PropertyToID("_SpriteUVRect");

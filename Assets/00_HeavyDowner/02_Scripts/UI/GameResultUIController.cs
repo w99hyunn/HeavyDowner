@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HeavyDowner.UI
 {
-    public sealed class GameResultUIController : MonoBehaviour
+    public class GameResultUIController : MonoBehaviour
     {
         [SerializeField] private IngamePlayerController player;
         [SerializeField] private VerticalCameraFollower cameraFollower;

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Bosses/Abilities/Crystal Lightning", fileName = "CrystalLightning")]
-    public sealed class CrystalLightningBossAbilityDefinition : BossAbilityDefinition
+    public class CrystalLightningBossAbilityDefinition : BossAbilityDefinition
     {
         [SerializeField] private SkillCueDefinition warningCue;
         [SerializeField] private SkillCueDefinition screenCue;

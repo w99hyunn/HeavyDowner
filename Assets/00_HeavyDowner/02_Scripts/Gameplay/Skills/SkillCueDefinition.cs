@@ -3,7 +3,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Skills/Cue", fileName = "SkillCue")]
-    public sealed class SkillCueDefinition : ScriptableObject
+    public class SkillCueDefinition : ScriptableObject
     {
         [SerializeField] private GameObject prefab;
         [SerializeField] private AudioClip[] audioClips = new AudioClip[0];

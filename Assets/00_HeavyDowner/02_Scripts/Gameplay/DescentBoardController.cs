@@ -17,7 +17,7 @@ namespace HeavyDowner.Gameplay
         public int CounterDamage { get; }
     }
 
-    public sealed class DescentBoardController : MonoBehaviour, ISkillBoard
+    public class DescentBoardController : MonoBehaviour, ISkillBoard
     {
         private const int MONSTER_BAND_HEIGHT = 4;
 

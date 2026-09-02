@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [CreateAssetMenu(menuName = "Heavy Downer/Bosses/Abilities/Abyss Fire", fileName = "AbyssFire")]
-    public sealed class AbyssFireBossAbilityDefinition : BossAbilityDefinition
+    public class AbyssFireBossAbilityDefinition : BossAbilityDefinition
     {
         [SerializeField] private SkillCueDefinition fireCue;
         [SerializeField, Min(0f)] private float windup = 0.55f;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class CellHealthBarPool : MonoBehaviour
+    public class CellHealthBarPool : MonoBehaviour
     {
         [SerializeField] private CellHealthBar healthBarPrefab;
         [SerializeField, Min(1)] private int initialCapacity = 4;

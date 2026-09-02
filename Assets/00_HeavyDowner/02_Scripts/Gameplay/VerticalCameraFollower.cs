@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class VerticalCameraFollower : MonoBehaviour
+    public class VerticalCameraFollower : MonoBehaviour
     {
         [SerializeField] private Transform target;
         [SerializeField] private float verticalOffset = 1.5f;

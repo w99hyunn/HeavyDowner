@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class BossAbilitySystem : MonoBehaviour
+    public class BossAbilitySystem : MonoBehaviour
     {
         [SerializeField] private VerticalTilemapWorld world;
         [SerializeField] private Tilemap enemyTilemap;

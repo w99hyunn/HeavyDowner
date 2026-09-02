@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class GameplayAbilitySystem
+    public class GameplayAbilitySystem
     {
         private readonly SkillCuePlayer cuePlayer;
         private readonly List<SkillRuntime> abilities = new();

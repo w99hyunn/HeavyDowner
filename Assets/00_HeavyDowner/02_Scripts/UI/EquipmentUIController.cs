@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 namespace HeavyDowner.UI
 {
-    public sealed class EquipmentUIController : MonoBehaviour
+    public class EquipmentUIController : MonoBehaviour
     {
         [SerializeField] private EquipmentCatalog catalog;
 

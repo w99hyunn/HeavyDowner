@@ -15,7 +15,7 @@ namespace HeavyDowner.Gameplay
 
         public abstract Awaitable ExecuteAsync(SkillExecutionContext context, CancellationToken cancellationToken);
 
-        public sealed override Awaitable ExecuteAsync(IGameplayAbilityContext context, int magnitude, CancellationToken cancellationToken)
+        public override Awaitable ExecuteAsync(IGameplayAbilityContext context, int magnitude, CancellationToken cancellationToken)
         {
             return ExecuteAsync((SkillExecutionContext)context, cancellationToken);
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class DamageTextVisual : MonoBehaviour
+    public class DamageTextVisual : MonoBehaviour
     {
         [Header("Block / Enemy")]
         [SerializeField] private Color worldDamageColor = new(1f, 0.72f, 0.15f, 1f);

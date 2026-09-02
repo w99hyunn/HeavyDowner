@@ -7,7 +7,7 @@ namespace HeavyDowner.Gameplay
     {
         public abstract Awaitable ExecuteAsync(BossAbilityContext context, int damage, CancellationToken cancellationToken);
 
-        public sealed override async Awaitable ExecuteAsync(IGameplayAbilityContext context, int magnitude, CancellationToken cancellationToken)
+        public override async Awaitable ExecuteAsync(IGameplayAbilityContext context, int magnitude, CancellationToken cancellationToken)
         {
             BossAbilityContext bossContext = (BossAbilityContext)context;
             bossContext.BeginCast();

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace HeavyDowner.UI
 {
-    public sealed class SkillButtonView : MonoBehaviour
+    public class SkillButtonView : MonoBehaviour
     {
         private static readonly int READY_STATE_HASH = Animator.StringToHash("Ready");
 

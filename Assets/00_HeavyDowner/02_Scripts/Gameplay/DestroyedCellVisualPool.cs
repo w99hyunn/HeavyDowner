@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class DestroyedCellVisualPool : MonoBehaviour
+    public class DestroyedCellVisualPool : MonoBehaviour
     {
         [SerializeField] private Camera streamingCamera;
         [SerializeField] private float despawnPadding = 0.45f;

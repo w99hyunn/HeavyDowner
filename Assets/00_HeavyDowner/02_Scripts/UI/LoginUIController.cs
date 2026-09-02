@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HeavyDowner.UI
 {
-    public sealed class LoginUIController : MonoBehaviour
+    public class LoginUIController : MonoBehaviour
     {
         [SerializeField] private InitializeManager initializer;
 

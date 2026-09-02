@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.UI
 {
-    public sealed class MainUIController : MonoBehaviour
+    public class MainUIController : MonoBehaviour
     {
         private const int CURRENCY_RECOVERY_AMOUNT = 100;
         private const int GAME_START_COST = 5;

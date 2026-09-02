@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.UI
 {
-    public sealed class LoginUIView : MonoBehaviour
+    public class LoginUIView : MonoBehaviour
     {
         [SerializeField] private TMP_Text loadingText;
         [SerializeField] private Button googleLoginButton;

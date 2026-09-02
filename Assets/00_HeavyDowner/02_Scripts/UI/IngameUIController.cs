@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.UI
 {
-    public sealed class IngameUIController : MonoBehaviour
+    public class IngameUIController : MonoBehaviour
     {
         [SerializeField] private IngamePlayerController player;
 

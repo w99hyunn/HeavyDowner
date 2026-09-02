@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class PlayerAbilitySystem : MonoBehaviour
+    public class PlayerAbilitySystem : MonoBehaviour
     {
         [SerializeField] private SkillSlotDefinition[] slots;
         [SerializeField] private DescentBoardController board;

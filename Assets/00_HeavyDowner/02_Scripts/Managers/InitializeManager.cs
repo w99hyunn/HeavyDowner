@@ -10,7 +10,7 @@ namespace HeavyDowner.Module
         Guest
     }
 
-    public sealed class InitializeManager : MonoBehaviour
+    public class InitializeManager : MonoBehaviour
     {
         public event Action<string> StepChanged;
         public event Action LoginRequired;

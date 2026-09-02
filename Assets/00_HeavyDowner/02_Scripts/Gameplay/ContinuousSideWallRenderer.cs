@@ -3,7 +3,7 @@ using UnityEngine;
 namespace HeavyDowner.Gameplay
 {
     [DefaultExecutionOrder(100)]
-    public sealed class ContinuousSideWallRenderer : MonoBehaviour
+    public class ContinuousSideWallRenderer : MonoBehaviour
     {
         [SerializeField] private Transform streamingCamera;
         [SerializeField] private SpriteRenderer[] leftSegments;

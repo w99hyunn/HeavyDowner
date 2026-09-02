@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace HeavyDowner.UI
 {
     [Serializable]
-    public sealed class EquipmentSlotBinding
+    public class EquipmentSlotBinding
     {
         [SerializeField] private Button button;
         [SerializeField] private Image icon;
@@ -29,7 +29,7 @@ namespace HeavyDowner.UI
         }
     }
 
-    public sealed class EquipmentUIView : MonoBehaviour
+    public class EquipmentUIView : MonoBehaviour
     {
         [SerializeField] private GameObject panel;
         [SerializeField] private Button closeButton;

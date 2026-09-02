@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class TileHitFlashController : MonoBehaviour
+    public class TileHitFlashController : MonoBehaviour
     {
         [SerializeField] private float duration = 0.08f;
         [SerializeField] private Color color = new(1f, 0.72f, 0.62f, 1f);

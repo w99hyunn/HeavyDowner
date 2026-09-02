@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class SkillCuePlayer : MonoBehaviour
+    public class SkillCuePlayer : MonoBehaviour
     {
-        private sealed class CueObject
+        private class CueObject
         {
             public GameObject Root;
             public ParticleSystem[] Particles;
@@ -14,14 +14,14 @@ namespace HeavyDowner.Gameplay
             public Vector3 InitialScale;
         }
 
-        private sealed class CuePool
+        private class CuePool
         {
             public SkillCueDefinition Definition;
             public readonly Queue<CueObject> Available = new();
             public readonly List<CueObject> All = new();
         }
 
-        private sealed class ActiveCue
+        private class ActiveCue
         {
             public int Id;
             public CuePool Pool;

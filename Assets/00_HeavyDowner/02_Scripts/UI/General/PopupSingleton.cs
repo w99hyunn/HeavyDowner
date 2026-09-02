@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 namespace HeavyDowner.UI
 {
     [DefaultExecutionOrder(-1000)]
-    public sealed class PopupSingleton : MonoBehaviour
+    public class PopupSingleton : MonoBehaviour
     {
         private static PopupSingleton instance;
         public static PopupSingleton Instance => instance;
