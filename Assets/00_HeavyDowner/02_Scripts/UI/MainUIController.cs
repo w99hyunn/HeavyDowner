@@ -9,6 +9,8 @@ namespace HeavyDowner.UI
         private const int CURRENCY_RECOVERY_AMOUNT = 100;
         private const int GAME_START_COST = 5;
 
+        [SerializeField] private EquipmentUIController equipmentUI;
+
         private MainUIView view;
         private bool isStartingGame;
 
@@ -25,13 +27,17 @@ namespace HeavyDowner.UI
         private void OnEnable()
         {
             view.AddCurrencyButton.onClick.AddListener(OnAddCurrencyClicked);
+            view.EquipmentButton.onClick.AddListener(equipmentUI.Show);
             view.GameStartButton.onClick.AddListener(OnGameStartClicked);
+            equipmentUI.EnhancementOrbsChanged += Refresh;
         }
 
         private void OnDisable()
         {
             view.AddCurrencyButton.onClick.RemoveListener(OnAddCurrencyClicked);
+            view.EquipmentButton.onClick.RemoveListener(equipmentUI.Show);
             view.GameStartButton.onClick.RemoveListener(OnGameStartClicked);
+            equipmentUI.EnhancementOrbsChanged -= Refresh;
         }
 
         private void Refresh()
@@ -39,6 +45,7 @@ namespace HeavyDowner.UI
             view.SetPlayerData(
                 PlayerDataService.Nickname,
                 PlayerDataService.Currency,
+                PlayerDataService.EnhancementOrbs,
                 PlayerDataService.HighScore);
         }
 

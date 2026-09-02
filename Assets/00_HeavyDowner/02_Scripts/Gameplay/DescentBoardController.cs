@@ -39,6 +39,12 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private TileBase batTile;
         [SerializeField] private TileBase golemTile;
 
+        [Header("Enhancement Orbs")]
+        [SerializeField] private TileBase enhancementOrbTile;
+        [SerializeField, Range(0f, 1f)] private float enhancementOrbSpawnChance = 0.04f;
+        [SerializeField, Min(1)] private int enhancementOrbHealth = 100;
+        [SerializeField, Min(1)] private int enhancementOrbAmount = 1;
+
         [Header("Streaming")]
         [SerializeField, Min(8)] private int chunkHeight = 32;
         [SerializeField, Min(1)] private int loadedChunkRadius = 1;
@@ -54,6 +60,7 @@ namespace HeavyDowner.Gameplay
         [Header("Presentation")]
         [SerializeField] private CellHealthBarPool healthBarPool;
         [SerializeField] private DamageTextPool damageTextPool;
+        [SerializeField] private RunRewardSession rewardSession;
 
         private VerticalTilemapWorld world;
         private DestroyedCellVisualPool destroyedCellVisualPool;
@@ -71,17 +78,24 @@ namespace HeavyDowner.Gameplay
         private int currentStreamingChunk = int.MaxValue;
         private int randomSeed;
 
+        private enum CellType
+        {
+            Block,
+            Enemy,
+            EnhancementOrb
+        }
+
         private readonly struct CellDefinition
         {
             public CellDefinition(
-                bool isEnemy,
+                CellType type,
                 TileBase tile,
                 int health,
                 int counterDamage,
                 Vector2Int anchorPosition,
                 int footprintSize)
             {
-                IsEnemy = isEnemy;
+                Type = type;
                 Tile = tile;
                 Health = health;
                 CounterDamage = counterDamage;
@@ -89,7 +103,9 @@ namespace HeavyDowner.Gameplay
                 FootprintSize = footprintSize;
             }
 
-            public bool IsEnemy { get; }
+            public CellType Type { get; }
+            public bool IsEnemy => Type == CellType.Enemy;
+            public bool IsEnhancementOrb => Type == CellType.EnhancementOrb;
             public TileBase Tile { get; }
             public int Health { get; }
             public int CounterDamage { get; }
@@ -175,8 +191,18 @@ namespace HeavyDowner.Gameplay
                 mutation.DestroyedMask |= cellMask;
                 remainingHealthByCell.Remove(statePosition);
                 SetRowMutation(statePosition.y, mutation);
+                Vector3 visualCenter = GetCellVisualCenter(cell);
                 ClearVisibleCell(cell);
-                int destructionDamage = cell.IsEnemy ? 0 : cell.CounterDamage;
+                if (cell.IsEnemy)
+                {
+                    rewardSession.TryDropEquipment(visualCenter);
+                }
+                else if (cell.IsEnhancementOrb)
+                {
+                    rewardSession.CollectEnhancementOrb(enhancementOrbAmount, visualCenter);
+                }
+
+                int destructionDamage = cell.Type == CellType.Block ? cell.CounterDamage : 0;
                 return new BoardActionResult(true, destructionDamage);
             }
 
@@ -212,6 +238,27 @@ namespace HeavyDowner.Gameplay
                 for (int x = -horizontalRadius; x <= horizontalRadius; x++)
                 {
                     AttackSkillCell(center + new Vector2Int(x, y), damage);
+                }
+            }
+        }
+
+        public void AttackSplash(Vector2Int center, int radius, int damage)
+        {
+            skillAttackAnchors.Clear();
+            if (TryGetCellDefinition(center, out CellDefinition centerCell))
+            {
+                skillAttackAnchors.Add(centerCell.AnchorPosition);
+            }
+
+            for (int y = -radius; y <= radius; y++)
+            {
+                int horizontalRadius = radius - Mathf.Abs(y);
+                for (int x = -horizontalRadius; x <= horizontalRadius; x++)
+                {
+                    if (x != 0 || y != 0)
+                    {
+                        AttackSkillCell(center + new Vector2Int(x, y), damage);
+                    }
                 }
             }
         }
@@ -369,9 +416,21 @@ namespace HeavyDowner.Gameplay
                 return true;
             }
 
+            if (Random01(position, 0xA24BAED5u) < enhancementOrbSpawnChance)
+            {
+                cell = new CellDefinition(
+                    CellType.EnhancementOrb,
+                    enhancementOrbTile,
+                    enhancementOrbHealth,
+                    0,
+                    position,
+                    1);
+                return true;
+            }
+
             int blockTier = GetBlockTier(-position.y);
             cell = new CellDefinition(
-                false,
+                CellType.Block,
                 blockTiles[blockTier],
                 blockHealthByTier[blockTier],
                 blockDamage,
@@ -437,7 +496,7 @@ namespace HeavyDowner.Gameplay
                 Mathf.FloorToInt(Random01(bandSeed, 0x27D4EB2Fu) * horizontalRange));
 
             cell = new CellDefinition(
-                true,
+                CellType.Enemy,
                 monsterTile,
                 monsterHealth,
                 monsterCounterDamage,

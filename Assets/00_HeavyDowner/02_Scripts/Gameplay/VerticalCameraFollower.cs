@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace HeavyDowner.Gameplay
@@ -12,6 +13,8 @@ namespace HeavyDowner.Gameplay
         private IngamePlayerController player;
         private float initialY;
         private bool isScrollingToTop;
+
+        public event Action ReachedTop;
 
         private void Awake()
         {
@@ -37,6 +40,11 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
+            if (player.IsDead)
+            {
+                return;
+            }
+
             float targetY = target.position.y + verticalOffset;
             if (targetY >= transform.position.y)
             {
@@ -59,6 +67,11 @@ namespace HeavyDowner.Gameplay
             Vector3 position = transform.position;
             position.y = Mathf.MoveTowards(position.y, initialY, scrollToTopSpeed * Time.deltaTime);
             transform.position = position;
+            if (position.y == initialY)
+            {
+                isScrollingToTop = false;
+                ReachedTop?.Invoke();
+            }
         }
     }
 }

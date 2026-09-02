@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d167924a76225747a39d194f9e02fa3, type: 3}
+  m_Name: EquipmentCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.EquipmentCatalog
+  enhancementOrbIcon: {fileID: 21300000, guid: 3eb23faf1be14b54c8a4fb1423b44690, type: 3}
+  items:
+  - id: 1
+    displayName: "\uB0A1\uC740 \uCCA0 \uACE1\uAD2D\uC774"
+    type: 0
+    rarity: 0
+    rarityColor: {r: 0.72, g: 0.72, b: 0.72, a: 1}
+    icon: {fileID: 21300000, guid: 47998656c9724a24e81d79cbe9ea62d3, type: 3}
+    attackBonus: 15
+    attackBonusPerLevel: 5
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 0
+    healthBonusPerLevel: 0
+    upgradeBaseCost: 5
+    maxLevel: 10
+    dropWeight: 40
+  - id: 2
+    displayName: "\uCF54\uBC1C\uD2B8 \uD574\uBA38"
+    type: 0
+    rarity: 1
+    rarityColor: {r: 0.3, g: 0.82, b: 0.46, a: 1}
+    icon: {fileID: 21300000, guid: acf214def90129244af404ced42d0590, type: 3}
+    attackBonus: 30
+    attackBonusPerLevel: 7
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 0
+    healthBonusPerLevel: 0
+    upgradeBaseCost: 8
+    maxLevel: 10
+    dropWeight: 28
+  - id: 3
+    displayName: "\uB9C8\uADF8\uB9C8 \uB4DC\uB9B4"
+    type: 0
+    rarity: 2
+    rarityColor: {r: 0.25, g: 0.62, b: 1, a: 1}
+    icon: {fileID: 21300000, guid: b37864cd3dea4d743be73f35c86c38db, type: 3}
+    attackBonus: 45
+    attackBonusPerLevel: 9
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 0
+    healthBonusPerLevel: 0
+    upgradeBaseCost: 12
+    maxLevel: 10
+    dropWeight: 18
+  - id: 4
+    displayName: "\uC218\uC815 \uD30C\uC1C4\uAE30"
+    type: 0
+    rarity: 3
+    rarityColor: {r: 0.72, g: 0.35, b: 1, a: 1}
+    icon: {fileID: 21300000, guid: 872f5d5651fd16c4a87a8195525d13f7, type: 3}
+    attackBonus: 25
+    attackBonusPerLevel: 8
+    attackRadius: 1
+    attackRadiusLevelInterval: 0
+    healthBonus: 0
+    healthBonusPerLevel: 0
+    upgradeBaseCost: 18
+    maxLevel: 10
+    dropWeight: 10
+  - id: 5
+    displayName: "\uD0DC\uC591 \uCF54\uC5B4 \uBCF4\uC5B4"
+    type: 0
+    rarity: 4
+    rarityColor: {r: 1, g: 0.72, b: 0.16, a: 1}
+    icon: {fileID: 21300000, guid: c202d268bb666934caa3491340b25ec0, type: 3}
+    attackBonus: 60
+    attackBonusPerLevel: 12
+    attackRadius: 1
+    attackRadiusLevelInterval: 10
+    healthBonus: 0
+    healthBonusPerLevel: 0
+    upgradeBaseCost: 25
+    maxLevel: 10
+    dropWeight: 4
+  - id: 6
+    displayName: "\uAD11\uBD80 \uC791\uC5C5 \uC870\uB07C"
+    type: 1
+    rarity: 0
+    rarityColor: {r: 0.72, g: 0.72, b: 0.72, a: 1}
+    icon: {fileID: 21300000, guid: 3500501cddced7b43af577e0bd16b396, type: 3}
+    attackBonus: 0
+    attackBonusPerLevel: 0
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 500
+    healthBonusPerLevel: 150
+    upgradeBaseCost: 5
+    maxLevel: 10
+    dropWeight: 40
+  - id: 7
+    displayName: "\uAC15\uD654 \uC791\uC5C5\uBCF5"
+    type: 1
+    rarity: 1
+    rarityColor: {r: 0.3, g: 0.82, b: 0.46, a: 1}
+    icon: {fileID: 21300000, guid: d2c9efdc785a01040a57f9b8fd67b008, type: 3}
+    attackBonus: 0
+    attackBonusPerLevel: 0
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 1000
+    healthBonusPerLevel: 250
+    upgradeBaseCost: 8
+    maxLevel: 10
+    dropWeight: 28
+  - id: 8
+    displayName: "\uCF54\uBC1C\uD2B8 \uD749\uAC11"
+    type: 1
+    rarity: 2
+    rarityColor: {r: 0.25, g: 0.62, b: 1, a: 1}
+    icon: {fileID: 21300000, guid: ebae49f5f15dea34ea751ea4bd0c21f3, type: 3}
+    attackBonus: 0
+    attackBonusPerLevel: 0
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 1800
+    healthBonusPerLevel: 400
+    upgradeBaseCost: 12
+    maxLevel: 10
+    dropWeight: 18
+  - id: 9
+    displayName: "\uC218\uC815 \uC218\uD638\uAC11"
+    type: 1
+    rarity: 3
+    rarityColor: {r: 0.72, g: 0.35, b: 1, a: 1}
+    icon: {fileID: 21300000, guid: 7145d6b2849a8ee4fabad6dc30954262, type: 3}
+    attackBonus: 0
+    attackBonusPerLevel: 0
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 3000
+    healthBonusPerLevel: 650
+    upgradeBaseCost: 18
+    maxLevel: 10
+    dropWeight: 10
+  - id: 10
+    displayName: "\uD0DC\uC591 \uCF54\uC5B4 \uAC11\uC637"
+    type: 1
+    rarity: 4
+    rarityColor: {r: 1, g: 0.72, b: 0.16, a: 1}
+    icon: {fileID: 21300000, guid: 4828721e5300ec740a3e3a3517cde709, type: 3}
+    attackBonus: 0
+    attackBonusPerLevel: 0
+    attackRadius: 0
+    attackRadiusLevelInterval: 0
+    healthBonus: 5000
+    healthBonusPerLevel: 900
+    upgradeBaseCost: 25
+    maxLevel: 10
+    dropWeight: 4

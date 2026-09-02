@@ -1,4 +1,5 @@
 using System;
+using HeavyDowner.Module;
 using HeavyDowner.UI;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private DescentBoardController board;
         [SerializeField] private JoystickControl joystick;
         [SerializeField] private DamageTextPool damageTextPool;
+        [SerializeField] private EquipmentCatalog equipmentCatalog;
         [SerializeField] private int attackPower = 100;
         [SerializeField] private int maxHealth = 10000;
         [SerializeField] private float damageFlashDuration = 0.12f;
@@ -24,6 +26,9 @@ namespace HeavyDowner.Gameplay
         private float nextStepTime;
         private float damageFlashEndTime;
         private int currentHealth;
+        private int currentMaxHealth;
+        private int currentAttackPower;
+        private int currentAttackRadius;
         private int currentShield;
         private int currentDepth;
         private FallAnimation currentAnimation;
@@ -37,8 +42,8 @@ namespace HeavyDowner.Gameplay
         public event Action<int> DepthChanged;
         public event Action Died;
 
-        public float HealthNormalized => (float)currentHealth / maxHealth;
-        public float ShieldNormalized => (float)currentShield / maxHealth;
+        public float HealthNormalized => (float)currentHealth / currentMaxHealth;
+        public float ShieldNormalized => (float)currentShield / currentMaxHealth;
         public int CurrentDepth => currentDepth;
         public bool IsDead => currentHealth <= 0;
         public Vector2Int CurrentCell => world.WorldToCell(transform.position);
@@ -56,7 +61,8 @@ namespace HeavyDowner.Gameplay
         {
             TryGetComponent<Animator>(out animator);
             TryGetComponent<SpriteRenderer>(out spriteRenderer);
-            currentHealth = maxHealth;
+            ApplyEquipmentStats();
+            currentHealth = currentMaxHealth;
         }
 
         private void Start()
@@ -99,7 +105,11 @@ namespace HeavyDowner.Gameplay
 
             Vector2Int currentCell = world.WorldToCell(transform.position);
             Vector2Int targetCell = currentCell + stepDirection;
-            BoardActionResult action = board.Attack(targetCell, attackPower);
+            BoardActionResult action = board.Attack(targetCell, currentAttackPower);
+            if (currentAttackRadius > 0)
+            {
+                board.AttackSplash(targetCell, currentAttackRadius, Mathf.Max(1, currentAttackPower / 2));
+            }
             if (action.CounterDamage > 0)
             {
                 TakeDamage(action.CounterDamage);
@@ -238,7 +248,7 @@ namespace HeavyDowner.Gameplay
         {
             damageReduction = reduction;
             damageRemainder = 0f;
-            currentShield = Mathf.Max(1, Mathf.CeilToInt(maxHealth * shieldHealthNormalized));
+            currentShield = Mathf.Max(1, Mathf.CeilToInt(currentMaxHealth * shieldHealthNormalized));
             spriteRenderer.color = new Color(0.55f, 0.88f, 1f, 1f);
             ShieldChanged?.Invoke(ShieldNormalized);
         }
@@ -283,6 +293,28 @@ namespace HeavyDowner.Gameplay
             }
 
             return FallAnimation.Front;
+        }
+
+        private void ApplyEquipmentStats()
+        {
+            currentAttackPower = attackPower;
+            currentAttackRadius = 0;
+            currentMaxHealth = maxHealth;
+
+            if (PlayerDataService.EquippedWeapon != EquipmentId.None)
+            {
+                EquipmentDefinition weapon = equipmentCatalog.Get(PlayerDataService.EquippedWeapon);
+                int level = PlayerDataService.GetEquipmentLevel(weapon.Id);
+                currentAttackPower += weapon.GetAttackBonus(level);
+                currentAttackRadius += weapon.GetAttackRadius(level);
+            }
+
+            if (PlayerDataService.EquippedArmor != EquipmentId.None)
+            {
+                EquipmentDefinition armor = equipmentCatalog.Get(PlayerDataService.EquippedArmor);
+                int level = PlayerDataService.GetEquipmentLevel(armor.Id);
+                currentMaxHealth += armor.GetHealthBonus(level);
+            }
         }
     }
 }
