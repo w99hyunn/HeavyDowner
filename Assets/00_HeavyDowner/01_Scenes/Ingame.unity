@@ -7140,6 +7140,7 @@ MonoBehaviour:
   grubTile: {fileID: 11400000, guid: 00807b6ead0d21b45b9159e87ca8833b, type: 2}
   batTile: {fileID: 11400000, guid: 3fdc24d05c836c740a7ec761b613f490, type: 2}
   golemTile: {fileID: 11400000, guid: 4a60e34549562fd40a396c2ff77666fb, type: 2}
+  monsterHealthGrowthPerTier: 0.25
   enhancementOrbTile: {fileID: 11400000, guid: bf099082dcfbc6f41a9e32f912ae8166, type: 2}
   enhancementOrbSpawnChance: 0.04
   enhancementOrbHealth: 100
@@ -7150,6 +7151,8 @@ MonoBehaviour:
   monster2x2Chance: 0.28
   monster4x4Chance: 0.08
   blockDamage: 100
+  minimumBlockDamageRatio: 0.7
+  destroyedBlockDamageRatio: 0.35
   healthBarPool: {fileID: 3480000003}
   damageTextPool: {fileID: 3480000004}
   rewardSession: {fileID: 431753808}

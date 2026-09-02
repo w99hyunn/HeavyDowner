@@ -38,6 +38,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private TileBase grubTile;
         [SerializeField] private TileBase batTile;
         [SerializeField] private TileBase golemTile;
+        [SerializeField, Min(0f)] private float monsterHealthGrowthPerTier = 0.25f;
 
         [Header("Enhancement Orbs")]
         [SerializeField] private TileBase enhancementOrbTile;
@@ -56,6 +57,8 @@ namespace HeavyDowner.Gameplay
 
         [Header("Damage")]
         [SerializeField, Min(0)] private int blockDamage = 100;
+        [SerializeField, Range(0f, 1f)] private float minimumBlockDamageRatio = 0.7f;
+        [SerializeField, Range(0f, 1f)] private float destroyedBlockDamageRatio = 0.35f;
 
         [Header("Presentation")]
         [SerializeField] private CellHealthBarPool healthBarPool;
@@ -202,7 +205,9 @@ namespace HeavyDowner.Gameplay
                     rewardSession.CollectEnhancementOrb(enhancementOrbAmount, visualCenter);
                 }
 
-                int destructionDamage = cell.Type == CellType.Block ? cell.CounterDamage : 0;
+                int destructionDamage = cell.Type == CellType.Block
+                    ? Mathf.CeilToInt(cell.CounterDamage * destroyedBlockDamageRatio)
+                    : 0;
                 return new BoardActionResult(true, destructionDamage);
             }
 
@@ -211,7 +216,17 @@ namespace HeavyDowner.Gameplay
             ShowHealthBar(cell, remainingHealth);
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
             hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
-            return new BoardActionResult(false, cell.CounterDamage);
+            int counterDamage = cell.CounterDamage;
+            if (cell.Type == CellType.Block)
+            {
+                float remainingHealthRatio = (float)remainingHealth / cell.Health;
+                float damageRatio = Mathf.Lerp(
+                    minimumBlockDamageRatio,
+                    1f,
+                    remainingHealthRatio);
+                counterDamage = Mathf.CeilToInt(cell.CounterDamage * damageRatio);
+            }
+            return new BoardActionResult(false, counterDamage);
         }
 
         public void AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage)
@@ -458,28 +473,28 @@ namespace HeavyDowner.Gameplay
             float sizeRoll = Random01(bandSeed, 0xC2B2AE35u);
             TileBase monsterTile;
             int monsterSize;
-            int monsterHealth;
+            int baseMonsterHealth;
             int monsterCounterDamage;
 
             if (sizeRoll < monster4x4Chance)
             {
                 monsterTile = golemTile;
                 monsterSize = 4;
-                monsterHealth = 300;
+                baseMonsterHealth = 300;
                 monsterCounterDamage = 200;
             }
             else if (sizeRoll < monster4x4Chance + monster2x2Chance)
             {
                 monsterTile = batTile;
                 monsterSize = 2;
-                monsterHealth = 200;
+                baseMonsterHealth = 200;
                 monsterCounterDamage = 100;
             }
             else
             {
                 monsterTile = grubTile;
                 monsterSize = 1;
-                monsterHealth = 100;
+                baseMonsterHealth = 100;
                 monsterCounterDamage = 100;
             }
 
@@ -488,6 +503,7 @@ namespace HeavyDowner.Gameplay
                 verticalRange - 1,
                 Mathf.FloorToInt(Random01(bandSeed, 0x165667B1u) * verticalRange));
             int topRow = -(band * MONSTER_BAND_HEIGHT + 1 + verticalOffset);
+            int monsterHealth = GetMonsterHealth(baseMonsterHealth, -topRow);
 
             int halfWidth = world.HorizontalCellCount / 2;
             int horizontalRange = world.HorizontalCellCount - monsterSize + 1;
@@ -503,6 +519,13 @@ namespace HeavyDowner.Gameplay
                 new Vector2Int(leftColumn, topRow),
                 monsterSize);
             return cell.Contains(position);
+        }
+
+        private int GetMonsterHealth(int baseHealth, int depth)
+        {
+            int depthTier = (depth - 1) / metersPerBlockTier;
+            float healthMultiplier = 1f + depthTier * monsterHealthGrowthPerTier;
+            return Mathf.CeilToInt(baseHealth * healthMultiplier);
         }
 
         private void ApplyMonsterTransforms()
