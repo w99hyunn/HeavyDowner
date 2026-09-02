@@ -16,7 +16,8 @@ MonoBehaviour:
   cooldown: 8
   requiredFreeCapabilities: 3
   occupiedCapabilities: -1
-  activationCues: []
+  activationCues:
+  - {fileID: 11400000, guid: 0b63aeea0cff455ca4fa93a43a518417, type: 2}
   loopCue: {fileID: 0}
   endCues: []
   distance: 10

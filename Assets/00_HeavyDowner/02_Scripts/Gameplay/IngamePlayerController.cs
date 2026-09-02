@@ -15,6 +15,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private JoystickControl joystick;
         [SerializeField] private DamageTextPool damageTextPool;
         [SerializeField] private EquipmentCatalog equipmentCatalog;
+        [SerializeField] private GameplayCueDefinition attackCue;
         [SerializeField] private int attackPower = 100;
         [SerializeField] private int maxHealth = 10000;
         [SerializeField] private float damageFlashDuration = 0.12f;
@@ -22,6 +23,7 @@ namespace HeavyDowner.Gameplay
 
         private Animator animator;
         private SpriteRenderer spriteRenderer;
+        private GameplayCuePlayer cuePlayer;
         private Vector2Int activeStepDirection;
         private float nextStepTime;
         private float damageFlashEndTime;
@@ -63,6 +65,8 @@ namespace HeavyDowner.Gameplay
         {
             TryGetComponent<Animator>(out animator);
             TryGetComponent<SpriteRenderer>(out spriteRenderer);
+            TryGetComponent<GameplayCuePlayer>(out cuePlayer);
+            cuePlayer.Prewarm(attackCue);
             ApplyEquipmentStats();
             currentHealth = currentMaxHealth;
         }
@@ -107,6 +111,11 @@ namespace HeavyDowner.Gameplay
 
             Vector2Int targetCell = world.WorldToCell(transform.position) + stepDirection;
             BoardActionResult action = board.Attack(targetCell, currentAttackPower);
+            if (action.DidAttack)
+            {
+                cuePlayer.PlayOneShot(attackCue, world.CellToWorld(targetCell));
+            }
+
             if (currentAttackRadius > 0)
             {
                 board.AttackSplash(targetCell, currentAttackRadius, Mathf.Max(1, currentAttackPower / 2));

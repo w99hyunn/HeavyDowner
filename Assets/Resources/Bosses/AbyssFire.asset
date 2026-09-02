@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: AbyssFire
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.AbyssFireBossAbilityDefinition
   cooldown: 0
-  activationCues: []
+  activationCues:
+  - {fileID: 11400000, guid: 2087f98df7f741dda28a793a86f431b1, type: 2}
   loopCue: {fileID: 0}
   endCues: []
   fireCue: {fileID: 11400000, guid: 6edd4ded431e4228ae7e0b8abb1f6393, type: 2}
+  breathCue: {fileID: 11400000, guid: 153f3717a4f0419e8d1628824f451e69, type: 2}
   windup: 0.55
   aftermathDuration: 1.1
   waveStepCount: 7

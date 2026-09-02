@@ -8,6 +8,9 @@ namespace HeavyDowner.Gameplay
     {
         [SerializeField] private EquipmentCatalog catalog;
         [SerializeField, Range(0f, 1f)] private float equipmentDropChance = 0.18f;
+        [SerializeField] private GameplayCuePlayer cuePlayer;
+        [SerializeField] private GameplayCueDefinition equipmentPickupCue;
+        [SerializeField] private GameplayCueDefinition enhancementOrbPickupCue;
 
         private readonly List<EquipmentDefinition> acquiredEquipment = new();
         private readonly List<EquipmentDefinition> dropCandidates = new();
@@ -22,6 +25,8 @@ namespace HeavyDowner.Gameplay
         private void Awake()
         {
             TryGetComponent<EquipmentDropVisualPool>(out dropVisualPool);
+            cuePlayer.Prewarm(equipmentPickupCue);
+            cuePlayer.Prewarm(enhancementOrbPickupCue);
         }
 
         public void TryDropEquipment(Vector3 worldPosition)
@@ -69,12 +74,14 @@ namespace HeavyDowner.Gameplay
 
             acquiredEquipment.Add(dropped);
             dropVisualPool.Play(dropped.Icon, worldPosition);
+            cuePlayer.PlayOneShot(equipmentPickupCue, worldPosition);
         }
 
         public void CollectEnhancementOrb(int amount, Vector3 worldPosition)
         {
             enhancementOrbs += amount;
             dropVisualPool.Play(catalog.EnhancementOrbIcon, worldPosition);
+            cuePlayer.PlayOneShot(enhancementOrbPickupCue, worldPosition);
         }
 
         public async Awaitable CommitAsync(int depth)

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
   m_Name: AbyssFireCue
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCueDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
   prefab: {fileID: 4815264237568093103, guid: 19d2b191a5c884146a3b7a03d8b21493, type: 3}
   audioClips: []
   pitchRange: {x: 1, y: 1}

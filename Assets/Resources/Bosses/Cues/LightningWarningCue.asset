@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
   m_Name: LightningWarningCue
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCueDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
   prefab: {fileID: 4377212276515575334, guid: 5ac6aeedc6c271d47b186a31c5245a6d, type: 3}
   audioClips: []
   pitchRange: {x: 1, y: 1}

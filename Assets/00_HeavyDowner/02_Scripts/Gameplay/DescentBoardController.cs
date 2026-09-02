@@ -7,14 +7,16 @@ namespace HeavyDowner.Gameplay
 {
     public readonly struct BoardActionResult
     {
-        public BoardActionResult(bool canEnter, int counterDamage)
+        public BoardActionResult(bool canEnter, int counterDamage, bool didAttack)
         {
             CanEnter = canEnter;
             CounterDamage = counterDamage;
+            DidAttack = didAttack;
         }
 
         public bool CanEnter { get; }
         public int CounterDamage { get; }
+        public bool DidAttack { get; }
     }
 
     public class DescentBoardController : MonoBehaviour, ISkillBoard
@@ -167,12 +169,12 @@ namespace HeavyDowner.Gameplay
         {
             if (!world.IsPlayableColumn(target.x))
             {
-                return new BoardActionResult(false, 0);
+                return new BoardActionResult(false, 0, false);
             }
 
             if (!TryGetCellDefinition(target, out CellDefinition cell))
             {
-                return new BoardActionResult(true, 0);
+                return new BoardActionResult(true, 0, false);
             }
 
             Vector2Int statePosition = cell.AnchorPosition;
@@ -180,7 +182,7 @@ namespace HeavyDowner.Gameplay
             ushort cellMask = GetCellMask(statePosition.x);
             if ((mutation.DestroyedMask & cellMask) != 0)
             {
-                return new BoardActionResult(true, 0);
+                return new BoardActionResult(true, 0, false);
             }
 
             if (cell.IsBoss)
@@ -214,7 +216,7 @@ namespace HeavyDowner.Gameplay
                     rewardSession.CollectEnhancementOrb(enhancementOrbAmount, visualCenter);
                 }
 
-                return new BoardActionResult(true, cell.Type == CellType.Block ? Mathf.CeilToInt(cell.CounterDamage * destroyedBlockDamageRatio) : 0);
+                return new BoardActionResult(true, cell.Type == CellType.Block ? Mathf.CeilToInt(cell.CounterDamage * destroyedBlockDamageRatio) : 0, true);
             }
 
             remainingHealthByCell[statePosition] = remainingHealth;
@@ -227,7 +229,7 @@ namespace HeavyDowner.Gameplay
             {
                 counterDamage = Mathf.CeilToInt(cell.CounterDamage * Mathf.Lerp(minimumBlockDamageRatio, 1f, (float)remainingHealth / cell.Health));
             }
-            return new BoardActionResult(false, counterDamage);
+            return new BoardActionResult(false, counterDamage, true);
         }
 
         private BoardActionResult AttackBoss(CellDefinition cell, RowMutation mutation, ushort cellMask, int damage)
@@ -245,7 +247,7 @@ namespace HeavyDowner.Gameplay
                 SetRowMutation(cell.AnchorPosition.y, mutation);
                 ClearVisibleCell(cell);
                 rewardSession.DropEquipment(GetCellVisualCenter(cell));
-                return new BoardActionResult(true, 0);
+                return new BoardActionResult(true, 0, true);
             }
 
             SetRowMutation(cell.AnchorPosition.y, mutation);
@@ -259,7 +261,7 @@ namespace HeavyDowner.Gameplay
                 hitFlashController.Flash(enemyTilemap, ToTilePosition(cell.AnchorPosition));
             }
 
-            return new BoardActionResult(false, result.CounterDamage);
+            return new BoardActionResult(false, result.CounterDamage, true);
         }
 
         private BossEntity GetBossEntity(CellDefinition cell)
@@ -666,16 +668,29 @@ namespace HeavyDowner.Gameplay
 
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
             Vector3Int tilePosition = ToTilePosition(cell.AnchorPosition);
-            PlayDestroyedCellVisual(cell, tilemap.GetSprite(tilePosition));
+            PlayDestroyedCellVisual(cell);
             healthBarPool.Hide(cell.AnchorPosition);
             tilemap.SetTile(tilePosition, null);
             tilemap.SetColor(tilePosition, Color.white);
             hitFlashController.Remove(tilemap, tilePosition);
         }
 
-        private void PlayDestroyedCellVisual(CellDefinition cell, Sprite sprite)
+        private void PlayDestroyedCellVisual(CellDefinition cell)
         {
-            destroyedCellVisualPool.Play(sprite, GetCellVisualCenter(cell), new Vector3(cell.FootprintSize, cell.FootprintSize, 1f));
+            destroyedCellVisualPool.Play(
+                GetDestructionSprite(cell.Tile),
+                GetCellVisualCenter(cell),
+                new Vector3(cell.FootprintSize, cell.FootprintSize, 1f));
+        }
+
+        private static Sprite GetDestructionSprite(TileBase tile)
+        {
+            if (tile is Tile staticTile)
+            {
+                return staticTile.sprite;
+            }
+
+            return ((AnimatedTile)tile).m_AnimatedSprites[0];
         }
 
         private void ShowHealthBar(CellDefinition cell, int currentHealth)

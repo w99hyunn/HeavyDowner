@@ -214,13 +214,19 @@ namespace HeavyDowner.Gameplay
 
         private CueObject CreateCueObject(GameplayCueDefinition definition)
         {
-            GameObject root = Instantiate(definition.Prefab, transform.parent);
+            GameObject root = definition.Prefab != null
+                ? Instantiate(definition.Prefab, transform.parent)
+                : new GameObject(definition.name);
+            root.transform.SetParent(transform.parent, true);
 
             root.TryGetComponent<AudioSource>(out AudioSource audioSource);
             if (audioSource == null)
             {
                 audioSource = root.AddComponent<AudioSource>();
             }
+
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
 
             root.SetActive(false);
             return new CueObject

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
-  m_Name: ShockwaveRing
+  m_Name: AbyssFireBreathCue
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
-  prefab: {fileID: 1843352335680372643, guid: 2f1beb1e6e3b7c245985ccca821ac4ff, type: 3}
-  audioClips: []
-  pitchRange: {x: 0.95, y: 1.05}
+  prefab: {fileID: 0}
+  audioClips:
+  - {fileID: 8300000, guid: 8c44f0c5711f41bb921823b324ee2b34, type: 3}
+  pitchRange: {x: 0.82, y: 0.88}
   poolSize: 1
-  lifetime: 2
+  lifetime: 0
   rotationSpeed: 0

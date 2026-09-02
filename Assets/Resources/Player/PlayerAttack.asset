@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
-  m_Name: ShockwaveRing
+  m_Name: PlayerAttack
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
-  prefab: {fileID: 1843352335680372643, guid: 2f1beb1e6e3b7c245985ccca821ac4ff, type: 3}
-  audioClips: []
-  pitchRange: {x: 0.95, y: 1.05}
-  poolSize: 1
-  lifetime: 2
+  prefab: {fileID: 0}
+  audioClips:
+  - {fileID: 8300000, guid: e647cb629d11421983a1f78bcec72b31, type: 3}
+  pitchRange: {x: 1, y: 1}
+  poolSize: 6
+  lifetime: 0
   rotationSpeed: 0

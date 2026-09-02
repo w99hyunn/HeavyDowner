@@ -11,9 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
   m_Name: ShockwaveImpact
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.SkillCueDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
   prefab: {fileID: 4631864236886314016, guid: f4bbb97574cb8014b8cf9463c695938c, type: 3}
-  audioClips: []
+  audioClips:
+  - {fileID: 8300000, guid: 0879dfee5c054e5eb6fd1753ba4692ca, type: 3}
   pitchRange: {x: 0.95, y: 1.05}
   poolSize: 1
   lifetime: 2

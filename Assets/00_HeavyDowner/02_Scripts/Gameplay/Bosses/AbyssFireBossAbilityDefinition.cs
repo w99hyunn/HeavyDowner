@@ -8,6 +8,7 @@ namespace HeavyDowner.Gameplay
     public class AbyssFireBossAbilityDefinition : BossAbilityDefinition
     {
         [SerializeField] private GameplayCueDefinition fireCue;
+        [SerializeField] private GameplayCueDefinition breathCue;
         [SerializeField, Min(0f)] private float windup = 0.55f;
         [SerializeField, Min(0f)] private float aftermathDuration = 1.1f;
         [SerializeField, Min(2)] private int waveStepCount = 7;
@@ -20,6 +21,7 @@ namespace HeavyDowner.Gameplay
         public override async Awaitable ExecuteAsync(BossAbilityContext context, int damage, CancellationToken cancellationToken)
         {
             await Awaitable.WaitForSecondsAsync(windup, cancellationToken);
+            context.Cues.PlayOneShot(breathCue, context.CuePosition);
 
             bool damageApplied = false;
             for (int step = 0; step < waveStepCount; step++)
@@ -49,6 +51,7 @@ namespace HeavyDowner.Gameplay
         {
             base.CollectCues(cues);
             cues.Add(fireCue);
+            cues.Add(breathCue);
         }
     }
 }
