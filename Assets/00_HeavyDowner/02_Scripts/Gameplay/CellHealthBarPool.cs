@@ -6,7 +6,6 @@ namespace HeavyDowner.Gameplay
     public class CellHealthBarPool : MonoBehaviour
     {
         [SerializeField] private CellHealthBar healthBarPrefab;
-        [SerializeField, Min(1)] private int initialCapacity = 4;
 
         private readonly Dictionary<Vector2Int, CellHealthBar> activeHealthBars = new();
         private readonly Stack<CellHealthBar> inactiveHealthBars = new();
@@ -14,7 +13,7 @@ namespace HeavyDowner.Gameplay
 
         private void Awake()
         {
-            for (int index = 0; index < initialCapacity; index++)
+            for (int index = 0; index < 4; index++)
             {
                 CellHealthBar healthBar = Instantiate(healthBarPrefab, transform);
                 healthBar.Hide();
@@ -49,12 +48,11 @@ namespace HeavyDowner.Gameplay
 
         public void HideRows(int firstRow, int rowCount)
         {
-            int lastRow = firstRow + rowCount;
             healthBarsToHide.Clear();
 
             foreach (Vector2Int cellPosition in activeHealthBars.Keys)
             {
-                if (cellPosition.y >= firstRow && cellPosition.y < lastRow)
+                if (cellPosition.y >= firstRow && cellPosition.y < firstRow + rowCount)
                 {
                     healthBarsToHide.Add(cellPosition);
                 }

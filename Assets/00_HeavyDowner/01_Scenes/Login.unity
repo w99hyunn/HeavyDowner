@@ -2085,12 +2085,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae44383c69f04682a1644105caa1c2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.PopupUIView
-  background: {fileID: 2000000020}
+  popupRoot: {fileID: 2000000020}
   messageText: {fileID: 2000000042}
   confirmButton: {fileID: 2000000064}
   cancelButton: {fileID: 2000000054}
   popupAnimator: {fileID: 2000000034}
-  hideDuration: 0.14
 --- !u!1 &2000000010
 GameObject:
   m_ObjectHideFlags: 0

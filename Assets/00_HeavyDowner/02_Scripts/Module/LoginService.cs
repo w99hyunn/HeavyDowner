@@ -29,8 +29,7 @@ namespace HeavyDowner.Module
 
         public static async Awaitable SignInGoogleAsync()
         {
-            string idToken = await GetIdTokenAsync();
-            await AuthenticationService.Instance.SignInWithGoogleAsync(idToken);
+            await AuthenticationService.Instance.SignInWithGoogleAsync(await GetIdTokenAsync());
         }
 
         public static async Awaitable SignInGuestAsync()

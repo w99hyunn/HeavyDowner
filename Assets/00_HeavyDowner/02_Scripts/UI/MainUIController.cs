@@ -9,14 +9,14 @@ namespace HeavyDowner.UI
         private const int CURRENCY_RECOVERY_AMOUNT = 100;
         private const int GAME_START_COST = 5;
 
-        [SerializeField] private EquipmentUIController equipmentUI;
-
         private MainUIView view;
+        private EquipmentUIController equipmentUI;
         private bool isStartingGame;
 
         private void Awake()
         {
             TryGetComponent<MainUIView>(out view);
+            TryGetComponent<EquipmentUIController>(out equipmentUI);
         }
 
         private void Start()

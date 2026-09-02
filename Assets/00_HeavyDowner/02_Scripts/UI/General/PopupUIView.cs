@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,21 +6,25 @@ namespace HeavyDowner.UI
 {
     public class PopupUIView : MonoBehaviour
     {
-        [SerializeField] private GameObject background;
+        [SerializeField] private GameObject popupRoot;
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private Button confirmButton;
         [SerializeField] private Button cancelButton;
         [SerializeField] private Animator popupAnimator;
-        [SerializeField] private float hideDuration = 0.14f;
 
-        private int animationVersion;
+        private PopupAnimation popupAnimation;
 
         public Button ConfirmButton => confirmButton;
         public Button CancelButton => cancelButton;
 
+        private void Awake()
+        {
+            popupAnimation = new PopupAnimation(popupRoot, popupAnimator);
+            popupAnimation.HideImmediate();
+        }
+
         public void Show(string message, bool showCancelButton)
         {
-            animationVersion++;
             messageText.text = message;
             cancelButton.gameObject.SetActive(showCancelButton);
             confirmButton.interactable = true;
@@ -32,40 +35,24 @@ namespace HeavyDowner.UI
             confirmButtonPosition.x = showCancelButton ? 160f : 0f;
             confirmButtonTransform.anchoredPosition = confirmButtonPosition;
 
-            background.SetActive(true);
-            popupAnimator.Play("Show", 0, 0f);
+            popupAnimation.Show();
         }
 
         public async Awaitable<bool> HideAsync()
         {
-            if (!background.activeSelf)
+            if (!popupAnimation.IsVisible)
+            {
                 return false;
+            }
 
-            int hideVersion = ++animationVersion;
             confirmButton.interactable = false;
             cancelButton.interactable = false;
-            popupAnimator.Play("Hide", 0, 0f);
-
-            try
-            {
-                await Awaitable.WaitForSecondsAsync(hideDuration, destroyCancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                return false;
-            }
-
-            if (hideVersion != animationVersion)
-                return false;
-
-            background.SetActive(false);
-            return true;
+            return await popupAnimation.HideAsync(destroyCancellationToken);
         }
 
         public void HideImmediate()
         {
-            animationVersion++;
-            background.SetActive(false);
+            popupAnimation.HideImmediate();
         }
     }
 }

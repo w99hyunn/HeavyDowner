@@ -5,12 +5,12 @@ namespace HeavyDowner.Gameplay
     [RequireComponent(typeof(Grid))]
     public class VerticalTilemapWorld : MonoBehaviour
     {
-        [SerializeField] private int horizontalCellCount = 9;
+        private const int HORIZONTAL_CELL_COUNT = 9;
 
         private Grid grid;
 
         public Vector2 CellSize => grid.cellSize;
-        public int HorizontalCellCount => horizontalCellCount;
+        public int HorizontalCellCount => HORIZONTAL_CELL_COUNT;
 
         private void Awake()
         {
@@ -20,9 +20,7 @@ namespace HeavyDowner.Gameplay
         public Vector2Int WorldToCell(Vector3 position)
         {
             Vector3 origin = transform.position;
-            int column = Mathf.RoundToInt((position.x - origin.x) / grid.cellSize.x);
-            int row = Mathf.RoundToInt((position.y - origin.y) / grid.cellSize.y);
-            return new Vector2Int(column, row);
+            return new Vector2Int(Mathf.RoundToInt((position.x - origin.x) / grid.cellSize.x), Mathf.RoundToInt((position.y - origin.y) / grid.cellSize.y));
         }
 
         public Vector3 CellToWorld(Vector2Int cell)
@@ -33,7 +31,7 @@ namespace HeavyDowner.Gameplay
 
         public bool IsPlayableColumn(int column)
         {
-            return Mathf.Abs(column) <= horizontalCellCount / 2;
+            return Mathf.Abs(column) <= HORIZONTAL_CELL_COUNT / 2;
         }
 
     }

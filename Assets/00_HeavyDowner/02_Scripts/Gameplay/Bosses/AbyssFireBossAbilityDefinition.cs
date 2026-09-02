@@ -25,14 +25,12 @@ namespace HeavyDowner.Gameplay
             for (int step = 0; step < waveStepCount; step++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                float progress = (float)step / (waveStepCount - 1);
-                float waveY = Mathf.Lerp(verticalRange.x, verticalRange.y, progress);
+                float waveY = Mathf.Lerp(verticalRange.x, verticalRange.y, (float)step / (waveStepCount - 1));
                 float firstColumn = (columnCount - 1) * -0.5f;
 
                 for (int column = 0; column < columnCount; column++)
                 {
-                    float waveX = (firstColumn + column) * columnSpacing;
-                    context.Cues.PlayOneShot(fireCue, context.ScreenAnchor, new Vector3(waveX, waveY, screenPlaneOffset));
+                    context.Cues.PlayOneShot(fireCue, context.ScreenAnchor, new Vector3((firstColumn + column) * columnSpacing, waveY, screenPlaneOffset));
                 }
 
                 if (!damageApplied && waveY >= 0f)

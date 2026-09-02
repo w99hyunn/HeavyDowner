@@ -13252,7 +13252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1dc7d509e794dba8e32ef79bea760cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.MainUIController
-  equipmentUI: {fileID: 1954111804}
 --- !u!114 &1954111802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13312,7 +13311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506a009906cf30844aacfdda0b1a9e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.EquipmentUIView
-  panel: {fileID: 1444174102}
+  popupRoot: {fileID: 1444174102}
   closeButton: {fileID: 869579259}
   weaponSlots:
   - button: {fileID: 1097929636}
@@ -13386,7 +13385,6 @@ MonoBehaviour:
   equipButton: {fileID: 963166718}
   upgradeButton: {fileID: 152361267}
   popupAnimator: {fileID: 2000000100}
-  hideDuration: 0.14
 --- !u!1 &1962251560
 GameObject:
   m_ObjectHideFlags: 0

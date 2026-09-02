@@ -95,11 +95,10 @@ namespace HeavyDowner.Gameplay
 
         public void RemoveRows(int firstRow, int rowCount)
         {
-            int lastRow = firstRow + rowCount;
             for (int index = flashes.Count - 1; index >= 0; index--)
             {
                 int row = flashes[index].Position.y;
-                if (row >= firstRow && row < lastRow)
+                if (row >= firstRow && row < firstRow + rowCount)
                 {
                     flashes.RemoveAt(index);
                 }

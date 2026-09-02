@@ -5,7 +5,6 @@ namespace HeavyDowner.Gameplay
     public class DestroyedCellVisualPool : MonoBehaviour
     {
         [SerializeField] private Camera streamingCamera;
-        [SerializeField] private float despawnPadding = 0.45f;
 
         private DestroyedCellVisual[] visuals;
         private int nextVisualIndex;
@@ -25,7 +24,7 @@ namespace HeavyDowner.Gameplay
         {
             float despawnHeight = streamingCamera.transform.position.y
                 - streamingCamera.orthographicSize
-                - despawnPadding;
+                - 0.45f;
 
             bool hasPlayingVisual = false;
             for (int index = 0; index < visuals.Length; index++)
@@ -42,9 +41,7 @@ namespace HeavyDowner.Gameplay
 
         public void Play(Sprite sprite, Vector3 position, Vector3 scale)
         {
-            DestroyedCellVisual visual = GetAvailableVisual();
-            float horizontalDirection = Mathf.Sign(position.x - transform.position.x);
-            visual.Play(sprite, position, scale, horizontalDirection);
+            GetAvailableVisual().Play(sprite, position, scale, Mathf.Sign(position.x - transform.position.x));
             enabled = true;
         }
 

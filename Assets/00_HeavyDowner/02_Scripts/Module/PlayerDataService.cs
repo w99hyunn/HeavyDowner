@@ -24,14 +24,13 @@ namespace HeavyDowner.Module
 
         public static async Awaitable LoadAsync()
         {
-            var keys = new HashSet<string>
+            var data = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string>
             {
                 NICKNAME_KEY,
                 CURRENCY_KEY,
                 HIGH_SCORE_KEY,
                 EQUIPMENT_KEY
-            };
-            var data = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
+            });
             var defaults = new Dictionary<string, object>();
 
             if (data.TryGetValue(NICKNAME_KEY, out var nicknameItem))
@@ -81,23 +80,19 @@ namespace HeavyDowner.Module
         public static async Awaitable SaveNicknameAsync(string nickname)
         {
             string value = string.IsNullOrWhiteSpace(nickname) ? DEFAULT_NICKNAME : nickname.Trim();
-            var data = new Dictionary<string, object>
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
             {
                 [NICKNAME_KEY] = value
-            };
-
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            });
             Nickname = value;
         }
 
         public static async Awaitable SaveCurrencyAsync(int currency)
         {
-            var data = new Dictionary<string, object>
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
             {
                 [CURRENCY_KEY] = currency
-            };
-
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            });
             Currency = currency;
         }
 
@@ -111,12 +106,10 @@ namespace HeavyDowner.Module
             if (score <= HighScore)
                 return;
 
-            var data = new Dictionary<string, object>
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
             {
                 [HIGH_SCORE_KEY] = score
-            };
-
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            });
             HighScore = score;
         }
 
@@ -149,8 +142,7 @@ namespace HeavyDowner.Module
         {
             EquipmentSaveData next = new(equipmentData);
             EquipmentProgress progress = next.GetProgress(definition.Id);
-            int cost = definition.GetUpgradeCost(progress.Level);
-            next.EnhancementOrbs -= cost;
+            next.EnhancementOrbs -= definition.GetUpgradeCost(progress.Level);
             progress.Level++;
             await SaveEquipmentAsync(next);
         }
@@ -167,23 +159,21 @@ namespace HeavyDowner.Module
             }
 
             int nextHighScore = Mathf.Max(HighScore, score);
-            var data = new Dictionary<string, object>
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
             {
                 [EQUIPMENT_KEY] = JsonUtility.ToJson(next),
                 [HIGH_SCORE_KEY] = nextHighScore
-            };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            });
             equipmentData = next;
             HighScore = nextHighScore;
         }
 
         private static async Awaitable SaveEquipmentAsync(EquipmentSaveData next)
         {
-            var data = new Dictionary<string, object>
+            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
             {
                 [EQUIPMENT_KEY] = JsonUtility.ToJson(next)
-            };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            });
             equipmentData = next;
         }
 

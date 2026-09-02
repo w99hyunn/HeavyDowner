@@ -105,8 +105,7 @@ namespace HeavyDowner.Gameplay
             activeStepDirection = stepDirection;
             nextStepTime = Time.time + repeatDelay;
 
-            Vector2Int currentCell = world.WorldToCell(transform.position);
-            Vector2Int targetCell = currentCell + stepDirection;
+            Vector2Int targetCell = world.WorldToCell(transform.position) + stepDirection;
             BoardActionResult action = board.Attack(targetCell, currentAttackPower);
             if (currentAttackRadius > 0)
             {
@@ -329,8 +328,7 @@ namespace HeavyDowner.Gameplay
             if (PlayerDataService.EquippedArmor != EquipmentId.None)
             {
                 EquipmentDefinition armor = equipmentCatalog.Get(PlayerDataService.EquippedArmor);
-                int level = PlayerDataService.GetEquipmentLevel(armor.Id);
-                currentMaxHealth += armor.GetHealthBonus(level);
+                currentMaxHealth += armor.GetHealthBonus(PlayerDataService.GetEquipmentLevel(armor.Id));
             }
         }
     }

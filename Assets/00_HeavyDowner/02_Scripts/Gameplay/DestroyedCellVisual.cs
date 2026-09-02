@@ -47,11 +47,10 @@ namespace HeavyDowner.Gameplay
 
             Rect textureRect = sprite.textureRect;
             Texture texture = sprite.texture;
-            Vector4 spriteUvRect = new Vector4(textureRect.x / texture.width, textureRect.y / texture.height, textureRect.width / texture.width, textureRect.height / texture.height);
             Vector2 scaledSpriteSize = Vector2.Scale(sprite.bounds.size, scale);
 
             propertyBlock.Clear();
-            propertyBlock.SetVector(SPRITE_UV_RECT_ID, spriteUvRect);
+            propertyBlock.SetVector(SPRITE_UV_RECT_ID, new Vector4(textureRect.x / texture.width, textureRect.y / texture.height, textureRect.width / texture.width, textureRect.height / texture.height));
 
             for (int index = 0; index < shardPivots.Length; index++)
             {
@@ -85,8 +84,7 @@ namespace HeavyDowner.Gameplay
             {
                 velocities[index].y -= gravity * deltaTime;
                 shardPivots[index].localPosition += (Vector3)(velocities[index] * deltaTime);
-                float rotationDirection = (index & 1) == 0 ? -1f : 1f;
-                shardPivots[index].Rotate(0f, 0f, rotationSpeed * rotationDirection * deltaTime, Space.Self);
+                shardPivots[index].Rotate(0f, 0f, rotationSpeed * ((index & 1) == 0 ? -1f : 1f) * deltaTime, Space.Self);
                 hasVisibleShard |= shardPivots[index].position.y >= despawnHeight;
             }
 

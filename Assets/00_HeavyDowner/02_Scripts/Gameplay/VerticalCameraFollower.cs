@@ -52,8 +52,7 @@ namespace HeavyDowner.Gameplay
             }
 
             Vector3 position = transform.position;
-            float interpolation = 1f - Mathf.Exp(-followSpeed * Time.deltaTime);
-            position.y = Mathf.Lerp(position.y, targetY, interpolation);
+            position.y = Mathf.Lerp(position.y, targetY, 1f - Mathf.Exp(-followSpeed * Time.deltaTime));
             transform.position = position;
         }
 

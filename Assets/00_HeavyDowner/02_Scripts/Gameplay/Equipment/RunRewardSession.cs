@@ -7,17 +7,22 @@ namespace HeavyDowner.Gameplay
     public class RunRewardSession : MonoBehaviour
     {
         [SerializeField] private EquipmentCatalog catalog;
-        [SerializeField] private EquipmentDropVisualPool dropVisualPool;
         [SerializeField, Range(0f, 1f)] private float equipmentDropChance = 0.18f;
 
         private readonly List<EquipmentDefinition> acquiredEquipment = new();
         private readonly List<EquipmentDefinition> dropCandidates = new();
         private readonly List<EquipmentId> acquiredIds = new();
+        private EquipmentDropVisualPool dropVisualPool;
         private int enhancementOrbs;
 
         public IReadOnlyList<EquipmentDefinition> AcquiredEquipment => acquiredEquipment;
         public int EnhancementOrbs => enhancementOrbs;
         public bool IsCommitted { get; private set; }
+
+        private void Awake()
+        {
+            TryGetComponent<EquipmentDropVisualPool>(out dropVisualPool);
+        }
 
         public void TryDropEquipment(Vector3 worldPosition)
         {

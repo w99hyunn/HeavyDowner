@@ -1401,7 +1401,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.RunRewardSession
   catalog: {fileID: 11400000, guid: 02f28f6d8c12fef4b997f46d0db86a5b, type: 2}
-  dropVisualPool: {fileID: 431753809}
   equipmentDropChance: 0.18
 --- !u!114 &431753809
 MonoBehaviour:
@@ -6625,7 +6624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd05a3ed21817744bab284320328b308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.GameResultUIView
-  panel: {fileID: 1612356434}
+  popupRoot: {fileID: 1612356434}
   depthText: {fileID: 792102941}
   enhancementOrbText: {fileID: 2084187051}
   equipmentIcons:
@@ -6643,7 +6642,6 @@ MonoBehaviour:
   mainButton: {fileID: 383767717}
   mainButtonText: {fileID: 1645263297}
   popupAnimator: {fileID: 2000000100}
-  hideDuration: 0.14
 --- !u!1 &2113898840
 GameObject:
   m_ObjectHideFlags: 0
@@ -7107,7 +7105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a7b8c9d0e1f42a3b4c5d6e7f8091a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.VerticalTilemapWorld
-  horizontalCellCount: 9
 --- !u!114 &3200000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7148,8 +7145,6 @@ MonoBehaviour:
   enhancementOrbSpawnChance: 0.04
   enhancementOrbHealth: 100
   enhancementOrbAmount: 1
-  chunkHeight: 32
-  loadedChunkRadius: 1
   monsterSpawnChance: 0.45
   monster2x2Chance: 0.28
   monster4x4Chance: 0.08
@@ -7159,7 +7154,6 @@ MonoBehaviour:
   healthBarPool: {fileID: 3480000003}
   damageTextPool: {fileID: 3480000004}
   rewardSession: {fileID: 431753808}
-  bossAbilitySystem: {fileID: 3200000007}
   bossHitFlashDuration: 0.2
 --- !u!114 &3200000005
 MonoBehaviour:
@@ -7174,7 +7168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DestroyedCellVisualPool
   streamingCamera: {fileID: 1962251562}
-  despawnPadding: 0.45
 --- !u!114 &3200000006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7201,7 +7194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 760b83a2acb640639222c1bcaf8a0632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.BossAbilitySystem
-  world: {fileID: 3200000003}
   enemyTilemap: {fileID: 2113898841}
   player: {fileID: 3100000004}
   screenAnchor: {fileID: 1962251563}
@@ -7583,7 +7575,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.CellHealthBarPool
   healthBarPrefab: {fileID: 1004, guid: c8f15b34d67a4d389b2ec1497f608ba2, type: 3}
-  initialCapacity: 4
 --- !u!114 &3480000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7598,10 +7589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.DamageTextPool
   damageTextPrefab: {fileID: 5971642689620518390, guid: 9b2f96107c22de54cad90c9e972e9955, type: 3}
   streamingCamera: {fileID: 1962251562}
-  initialCapacity: 12
   worldDamageOffset: {x: 0, y: 0.2, z: 0}
   playerDamageOffset: {x: 0, y: 0.75, z: 0}
-  despawnPadding: 0.45
 --- !u!1 &3500000000
 GameObject:
   m_ObjectHideFlags: 0

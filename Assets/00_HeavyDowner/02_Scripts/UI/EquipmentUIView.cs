@@ -31,7 +31,7 @@ namespace HeavyDowner.UI
 
     public class EquipmentUIView : MonoBehaviour
     {
-        [SerializeField] private GameObject panel;
+        [SerializeField] private GameObject popupRoot;
         [SerializeField] private Button closeButton;
         [SerializeField] private EquipmentSlotBinding[] weaponSlots;
         [SerializeField] private EquipmentSlotBinding[] armorSlots;
@@ -45,15 +45,20 @@ namespace HeavyDowner.UI
         [SerializeField] private Button equipButton;
         [SerializeField] private Button upgradeButton;
         [SerializeField] private Animator popupAnimator;
-        [SerializeField] private float hideDuration = 0.14f;
 
-        private int animationVersion;
+        private PopupAnimation popupAnimation;
 
         public Button CloseButton => closeButton;
         public Button EquipButton => equipButton;
         public Button UpgradeButton => upgradeButton;
         public int WeaponSlotCount => weaponSlots.Length;
         public int ArmorSlotCount => armorSlots.Length;
+
+        private void Awake()
+        {
+            popupAnimation = new PopupAnimation(popupRoot, popupAnimator);
+            popupAnimation.HideImmediate();
+        }
 
         public EquipmentSlotBinding GetWeaponSlot(int index)
         {
@@ -67,40 +72,14 @@ namespace HeavyDowner.UI
 
         public void Show()
         {
-            animationVersion++;
             closeButton.interactable = true;
-            panel.SetActive(true);
-            popupAnimator.Play("Show", 0, 0f);
+            popupAnimation.Show();
         }
 
         public async Awaitable<bool> HideAsync()
         {
-            int hideVersion = ++animationVersion;
             closeButton.interactable = false;
-            popupAnimator.Play("Hide", 0, 0f);
-
-            try
-            {
-                await Awaitable.WaitForSecondsAsync(hideDuration, destroyCancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                return false;
-            }
-
-            if (hideVersion != animationVersion)
-            {
-                return false;
-            }
-
-            panel.SetActive(false);
-            return true;
-        }
-
-        public void HideImmediate()
-        {
-            animationVersion++;
-            panel.SetActive(false);
+            return await popupAnimation.HideAsync(destroyCancellationToken);
         }
 
         public void SetEnhancementOrbs(int amount)

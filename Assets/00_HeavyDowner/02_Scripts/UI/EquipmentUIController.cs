@@ -26,7 +26,6 @@ namespace HeavyDowner.UI
             TryGetComponent<EquipmentUIView>(out view);
             BuildCategoryLists();
             BuildSlotActions();
-            view.HideImmediate();
         }
 
         private void OnEnable()
@@ -156,15 +155,14 @@ namespace HeavyDowner.UI
 
         private void RefreshSelected()
         {
-            bool owned = PlayerDataService.IsEquipmentOwned(selected.Id);
             int level = PlayerDataService.GetEquipmentLevel(selected.Id);
-            bool equipped = selected.Type == EquipmentType.Weapon
-                ? PlayerDataService.EquippedWeapon == selected.Id
-                : PlayerDataService.EquippedArmor == selected.Id;
-            string stats = selected.Type == EquipmentType.Weapon
-                ? GetWeaponStats(selected, level)
-                : $"HP +{selected.GetHealthBonus(level):N0}";
-            view.SetSelected(selected, owned, level, equipped, stats, selected.GetUpgradeCost(level));
+            view.SetSelected(
+                selected,
+                PlayerDataService.IsEquipmentOwned(selected.Id),
+                level,
+                selected.Type == EquipmentType.Weapon ? PlayerDataService.EquippedWeapon == selected.Id : PlayerDataService.EquippedArmor == selected.Id,
+                selected.Type == EquipmentType.Weapon ? GetWeaponStats(selected, level) : $"HP +{selected.GetHealthBonus(level):N0}",
+                selected.GetUpgradeCost(level));
         }
 
         private async void OnEquipClicked()
@@ -198,8 +196,7 @@ namespace HeavyDowner.UI
                 return;
             }
 
-            int upgradeCost = selected.GetUpgradeCost(PlayerDataService.GetEquipmentLevel(selected.Id));
-            if (PlayerDataService.EnhancementOrbs < upgradeCost)
+            if (PlayerDataService.EnhancementOrbs < selected.GetUpgradeCost(PlayerDataService.GetEquipmentLevel(selected.Id)))
             {
                 PopupSingleton.Instance.ShowMessage("강화 재료가 부족합니다.");
                 return;

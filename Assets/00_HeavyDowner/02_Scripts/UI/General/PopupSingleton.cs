@@ -27,7 +27,6 @@ namespace HeavyDowner.UI
             DontDestroyOnLoad(gameObject);
             view.ConfirmButton.onClick.AddListener(OnConfirmClicked);
             view.CancelButton.onClick.AddListener(OnCancelClicked);
-            view.HideImmediate();
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
 

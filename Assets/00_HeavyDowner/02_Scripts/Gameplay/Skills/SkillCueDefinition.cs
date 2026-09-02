@@ -25,9 +25,7 @@ namespace HeavyDowner.Gameplay
 
         public float GetRandomPitch()
         {
-            float minimumPitch = Mathf.Min(pitchRange.x, pitchRange.y);
-            float maximumPitch = Mathf.Max(pitchRange.x, pitchRange.y);
-            return Random.Range(minimumPitch, maximumPitch);
+            return Random.Range(Mathf.Min(pitchRange.x, pitchRange.y), Mathf.Max(pitchRange.x, pitchRange.y));
         }
     }
 }

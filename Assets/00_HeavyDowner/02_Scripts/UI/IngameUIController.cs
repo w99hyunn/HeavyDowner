@@ -38,8 +38,7 @@ namespace HeavyDowner.UI
             view.SetDepth(player.CurrentDepth);
             for (int i = 0; i < view.SkillButtonCount; i++)
             {
-                SkillSlotId slotId = view.GetSkillButton(i).SlotId;
-                view.SetSkillIcon(i, abilitySystem.GetSkillDefinition(slotId).Icon);
+                view.SetSkillIcon(i, abilitySystem.GetSkillDefinition(view.GetSkillButton(i).SlotId).Icon);
             }
 
             RefreshSkillState();
@@ -68,8 +67,7 @@ namespace HeavyDowner.UI
         {
             for (int i = 0; i < view.SkillButtonCount; i++)
             {
-                SkillSlotId slotId = view.GetSkillButton(i).SlotId;
-                view.SetSkillState(i, abilitySystem.CanActivate(slotId));
+                view.SetSkillState(i, abilitySystem.CanActivate(view.GetSkillButton(i).SlotId));
             }
         }
 

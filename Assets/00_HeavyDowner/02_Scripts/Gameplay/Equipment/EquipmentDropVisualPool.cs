@@ -51,18 +51,10 @@ namespace HeavyDowner.Gameplay
                     return false;
                 }
 
-                float riseProgress = Mathf.Clamp01(elapsed / riseDuration);
-                float easedRise = 1f - Mathf.Pow(1f - riseProgress, 3f);
-                float hover = elapsed > riseDuration
-                    ? Mathf.Sin((elapsed - riseDuration) * hoverSpeed) * hoverAmplitude
-                    : 0f;
-                root.position = origin + Vector3.up * (riseHeight * easedRise + hover);
+                root.position = origin + Vector3.up * (riseHeight * (1f - Mathf.Pow(1f - Mathf.Clamp01(elapsed / riseDuration), 3f)) + (elapsed > riseDuration ? Mathf.Sin((elapsed - riseDuration) * hoverSpeed) * hoverAmplitude : 0f));
 
-                float alpha = elapsed > fadeStart
-                    ? 1f - (elapsed - fadeStart) / fadeDuration
-                    : 1f;
                 Color color = icon.color;
-                color.a = alpha;
+                color.a = elapsed > fadeStart ? 1f - (elapsed - fadeStart) / fadeDuration : 1f;
                 icon.color = color;
                 return true;
             }

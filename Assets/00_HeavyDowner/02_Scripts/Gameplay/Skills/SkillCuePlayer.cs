@@ -132,13 +132,12 @@ namespace HeavyDowner.Gameplay
         public SkillCueHandle PlayLoop(SkillCueDefinition definition, Transform anchor)
         {
             CuePool pool = pools[definition];
-            CueObject cueObject = Rent(pool, anchor.position);
             int handleId = nextHandleId++;
             activeCues.Add(new ActiveCue
             {
                 Id = handleId,
                 Pool = pool,
-                CueObject = cueObject,
+                CueObject = Rent(pool, anchor.position),
                 Anchor = anchor,
                 IsLooping = true
             });
@@ -217,7 +216,6 @@ namespace HeavyDowner.Gameplay
         {
             GameObject root = Instantiate(definition.Prefab, transform.parent);
 
-            ParticleSystem[] particles = root.GetComponentsInChildren<ParticleSystem>(true);
             root.TryGetComponent<AudioSource>(out AudioSource audioSource);
             if (audioSource == null)
             {
@@ -228,7 +226,7 @@ namespace HeavyDowner.Gameplay
             return new CueObject
             {
                 Root = root,
-                Particles = particles,
+                Particles = root.GetComponentsInChildren<ParticleSystem>(true),
                 AudioSource = audioSource,
                 InitialRotation = root.transform.localRotation,
                 InitialScale = root.transform.localScale
@@ -240,9 +238,7 @@ namespace HeavyDowner.Gameplay
             float lifetime = definition.Lifetime;
             if (definition.HasAudio)
             {
-                float audioLifetime = cueObject.AudioSource.clip.length
-                    / Mathf.Max(0.01f, Mathf.Abs(cueObject.AudioSource.pitch));
-                lifetime = Mathf.Max(lifetime, audioLifetime);
+                lifetime = Mathf.Max(lifetime, cueObject.AudioSource.clip.length / Mathf.Max(0.01f, Mathf.Abs(cueObject.AudioSource.pitch)));
             }
 
             return lifetime;

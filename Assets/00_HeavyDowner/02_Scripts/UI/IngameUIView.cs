@@ -48,10 +48,9 @@ namespace HeavyDowner.UI
             displayedShield = Mathf.Lerp(displayedShield, targetShield, lerpAmount);
 
             float shieldEnd = Mathf.Min(1f, healthSlider.value + displayedShield);
-            float shieldStart = shieldEnd - displayedShield;
             Vector2 shieldAnchorMin = shieldFillRect.anchorMin;
             Vector2 shieldAnchorMax = shieldFillRect.anchorMax;
-            shieldAnchorMin.x = shieldStart;
+            shieldAnchorMin.x = shieldEnd - displayedShield;
             shieldAnchorMax.x = shieldEnd;
             shieldFillRect.anchorMin = shieldAnchorMin;
             shieldFillRect.anchorMax = shieldAnchorMax;

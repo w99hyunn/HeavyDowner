@@ -61,9 +61,7 @@ namespace HeavyDowner.Gameplay
                 return false;
             }
 
-            SkillCapability occupiedCapabilities = GetOccupiedCapabilities();
-            SkillDefinition skill = (SkillDefinition)runtime.Definition;
-            return (skill.RequiredFreeCapabilities & occupiedCapabilities) == SkillCapability.None;
+            return (((SkillDefinition)runtime.Definition).RequiredFreeCapabilities & GetOccupiedCapabilities()) == SkillCapability.None;
         }
 
         public void TryActivate(SkillSlotId slotId)

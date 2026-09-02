@@ -140,7 +140,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.UI.SkillButtonView
   iconImage: {fileID: 2003}
   cooldownOverlay: {fileID: 3003}
-  readyAnimator: {fileID: 4005}
   slotId: 0
 --- !u!95 &1006
 Animator:

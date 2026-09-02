@@ -7,16 +7,14 @@ namespace HeavyDowner.Gameplay
     {
         [SerializeField] private DamageTextVisual damageTextPrefab;
         [SerializeField] private Camera streamingCamera;
-        [SerializeField, Min(1)] private int initialCapacity = 12;
         [SerializeField] private Vector3 worldDamageOffset = new(0f, 0.2f, 0f);
         [SerializeField] private Vector3 playerDamageOffset = new(0f, 0.75f, 0f);
-        [SerializeField] private float despawnPadding = 0.45f;
 
         private readonly List<DamageTextVisual> visuals = new();
 
         private void Awake()
         {
-            for (int index = 0; index < initialCapacity; index++)
+            for (int index = 0; index < 12; index++)
             {
                 CreateVisual();
             }
@@ -28,7 +26,7 @@ namespace HeavyDowner.Gameplay
         {
             float despawnHeight = streamingCamera.transform.position.y
                 - streamingCamera.orthographicSize
-                - despawnPadding;
+                - 0.45f;
 
             bool hasPlayingVisual = false;
             for (int index = 0; index < visuals.Count; index++)

@@ -101,8 +101,7 @@ namespace HeavyDowner.Gameplay
             Color flashColor = default;
             if (HitCount % Definition.AbilityHitInterval == 0)
             {
-                int abilityDamage = Mathf.CeilToInt(Definition.CounterDamage * Definition.AbilityDamageMultiplier);
-                if (abilityRuntime.TryActivate(abilityDamage))
+                if (abilityRuntime.TryActivate(Mathf.CeilToInt(Definition.CounterDamage * Definition.AbilityDamageMultiplier)))
                 {
                     counterDamage = 0;
                     flashColor = Definition.AbilityFlashColor;

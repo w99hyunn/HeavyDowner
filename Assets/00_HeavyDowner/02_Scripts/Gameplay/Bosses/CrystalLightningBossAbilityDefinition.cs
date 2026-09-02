@@ -32,8 +32,7 @@ namespace HeavyDowner.Gameplay
                 while (Time.time - warningStartTime < warningDuration)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    float phase = Mathf.PingPong((Time.time - warningStartTime) * warningPulseSpeed, 1f);
-                    float scale = Mathf.Lerp(warningScaleRange.x, warningScaleRange.y, phase);
+                    float scale = Mathf.Lerp(warningScaleRange.x, warningScaleRange.y, Mathf.PingPong((Time.time - warningStartTime) * warningPulseSpeed, 1f));
                     for (int index = 0; index < warnings.Length; index++)
                     {
                         context.Cues.SetScale(warnings[index], scale);

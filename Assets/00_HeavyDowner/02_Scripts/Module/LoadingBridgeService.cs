@@ -61,16 +61,14 @@ namespace HeavyDowner.Module
             op.allowSceneActivation = true;
             shownTime += await WaitAsync(op);
 
-            Scene nextScene = SceneManager.GetSceneByName(scene.ToString());
-            SceneManager.SetActiveScene(nextScene);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene.ToString()));
 
             op = SceneManager.UnloadSceneAsync(prevScene);
             shownTime += await WaitAsync(op);
 
             await WaitMinAsync(shownTime, 1f);
 
-            Scene loadingScene = SceneManager.GetSceneByName(SceneType.Loading.ToString());
-            op = SceneManager.UnloadSceneAsync(loadingScene);
+            op = SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName(SceneType.Loading.ToString()));
             await WaitAsync(op);
         }
 
