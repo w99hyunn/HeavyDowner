@@ -10,40 +10,17 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private GameplayCueDefinition fireCue;
         [SerializeField] private GameplayCueDefinition breathCue;
         [SerializeField, Min(0f)] private float windup = 0.55f;
-        [SerializeField, Min(0f)] private float aftermathDuration = 1.1f;
-        [SerializeField, Min(2)] private int waveStepCount = 7;
-        [SerializeField, Min(0.01f)] private float waveStepInterval = 0.08f;
-        [SerializeField] private Vector2 verticalRange = new(-5.5f, 5.5f);
-        [SerializeField, Min(1)] private int columnCount = 3;
-        [SerializeField, Min(0f)] private float columnSpacing = 3f;
-        [SerializeField] private float screenPlaneOffset = 10f;
+        [SerializeField, Min(0f)] private float damageDelay = 0.24f;
+        [SerializeField, Min(0f)] private float aftermathDuration = 1.42f;
+        [SerializeField] private Vector3 screenLocalPosition = new(0f, 0f, 10f);
 
         public override async Awaitable ExecuteAsync(BossAbilityContext context, int damage, CancellationToken cancellationToken)
         {
             await Awaitable.WaitForSecondsAsync(windup, cancellationToken);
             context.Cues.PlayOneShot(breathCue, context.CuePosition);
-
-            bool damageApplied = false;
-            for (int step = 0; step < waveStepCount; step++)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                float waveY = Mathf.Lerp(verticalRange.x, verticalRange.y, (float)step / (waveStepCount - 1));
-                float firstColumn = (columnCount - 1) * -0.5f;
-
-                for (int column = 0; column < columnCount; column++)
-                {
-                    context.Cues.PlayOneShot(fireCue, context.ScreenAnchor, new Vector3((firstColumn + column) * columnSpacing, waveY, screenPlaneOffset));
-                }
-
-                if (!damageApplied && waveY >= 0f)
-                {
-                    context.Player.TakeBossSkillDamage(damage);
-                    damageApplied = true;
-                }
-
-                await Awaitable.WaitForSecondsAsync(waveStepInterval, cancellationToken);
-            }
-
+            context.Cues.PlayOneShot(fireCue, context.ScreenAnchor, screenLocalPosition);
+            await Awaitable.WaitForSecondsAsync(damageDelay, cancellationToken);
+            context.Player.TakeBossSkillDamage(damage);
             await Awaitable.WaitForSecondsAsync(aftermathDuration, cancellationToken);
         }
 

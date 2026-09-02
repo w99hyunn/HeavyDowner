@@ -25,6 +25,7 @@ namespace HeavyDowner.Gameplay
         private SpriteRenderer spriteRenderer;
         private GameplayCuePlayer cuePlayer;
         private PlayerAbilitySystem abilitySystem;
+        private BossHitPresentation bossHitPresentation;
         private Vector2Int activeStepDirection;
         private Vector2Int abilityMovementDirection;
         private float nextStepTime;
@@ -37,6 +38,8 @@ namespace HeavyDowner.Gameplay
         private int currentDepth;
         private FallAnimation currentAnimation;
         private bool isMovementLocked;
+        private bool isHitFrozen;
+        private float animatorSpeedBeforeHitFreeze;
         private float damageReduction;
         private float damageRemainder;
 
@@ -50,6 +53,7 @@ namespace HeavyDowner.Gameplay
         public float ShieldNormalized => (float)currentShield / currentMaxHealth;
         public int CurrentDepth => currentDepth;
         public bool IsDead => currentHealth <= 0;
+        public bool IsHitFrozen => isHitFrozen;
         public Vector2Int CurrentCell => world.WorldToCell(transform.position);
         public Transform SkillTransform => transform;
 
@@ -69,6 +73,7 @@ namespace HeavyDowner.Gameplay
             TryGetComponent<SpriteRenderer>(out spriteRenderer);
             TryGetComponent<GameplayCuePlayer>(out cuePlayer);
             TryGetComponent<PlayerAbilitySystem>(out abilitySystem);
+            TryGetComponent<BossHitPresentation>(out bossHitPresentation);
             cuePlayer.Prewarm(attackCue);
             ApplyEquipmentStats();
             currentHealth = currentMaxHealth;
@@ -90,12 +95,16 @@ namespace HeavyDowner.Gameplay
             }
 
             Vector2 direction = joystick.Direction;
-            if (!isMovementLocked)
+            if (!isMovementLocked && !isHitFrozen)
             {
                 Move(direction);
             }
 
-            Animate(isMovementLocked ? (Vector2)abilityMovementDirection : direction);
+            if (!isHitFrozen)
+            {
+                Animate(isMovementLocked ? (Vector2)abilityMovementDirection : direction);
+            }
+
             RestoreDamageColor();
         }
 
@@ -239,7 +248,29 @@ namespace HeavyDowner.Gameplay
 
         public void TakeBossSkillDamage(int damage)
         {
+            abilitySystem.CancelMovementAbilities();
             TakeDamage(damage);
+            bossHitPresentation.Play();
+        }
+
+        public void SetHitFrozen(bool frozen)
+        {
+            if (isHitFrozen == frozen)
+            {
+                return;
+            }
+
+            isHitFrozen = frozen;
+            activeStepDirection = Vector2Int.zero;
+
+            if (frozen)
+            {
+                animatorSpeedBeforeHitFreeze = animator.speed;
+                animator.speed = 0f;
+                return;
+            }
+
+            animator.speed = animatorSpeedBeforeHitFreeze;
         }
 
         public void SetMovementLocked(bool locked)

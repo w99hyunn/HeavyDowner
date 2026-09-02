@@ -15,6 +15,6 @@ MonoBehaviour:
   prefab: {fileID: 4815264237568093103, guid: 19d2b191a5c884146a3b7a03d8b21493, type: 3}
   audioClips: []
   pitchRange: {x: 1, y: 1}
-  poolSize: 21
+  poolSize: 1
   lifetime: 1.75
   rotationSpeed: 0

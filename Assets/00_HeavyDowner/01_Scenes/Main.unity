@@ -13512,6 +13512,7 @@ MonoBehaviour:
   enhancementOrbText: {fileID: 34615764}
   upgradeCostText: {fileID: 1082039186}
   equipButton: {fileID: 963166718}
+  equipButtonText: {fileID: 1031954842}
   upgradeButton: {fileID: 152361267}
   popupAnimator: {fileID: 2000000100}
 --- !u!1 &1962251560

@@ -21,6 +21,4 @@ MonoBehaviour:
   strikeCue: {fileID: 11400000, guid: 14325c85aca84cbdb2f9558f86ff468b, type: 2}
   warningDuration: 2
   strikeDuration: 0.45
-  warningScaleRange: {x: 0.78, y: 1.05}
-  warningPulseSpeed: 3
   screenLocalPosition: {x: 0, y: 0, z: 10}

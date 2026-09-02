@@ -43,6 +43,7 @@ namespace HeavyDowner.UI
         [SerializeField] private TMP_Text enhancementOrbText;
         [SerializeField] private TMP_Text upgradeCostText;
         [SerializeField] private Button equipButton;
+        [SerializeField] private TMP_Text equipButtonText;
         [SerializeField] private Button upgradeButton;
         [SerializeField] private Animator popupAnimator;
 
@@ -97,7 +98,8 @@ namespace HeavyDowner.UI
             selectedLevelText.text = owned ? $"강화 +{level}" : "미획득";
             selectedStatsText.text = stats;
             upgradeCostText.text = level < definition.MaxLevel ? upgradeCost.ToString() : "MAX";
-            equipButton.gameObject.SetActive(owned && !equipped);
+            equipButton.gameObject.SetActive(owned);
+            equipButtonText.text = equipped ? "해제" : "장착";
             upgradeButton.gameObject.SetActive(owned && level < definition.MaxLevel);
         }
 

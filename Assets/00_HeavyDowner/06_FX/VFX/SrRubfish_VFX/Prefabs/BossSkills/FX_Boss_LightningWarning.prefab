@@ -9701,6 +9701,7 @@ GameObject:
   - component: {fileID: 1002479199003608194}
   - component: {fileID: 73997617861512099}
   - component: {fileID: 7805515285765602195}
+  - component: {fileID: 8833700000000000003}
   m_Layer: 0
   m_Name: FX_Boss_LightningWarning
   m_TagString: Untagged
@@ -9728,6 +9729,28 @@ Transform:
   - {fileID: 2090102843154521322}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8833700000000000003
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377212276515575334}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c90f3cd7cf6e4b6d9b5ae07c932d1163, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!198 &73997617861512099
 ParticleSystem:
   m_ObjectHideFlags: 0

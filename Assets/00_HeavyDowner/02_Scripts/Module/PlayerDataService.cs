@@ -138,6 +138,21 @@ namespace HeavyDowner.Module
             await SaveEquipmentAsync(next);
         }
 
+        public static async Awaitable UnequipAsync(EquipmentType type)
+        {
+            EquipmentSaveData next = new(equipmentData);
+            if (type == EquipmentType.Weapon)
+            {
+                next.EquippedWeapon = EquipmentId.None;
+            }
+            else
+            {
+                next.EquippedArmor = EquipmentId.None;
+            }
+
+            await SaveEquipmentAsync(next);
+        }
+
         public static async Awaitable UpgradeAsync(EquipmentDefinition definition)
         {
             EquipmentSaveData next = new(equipmentData);

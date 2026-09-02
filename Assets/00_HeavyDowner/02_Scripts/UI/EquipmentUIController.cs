@@ -175,7 +175,17 @@ namespace HeavyDowner.UI
             isSaving = true;
             try
             {
-                await PlayerDataService.EquipAsync(selected);
+                bool isEquipped = selected.Type == EquipmentType.Weapon
+                    ? PlayerDataService.EquippedWeapon == selected.Id
+                    : PlayerDataService.EquippedArmor == selected.Id;
+                if (isEquipped)
+                {
+                    await PlayerDataService.UnequipAsync(selected.Type);
+                }
+                else
+                {
+                    await PlayerDataService.EquipAsync(selected);
+                }
             }
             catch (RequestFailedException exception)
             {

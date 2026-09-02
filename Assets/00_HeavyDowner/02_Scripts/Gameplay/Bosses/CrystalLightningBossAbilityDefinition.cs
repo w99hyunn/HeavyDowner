@@ -12,8 +12,6 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private GameplayCueDefinition strikeCue;
         [SerializeField, Min(0f)] private float warningDuration = 2f;
         [SerializeField, Min(0f)] private float strikeDuration = 0.45f;
-        [SerializeField] private Vector2 warningScaleRange = new(0.78f, 1.05f);
-        [SerializeField, Min(0f)] private float warningPulseSpeed = 3f;
         [SerializeField] private Vector3 screenLocalPosition = new(0f, 0f, 10f);
 
         public override async Awaitable ExecuteAsync(BossAbilityContext context, int damage, CancellationToken cancellationToken)
@@ -28,18 +26,7 @@ namespace HeavyDowner.Gameplay
 
             try
             {
-                float warningStartTime = Time.time;
-                while (Time.time - warningStartTime < warningDuration)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    float scale = Mathf.Lerp(warningScaleRange.x, warningScaleRange.y, Mathf.PingPong((Time.time - warningStartTime) * warningPulseSpeed, 1f));
-                    for (int index = 0; index < warnings.Length; index++)
-                    {
-                        context.Cues.SetScale(warnings[index], scale);
-                    }
-
-                    await Awaitable.NextFrameAsync(cancellationToken);
-                }
+                await Awaitable.WaitForSecondsAsync(warningDuration, cancellationToken);
             }
             finally
             {

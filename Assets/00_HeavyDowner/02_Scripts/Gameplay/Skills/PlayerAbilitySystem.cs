@@ -59,7 +59,7 @@ namespace HeavyDowner.Gameplay
         public bool CanActivate(SkillSlotId slotId)
         {
             GameplayAbilityRuntime runtime = skillsBySlot[slotId];
-            if (player.IsDead || !runtime.IsReady)
+            if (player.IsDead || player.IsHitFrozen || !runtime.IsReady)
             {
                 return false;
             }
@@ -100,6 +100,27 @@ namespace HeavyDowner.Gameplay
             }
 
             runtime.Activate();
+        }
+
+        public void CancelMovementAbilities()
+        {
+            foreach (GameplayAbilityRuntime runtime in skillsBySlot.Values)
+            {
+                CancelMovementAbility(runtime);
+            }
+
+            foreach (GameplayAbilityRuntime runtime in pickupAbilities.Values)
+            {
+                CancelMovementAbility(runtime);
+            }
+        }
+
+        private static void CancelMovementAbility(GameplayAbilityRuntime runtime)
+        {
+            if ((((SkillDefinition)runtime.Definition).OccupiedCapabilities & SkillCapability.Movement) != SkillCapability.None)
+            {
+                runtime.Cancel();
+            }
         }
 
         private SkillCapability GetOccupiedCapabilities()

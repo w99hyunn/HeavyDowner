@@ -20,10 +20,6 @@ MonoBehaviour:
   fireCue: {fileID: 11400000, guid: 6edd4ded431e4228ae7e0b8abb1f6393, type: 2}
   breathCue: {fileID: 11400000, guid: 153f3717a4f0419e8d1628824f451e69, type: 2}
   windup: 0.55
-  aftermathDuration: 1.1
-  waveStepCount: 7
-  waveStepInterval: 0.08
-  verticalRange: {x: -5.5, y: 5.5}
-  columnCount: 3
-  columnSpacing: 3
-  screenPlaneOffset: 10
+  damageDelay: 0.24
+  aftermathDuration: 1.42
+  screenLocalPosition: {x: 0, y: 0, z: 10}

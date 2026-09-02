@@ -32,7 +32,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private Tilemap enemyTilemap;
 
         [Header("Block Tiers")]
-        [SerializeField, Min(1)] private int metersPerBlockTier = 50;
+        [SerializeField, Min(1)] private int metersPerBlockTier = 200;
         [SerializeField] private TileBase[] blockTiles = new TileBase[10];
         [SerializeField] private int[] blockHealthByTier =
         {

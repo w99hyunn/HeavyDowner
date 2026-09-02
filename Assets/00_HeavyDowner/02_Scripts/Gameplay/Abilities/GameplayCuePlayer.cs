@@ -163,19 +163,6 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public void SetScale(GameplayCueHandle handle, float scale)
-        {
-            for (int index = activeCues.Count - 1; index >= 0; index--)
-            {
-                if (activeCues[index].Id == handle.Id)
-                {
-                    CueObject cueObject = activeCues[index].CueObject;
-                    cueObject.Root.transform.localScale = cueObject.InitialScale * scale;
-                    return;
-                }
-            }
-        }
-
         private CueObject Rent(CuePool pool, Vector3 position)
         {
             CueObject cueObject = pool.Objects.Get();
@@ -210,27 +197,21 @@ namespace HeavyDowner.Gameplay
 
         private static void ResetCueObject(CueObject cueObject)
         {
-            cueObject.AudioSource.Stop();
-            cueObject.AudioSource.clip = null;
+            if (cueObject.AudioSource != null)
+            {
+                cueObject.AudioSource.Stop();
+                cueObject.AudioSource.clip = null;
+            }
+
             cueObject.Root.SetActive(false);
         }
 
         private CueObject CreateCueObject(GameplayCueDefinition definition)
         {
-            GameObject root = definition.Prefab != null
-                ? Instantiate(definition.Prefab, transform.parent)
-                : new GameObject(definition.name);
+            GameObject root = Instantiate(definition.Prefab, transform.parent);
             root.transform.SetParent(transform.parent, true);
 
             root.TryGetComponent<AudioSource>(out AudioSource audioSource);
-            if (audioSource == null)
-            {
-                audioSource = root.AddComponent<AudioSource>();
-            }
-
-            audioSource.playOnAwake = false;
-            audioSource.spatialBlend = 0f;
-
             root.SetActive(false);
             return new CueObject
             {

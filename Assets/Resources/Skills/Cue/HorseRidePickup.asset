@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a6377173c572c50667f3b2770de807, type: 3}
   m_Name: HorseRidePickup
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.GameplayCueDefinition
-  prefab: {fileID: 0}
+  prefab: {fileID: 3409187264518021367, guid: a5b0dc04b9bf4f8eaabcae5c41272f23, type: 3}
   audioClips:
   - {fileID: 8300000, guid: cc418da9d5b0473b9b8f0e3362972224, type: 3}
   pitchRange: {x: 1, y: 1}
