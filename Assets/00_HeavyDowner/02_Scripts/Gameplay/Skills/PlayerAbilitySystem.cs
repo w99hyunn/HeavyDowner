@@ -10,9 +10,11 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private DescentBoardController board;
 
         private readonly Dictionary<SkillSlotId, GameplayAbilityRuntime> skillsBySlot = new();
+        private readonly Dictionary<SkillDefinition, GameplayAbilityRuntime> pickupAbilities = new();
         private GameplayAbilitySystem abilitySystem;
         private IngamePlayerController player;
         private GameplayCuePlayer cuePlayer;
+        private SkillExecutionContext executionContext;
 
         public event Action AvailabilityChanged;
         public event Action<SkillSlotId> CooldownStarted;
@@ -22,12 +24,12 @@ namespace HeavyDowner.Gameplay
             TryGetComponent<IngamePlayerController>(out player);
             TryGetComponent<GameplayCuePlayer>(out cuePlayer);
 
-            SkillExecutionContext context = new(player, board, cuePlayer);
+            executionContext = new SkillExecutionContext(player, board, cuePlayer);
             abilitySystem = new GameplayAbilitySystem(cuePlayer);
             foreach (SkillSlotDefinition slot in slots)
             {
                 GameplayAbilityRuntime runtime = abilitySystem.GrantAbility(
-                    new GameplayAbilityRuntime(slot.Skill, context, destroyCancellationToken));
+                    new GameplayAbilityRuntime(slot.Skill, executionContext, destroyCancellationToken));
                 runtime.StateChanged += HandleSkillStateChanged;
                 skillsBySlot.Add(slot.SlotId, runtime);
             }
@@ -80,10 +82,38 @@ namespace HeavyDowner.Gameplay
             }
         }
 
+        public void TryActivatePickup(SkillDefinition ability)
+        {
+            if (!pickupAbilities.TryGetValue(ability, out GameplayAbilityRuntime runtime))
+            {
+                runtime = abilitySystem.GrantAbility(
+                    new GameplayAbilityRuntime(ability, executionContext, destroyCancellationToken));
+                runtime.StateChanged += HandleSkillStateChanged;
+                pickupAbilities.Add(ability, runtime);
+            }
+
+            if (player.IsDead
+                || !runtime.IsReady
+                || (ability.RequiredFreeCapabilities & GetOccupiedCapabilities()) != SkillCapability.None)
+            {
+                return;
+            }
+
+            runtime.Activate();
+        }
+
         private SkillCapability GetOccupiedCapabilities()
         {
             SkillCapability occupiedCapabilities = SkillCapability.None;
             foreach (GameplayAbilityRuntime runtime in skillsBySlot.Values)
+            {
+                if (runtime.IsActive)
+                {
+                    occupiedCapabilities |= ((SkillDefinition)runtime.Definition).OccupiedCapabilities;
+                }
+            }
+
+            foreach (GameplayAbilityRuntime runtime in pickupAbilities.Values)
             {
                 if (runtime.IsActive)
                 {

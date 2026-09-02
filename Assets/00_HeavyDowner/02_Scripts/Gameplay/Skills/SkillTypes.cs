@@ -38,6 +38,7 @@ namespace HeavyDowner.Gameplay
         bool IsDead { get; }
 
         void SetMovementLocked(bool locked);
+        void SetAbilityMovementDirection(Vector2Int direction);
         void MoveToCell(Vector2Int targetCell);
         void ActivateShield(float damageReduction, float healthNormalized);
         void DeactivateShield();
@@ -47,6 +48,8 @@ namespace HeavyDowner.Gameplay
     {
         int AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage);
         void AttackArea(Vector2Int center, int radius, int damage);
+        bool IsPlayableColumn(int column);
+        bool TryClearTraversalCell(Vector2Int position, out bool didAttack);
     }
 
     public readonly struct SkillExecutionContext : IGameplayAbilityContext

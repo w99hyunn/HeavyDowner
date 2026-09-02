@@ -24,7 +24,9 @@ namespace HeavyDowner.Gameplay
         private Animator animator;
         private SpriteRenderer spriteRenderer;
         private GameplayCuePlayer cuePlayer;
+        private PlayerAbilitySystem abilitySystem;
         private Vector2Int activeStepDirection;
+        private Vector2Int abilityMovementDirection;
         private float nextStepTime;
         private float damageFlashEndTime;
         private int currentHealth;
@@ -66,6 +68,7 @@ namespace HeavyDowner.Gameplay
             TryGetComponent<Animator>(out animator);
             TryGetComponent<SpriteRenderer>(out spriteRenderer);
             TryGetComponent<GameplayCuePlayer>(out cuePlayer);
+            TryGetComponent<PlayerAbilitySystem>(out abilitySystem);
             cuePlayer.Prewarm(attackCue);
             ApplyEquipmentStats();
             currentHealth = currentMaxHealth;
@@ -86,9 +89,13 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            Vector2 direction = isMovementLocked ? Vector2.zero : joystick.Direction;
-            Move(direction);
-            Animate(direction);
+            Vector2 direction = joystick.Direction;
+            if (!isMovementLocked)
+            {
+                Move(direction);
+            }
+
+            Animate(isMovementLocked ? (Vector2)abilityMovementDirection : direction);
             RestoreDamageColor();
         }
 
@@ -135,6 +142,10 @@ namespace HeavyDowner.Gameplay
             }
 
             MoveToCell(targetCell);
+            if (action.PickupAbility != null)
+            {
+                abilitySystem.TryActivatePickup(action.PickupAbility);
+            }
         }
 
         private static Vector2Int ResolveStepDirection(Vector2 direction)
@@ -238,11 +249,17 @@ namespace HeavyDowner.Gameplay
 
             if (!locked)
             {
+                abilityMovementDirection = Vector2Int.zero;
                 return;
             }
 
-            currentAnimation = FallAnimation.Dive;
-            animator.SetInteger(FALL_STATE_HASH, (int)currentAnimation);
+            SetAbilityMovementDirection(Vector2Int.down);
+        }
+
+        public void SetAbilityMovementDirection(Vector2Int direction)
+        {
+            abilityMovementDirection = direction;
+            Animate((Vector2)direction);
         }
 
         public void MoveToCell(Vector2Int targetCell)
