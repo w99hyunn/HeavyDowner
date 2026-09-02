@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6bafea05f345939bc1faa82fb721f0, type: 3}
+  m_Name: CrystalWarden
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.BossDefinition
+  idleTile: {fileID: 11400000, guid: e388d6e6f9cb7d58eaf612c9d7f40404, type: 2}
+  castTile: {fileID: 11400000, guid: 2a2504c0e4cc1874e960fc5cb25dadfb, type: 2}
+  baseHealth: 1600
+  counterDamage: 200
+  abilityHitInterval: 4
+  abilityDamageMultiplier: 1.75
+  abilityFlashColor: {r: 0.52, g: 0.3, b: 1, a: 1}
+  guardedHitInterval: 2
+  guardedHitOffset: 1
+  guardedDamageReduction: 0.5
+  guardedFlashColor: {r: 0.1, g: 0.9, b: 1, a: 1}
+  ability: {fileID: 11400000, guid: 6abdfb8bd5f940c58a74f937f0868c1f, type: 2}

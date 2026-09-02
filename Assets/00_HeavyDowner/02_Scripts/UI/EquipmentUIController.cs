@@ -142,21 +142,13 @@ namespace HeavyDowner.UI
             for (int index = 0; index < weapons.Length; index++)
             {
                 EquipmentDefinition definition = weapons[index];
-                view.GetWeaponSlot(index).Set(
-                    definition,
-                    PlayerDataService.IsEquipmentOwned(definition.Id),
-                    PlayerDataService.GetEquipmentLevel(definition.Id),
-                    PlayerDataService.EquippedWeapon == definition.Id);
+                view.GetWeaponSlot(index).Set(definition, PlayerDataService.IsEquipmentOwned(definition.Id), PlayerDataService.GetEquipmentLevel(definition.Id), PlayerDataService.EquippedWeapon == definition.Id);
             }
 
             for (int index = 0; index < armors.Length; index++)
             {
                 EquipmentDefinition definition = armors[index];
-                view.GetArmorSlot(index).Set(
-                    definition,
-                    PlayerDataService.IsEquipmentOwned(definition.Id),
-                    PlayerDataService.GetEquipmentLevel(definition.Id),
-                    PlayerDataService.EquippedArmor == definition.Id);
+                view.GetArmorSlot(index).Set(definition, PlayerDataService.IsEquipmentOwned(definition.Id), PlayerDataService.GetEquipmentLevel(definition.Id), PlayerDataService.EquippedArmor == definition.Id);
             }
 
             RefreshSelected();
@@ -172,13 +164,7 @@ namespace HeavyDowner.UI
             string stats = selected.Type == EquipmentType.Weapon
                 ? GetWeaponStats(selected, level)
                 : $"HP +{selected.GetHealthBonus(level):N0}";
-            view.SetSelected(
-                selected,
-                owned,
-                level,
-                equipped,
-                stats,
-                selected.GetUpgradeCost(level));
+            view.SetSelected(selected, owned, level, equipped, stats, selected.GetUpgradeCost(level));
         }
 
         private async void OnEquipClicked()

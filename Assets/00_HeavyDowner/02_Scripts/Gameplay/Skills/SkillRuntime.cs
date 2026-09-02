@@ -4,41 +4,30 @@ using UnityEngine;
 
 namespace HeavyDowner.Gameplay
 {
-    public sealed class SkillRuntime
+    public class SkillRuntime
     {
-        private readonly SkillExecutionContext context;
+        private readonly IGameplayAbilityContext context;
         private readonly CancellationToken lifetimeToken;
-        private readonly Action stateChanged;
-
         private CancellationTokenSource activationCancellation;
         private float cooldownEndTime;
 
-        public SkillRuntime(
-            SkillDefinition definition,
-            SkillExecutionContext context,
-            CancellationToken lifetimeToken,
-            Action stateChanged)
+        public SkillRuntime(GameplayAbilityDefinition ability, IGameplayAbilityContext context, CancellationToken lifetimeToken)
         {
-            Definition = definition;
+            Definition = ability;
             this.context = context;
             this.lifetimeToken = lifetimeToken;
-            this.stateChanged = stateChanged;
         }
 
-        public SkillDefinition Definition { get; }
+        public event Action StateChanged;
+
+        public GameplayAbilityDefinition Definition { get; }
         public bool IsActive { get; private set; }
         public float CooldownRemaining => Mathf.Max(0f, cooldownEndTime - Time.time);
         public bool IsReady => !IsActive && CooldownRemaining <= 0f;
 
         public void Activate()
         {
-            cooldownEndTime = Time.time + Definition.Cooldown;
-            activationCancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetimeToken);
-            IsActive = true;
-            stateChanged();
-
-            _ = ExecuteAsync(activationCancellation);
-            _ = WaitForCooldownAsync(Definition.Cooldown);
+            TryActivate();
         }
 
         public void Cancel()
@@ -51,25 +40,41 @@ namespace HeavyDowner.Gameplay
             activationCancellation.Cancel();
         }
 
-        private async Awaitable ExecuteAsync(CancellationTokenSource cancellationSource)
+        public bool TryActivate(int magnitude = 0)
         {
-            CancellationToken cancellationToken = cancellationSource.Token;
+            if (!IsReady)
+            {
+                return false;
+            }
+
+            cooldownEndTime = Time.time + Definition.Cooldown;
+            activationCancellation = CancellationTokenSource.CreateLinkedTokenSource(lifetimeToken);
+            IsActive = true;
+            StateChanged?.Invoke();
+
+            _ = ExecuteAsync(magnitude, activationCancellation);
+            _ = WaitForCooldownAsync(Definition.Cooldown);
+            return true;
+        }
+
+        private async Awaitable ExecuteAsync(int magnitude, CancellationTokenSource cancellationSource)
+        {
             SkillCueHandle loopCueHandle = default;
 
             try
             {
                 foreach (SkillCueDefinition cue in Definition.ActivationCues)
                 {
-                    context.Cues.PlayOneShot(cue, context.Actor.SkillTransform.position);
+                    context.Cues.PlayOneShot(cue, context.CuePosition);
                 }
 
                 if (Definition.LoopCue != null)
                 {
-                    loopCueHandle = context.Cues.PlayLoop(Definition.LoopCue, context.Actor.SkillTransform);
+                    loopCueHandle = context.Cues.PlayLoop(Definition.LoopCue, context.LoopCueAnchor);
                 }
 
-                cancellationToken.ThrowIfCancellationRequested();
-                await Definition.ExecuteAsync(context, cancellationToken);
+                cancellationSource.Token.ThrowIfCancellationRequested();
+                await Definition.ExecuteAsync(context, magnitude, cancellationSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -87,13 +92,13 @@ namespace HeavyDowner.Gameplay
 
                 foreach (SkillCueDefinition cue in Definition.EndCues)
                 {
-                    context.Cues.PlayOneShot(cue, context.Actor.SkillTransform.position);
+                    context.Cues.PlayOneShot(cue, context.CuePosition);
                 }
 
                 IsActive = false;
                 activationCancellation = null;
                 cancellationSource.Dispose();
-                stateChanged();
+                StateChanged?.Invoke();
             }
         }
 
@@ -101,14 +106,13 @@ namespace HeavyDowner.Gameplay
         {
             if (cooldown <= 0f)
             {
-                stateChanged();
                 return;
             }
 
             try
             {
                 await Awaitable.WaitForSecondsAsync(cooldown, lifetimeToken);
-                stateChanged();
+                StateChanged?.Invoke();
             }
             catch (OperationCanceledException)
             {

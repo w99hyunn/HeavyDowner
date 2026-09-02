@@ -10,6 +10,17 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private Transform[] shardPivots;
         [SerializeField] private SpriteRenderer[] shardRenderers;
         [SerializeField] private Vector2[] shardOrigins;
+        [SerializeField] private Vector2[] shardVelocityFactors =
+        {
+            new(-1.35f, 0.7f),
+            new(-0.8f, 1.05f),
+            new(-0.35f, 1.25f),
+            new(0.1f, 0.9f),
+            new(0.45f, 0.6f),
+            new(0.75f, 1.15f),
+            new(1.05f, 0.8f),
+            new(1.35f, 0.55f)
+        };
         [SerializeField] private float shardScale = 1.3f;
         [SerializeField] private float jumpSpeed = 0.75f;
         [SerializeField] private float horizontalSpeed = 0.45f;
@@ -29,22 +40,14 @@ namespace HeavyDowner.Gameplay
             gameObject.SetActive(false);
         }
 
-        public void Play(
-            Sprite sprite,
-            Vector3 position,
-            Vector3 scale,
-            float horizontalDirection)
+        public void Play(Sprite sprite, Vector3 position, Vector3 scale, float horizontalDirection)
         {
             transform.SetPositionAndRotation(position, Quaternion.identity);
             transform.localScale = Vector3.one;
 
             Rect textureRect = sprite.textureRect;
             Texture texture = sprite.texture;
-            Vector4 spriteUvRect = new Vector4(
-                textureRect.x / texture.width,
-                textureRect.y / texture.height,
-                textureRect.width / texture.width,
-                textureRect.height / texture.height);
+            Vector4 spriteUvRect = new Vector4(textureRect.x / texture.width, textureRect.y / texture.height, textureRect.width / texture.width, textureRect.height / texture.height);
             Vector2 scaledSpriteSize = Vector2.Scale(sprite.bounds.size, scale);
 
             propertyBlock.Clear();
@@ -66,9 +69,8 @@ namespace HeavyDowner.Gameplay
                 propertyBlock.SetFloat(SHARD_INDEX_ID, index);
                 shardRenderer.SetPropertyBlock(propertyBlock);
 
-                velocities[index] = new Vector2(
-                    horizontalSpeed * (GetHorizontalSpread(index) + horizontalDirection * 0.2f),
-                    jumpSpeed * GetVerticalSpread(index));
+                Vector2 velocityFactor = shardVelocityFactors[index];
+                velocities[index] = new Vector2(horizontalSpeed * (velocityFactor.x + horizontalDirection * 0.2f), jumpSpeed * velocityFactor.y);
             }
 
             IsPlaying = true;
@@ -84,11 +86,7 @@ namespace HeavyDowner.Gameplay
                 velocities[index].y -= gravity * deltaTime;
                 shardPivots[index].localPosition += (Vector3)(velocities[index] * deltaTime);
                 float rotationDirection = (index & 1) == 0 ? -1f : 1f;
-                shardPivots[index].Rotate(
-                    0f,
-                    0f,
-                    rotationSpeed * rotationDirection * deltaTime,
-                    Space.Self);
+                shardPivots[index].Rotate(0f, 0f, rotationSpeed * rotationDirection * deltaTime, Space.Self);
                 hasVisibleShard |= shardPivots[index].position.y >= despawnHeight;
             }
 
@@ -99,34 +97,5 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        private static float GetHorizontalSpread(int index)
-        {
-            return index switch
-            {
-                0 => -1.35f,
-                1 => -0.8f,
-                2 => -0.35f,
-                3 => 0.1f,
-                4 => 0.45f,
-                5 => 0.75f,
-                6 => 1.05f,
-                _ => 1.35f
-            };
-        }
-
-        private static float GetVerticalSpread(int index)
-        {
-            return index switch
-            {
-                0 => 0.7f,
-                1 => 1.05f,
-                2 => 1.25f,
-                3 => 0.9f,
-                4 => 0.6f,
-                5 => 1.15f,
-                6 => 0.8f,
-                _ => 0.55f
-            };
-        }
     }
 }

@@ -39,9 +39,7 @@ namespace HeavyDowner.Gameplay
         {
             Play(position, worldDamageColor);
             damageText.SetText("{0}", damage);
-            velocity = new Vector2(
-                Random.Range(-horizontalSpeed, horizontalSpeed),
-                jumpSpeed);
+            velocity = new Vector2(Random.Range(-horizontalSpeed, horizontalSpeed), jumpSpeed);
             isBallistic = true;
         }
 
@@ -69,10 +67,7 @@ namespace HeavyDowner.Gameplay
                 return;
             }
 
-            float fadeProgress = Mathf.InverseLerp(
-                playerHoldDuration,
-                playerHoldDuration + playerFadeDuration,
-                elapsedTime);
+            float fadeProgress = Mathf.InverseLerp(playerHoldDuration, playerHoldDuration + playerFadeDuration, elapsedTime);
             Color color = activeColor;
             color.a = 1f - fadeProgress;
             damageText.color = color;

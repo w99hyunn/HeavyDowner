@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4a0e31cb7d4fb5b36f16e54b47af83, type: 3}
+  m_Name: CrystalLightning
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.CrystalLightningBossAbilityDefinition
+  cooldown: 0
+  activationCues: []
+  loopCue: {fileID: 0}
+  endCues: []
+  warningCue: {fileID: 11400000, guid: 47d099c6784f4a5d9bab626746a63866, type: 2}
+  screenCue: {fileID: 11400000, guid: 22f77263b5ad4c49b98eaaff133d8d0d, type: 2}
+  strikeCue: {fileID: 11400000, guid: 14325c85aca84cbdb2f9558f86ff468b, type: 2}
+  warningDuration: 2
+  strikeDuration: 0.45
+  warningScaleRange: {x: 0.78, y: 1.05}
+  warningPulseSpeed: 3
+  screenLocalPosition: {x: 0, y: 0, z: 10}

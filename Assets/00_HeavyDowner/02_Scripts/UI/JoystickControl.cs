@@ -40,11 +40,7 @@ namespace HeavyDowner.UI
         private void UpdateDirection(PointerEventData eventData)
         {
             RectTransform backgroundRect = (RectTransform)joystickBackground.transform;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                backgroundRect,
-                eventData.position,
-                eventData.pressEventCamera,
-                out Vector2 localPoint);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(backgroundRect, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
 
             Direction = Vector2.ClampMagnitude(localPoint / onScreenStick.movementRange, 1f);
         }

@@ -108,13 +108,7 @@ namespace HeavyDowner.UI
             enhancementOrbText.text = amount.ToString();
         }
 
-        public void SetSelected(
-            EquipmentDefinition definition,
-            bool owned,
-            int level,
-            bool equipped,
-            string stats,
-            int upgradeCost)
+        public void SetSelected(EquipmentDefinition definition, bool owned, int level, bool equipped, string stats, int upgradeCost)
         {
             selectedIcon.sprite = definition.Icon;
             selectedIcon.color = owned ? Color.white : new Color(0.3f, 0.3f, 0.36f, 0.78f);

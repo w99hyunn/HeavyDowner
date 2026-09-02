@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6bafea05f345939bc1faa82fb721f0, type: 3}
+  m_Name: AbyssBurrower
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.BossDefinition
+  idleTile: {fileID: 11400000, guid: d277c5d5e8ba6c47d9f501b8c6e30303, type: 2}
+  castTile: {fileID: 11400000, guid: 989b922c4213e8e4ea771125a738f669, type: 2}
+  baseHealth: 1400
+  counterDamage: 180
+  abilityHitInterval: 3
+  abilityDamageMultiplier: 2
+  abilityFlashColor: {r: 1, g: 0.34, b: 0.08, a: 1}
+  guardedHitInterval: 2
+  guardedHitOffset: 1
+  guardedDamageReduction: 0
+  guardedFlashColor: {r: 1, g: 1, b: 1, a: 1}
+  ability: {fileID: 11400000, guid: dfd88c29a0964331a641396bbd6fe768, type: 2}

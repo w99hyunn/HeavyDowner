@@ -1415,21 +1415,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221da0a98f1e8f14e9cf5fe33e367efa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.EquipmentDropVisualPool
-  roots:
-  - {fileID: 1629048818}
-  - {fileID: 711343787}
-  - {fileID: 1544167866}
-  - {fileID: 913949850}
-  icons:
-  - {fileID: 1629048817}
-  - {fileID: 711343786}
-  - {fileID: 1544167865}
-  - {fileID: 913949849}
-  effects:
-  - {fileID: 377286048}
-  - {fileID: 51983397}
-  - {fileID: 1847757988}
-  - {fileID: 1069627980}
+  slots:
+  - root: {fileID: 1629048818}
+    icon: {fileID: 1629048817}
+    effect: {fileID: 377286048}
+  - root: {fileID: 711343787}
+    icon: {fileID: 711343786}
+    effect: {fileID: 51983397}
+  - root: {fileID: 1544167866}
+    icon: {fileID: 1544167865}
+    effect: {fileID: 1847757988}
+  - root: {fileID: 913949850}
+    icon: {fileID: 913949849}
+    effect: {fileID: 1069627980}
   riseDuration: 0.35
   riseHeight: 0.85
   hoverDuration: 1.15
@@ -7142,21 +7140,10 @@ MonoBehaviour:
   batTile: {fileID: 11400000, guid: 3fdc24d05c836c740a7ec761b613f490, type: 2}
   golemTile: {fileID: 11400000, guid: 4a60e34549562fd40a396c2ff77666fb, type: 2}
   monsterHealthGrowthPerTier: 0.25
-  abyssBurrowerTile: {fileID: 11400000, guid: d277c5d5e8ba6c47d9f501b8c6e30303, type: 2}
-  crystalWardenTile: {fileID: 11400000, guid: e388d6e6f9cb7d58eaf612c9d7f40404, type: 2}
+  bosses:
+  - {fileID: 11400000, guid: 5fcad0a38fea4853ac25df8a2c8bd0bf, type: 2}
+  - {fileID: 11400000, guid: d0da273bb8b141a99023c4d6ca341fe1, type: 2}
   bossIntervalMeters: 50
-  abyssBurrowerBaseHealth: 1400
-  crystalWardenBaseHealth: 1600
-  abyssBurrowerDamage: 180
-  crystalWardenDamage: 200
-  abyssSlamHitInterval: 3
-  abyssSlamDamageMultiplier: 2
-  crystalShieldDamageReduction: 0.5
-  crystalBurstHitInterval: 4
-  crystalBurstDamageMultiplier: 1.75
-  abyssSlamFlashColor: {r: 1, g: 0.34, b: 0.08, a: 1}
-  crystalShieldFlashColor: {r: 0.1, g: 0.9, b: 1, a: 1}
-  crystalBurstFlashColor: {r: 0.52, g: 0.3, b: 1, a: 1}
   enhancementOrbTile: {fileID: 11400000, guid: bf099082dcfbc6f41a9e32f912ae8166, type: 2}
   enhancementOrbSpawnChance: 0.04
   enhancementOrbHealth: 100
@@ -7172,7 +7159,8 @@ MonoBehaviour:
   healthBarPool: {fileID: 3480000003}
   damageTextPool: {fileID: 3480000004}
   rewardSession: {fileID: 431753808}
-  bossSkillController: {fileID: 3200000007}
+  bossAbilitySystem: {fileID: 3200000007}
+  bossHitFlashDuration: 0.2
 --- !u!114 &3200000005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7210,28 +7198,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3200000000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b84b5e36e4b3e9d4691b86358ff55cfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 760b83a2acb640639222c1bcaf8a0632, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.BossSkillController
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyDowner.Gameplay.BossAbilitySystem
   world: {fileID: 3200000003}
   enemyTilemap: {fileID: 2113898841}
   player: {fileID: 3100000004}
-  streamingCamera: {fileID: 1962251563}
-  abyssBurrowerIdleTile: {fileID: 11400000, guid: d277c5d5e8ba6c47d9f501b8c6e30303, type: 2}
-  abyssBurrowerFireCastTile: {fileID: 11400000, guid: 989b922c4213e8e4ea771125a738f669, type: 2}
-  crystalWardenIdleTile: {fileID: 11400000, guid: e388d6e6f9cb7d58eaf612c9d7f40404, type: 2}
-  crystalWardenLightningCastTile: {fileID: 11400000, guid: 2a2504c0e4cc1874e960fc5cb25dadfb, type: 2}
-  abyssFireVfxPrefab: {fileID: 4815264237568093103, guid: 19d2b191a5c884146a3b7a03d8b21493, type: 3}
-  lightningWarningPrefab: {fileID: 4377212276515575334, guid: 5ac6aeedc6c271d47b186a31c5245a6d, type: 3}
-  lightningScreenVfxPrefab: {fileID: 3431517047535153462, guid: 3b21526db4eac9a45bbb018bdf1809e0, type: 3}
-  lightningStrikePrefab: {fileID: 7618436923053136293, guid: 715a1cb9d07ff6f48984246a0622da84, type: 3}
-  abyssFireWindup: 0.55
-  abyssFireDuration: 1.1
-  abyssFireWaveStepCount: 7
-  abyssFireWaveStepInterval: 0.08
-  lightningWarningDuration: 2
-  lightningStrikeDuration: 0.45
-  lightningScreenFadeOutDuration: 1.7
+  screenAnchor: {fileID: 1962251563}
+  cuePlayer: {fileID: 3100000007}
 --- !u!1 &3300000000
 GameObject:
   m_ObjectHideFlags: 0

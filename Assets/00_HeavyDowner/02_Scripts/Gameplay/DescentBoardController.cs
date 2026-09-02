@@ -41,21 +41,8 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(0f)] private float monsterHealthGrowthPerTier = 0.25f;
 
         [Header("Bosses")]
-        [SerializeField] private TileBase abyssBurrowerTile;
-        [SerializeField] private TileBase crystalWardenTile;
+        [SerializeField] private BossDefinition[] bosses;
         [SerializeField, Min(1)] private int bossIntervalMeters = 50;
-        [SerializeField, Min(1)] private int abyssBurrowerBaseHealth = 1400;
-        [SerializeField, Min(1)] private int crystalWardenBaseHealth = 1600;
-        [SerializeField, Min(0)] private int abyssBurrowerDamage = 180;
-        [SerializeField, Min(0)] private int crystalWardenDamage = 200;
-        [SerializeField, Min(1)] private int abyssSlamHitInterval = 3;
-        [SerializeField, Min(1f)] private float abyssSlamDamageMultiplier = 2f;
-        [SerializeField, Range(0f, 1f)] private float crystalShieldDamageReduction = 0.5f;
-        [SerializeField, Min(1)] private int crystalBurstHitInterval = 4;
-        [SerializeField, Min(1f)] private float crystalBurstDamageMultiplier = 1.75f;
-        [SerializeField] private Color abyssSlamFlashColor = new(1f, 0.34f, 0.08f, 1f);
-        [SerializeField] private Color crystalShieldFlashColor = new(0.1f, 0.9f, 1f, 1f);
-        [SerializeField] private Color crystalBurstFlashColor = new(0.52f, 0.3f, 1f, 1f);
 
         [Header("Enhancement Orbs")]
         [SerializeField] private TileBase enhancementOrbTile;
@@ -81,7 +68,8 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private CellHealthBarPool healthBarPool;
         [SerializeField] private DamageTextPool damageTextPool;
         [SerializeField] private RunRewardSession rewardSession;
-        [SerializeField] private BossSkillController bossSkillController;
+        [SerializeField] private BossAbilitySystem bossAbilitySystem;
+        [SerializeField, Min(0f)] private float bossHitFlashDuration = 0.2f;
 
         private VerticalTilemapWorld world;
         private DestroyedCellVisualPool destroyedCellVisualPool;
@@ -93,7 +81,7 @@ namespace HeavyDowner.Gameplay
         private readonly List<MonsterVisual> monsterVisuals = new();
         private readonly HashSet<Vector2Int> skillAttackAnchors = new();
         private readonly Dictionary<Vector2Int, int> remainingHealthByCell = new();
-        private readonly Dictionary<Vector2Int, int> bossHitCountByCell = new();
+        private readonly Dictionary<Vector2Int, BossEntity> bossEntities = new();
 
         private TileBase[] terrainChunkTiles;
         private TileBase[] enemyChunkTiles;
@@ -108,23 +96,9 @@ namespace HeavyDowner.Gameplay
             EnhancementOrb
         }
 
-        private enum BossKind
-        {
-            None,
-            AbyssBurrower,
-            CrystalWarden
-        }
-
         private readonly struct CellDefinition
         {
-            public CellDefinition(
-                CellType type,
-                TileBase tile,
-                int health,
-                int counterDamage,
-                Vector2Int anchorPosition,
-                int footprintSize,
-                BossKind bossKind = BossKind.None)
+            public CellDefinition(CellType type, TileBase tile, int health, int counterDamage, Vector2Int anchorPosition, int footprintSize, BossDefinition boss = null)
             {
                 Type = type;
                 Tile = tile;
@@ -132,7 +106,7 @@ namespace HeavyDowner.Gameplay
                 CounterDamage = counterDamage;
                 AnchorPosition = anchorPosition;
                 FootprintSize = footprintSize;
-                BossKind = bossKind;
+                Boss = boss;
             }
 
             public CellType Type { get; }
@@ -144,7 +118,7 @@ namespace HeavyDowner.Gameplay
             public int CounterDamage { get; }
             public Vector2Int AnchorPosition { get; }
             public int FootprintSize { get; }
-            public BossKind BossKind { get; }
+            public BossDefinition Boss { get; }
 
             public bool Contains(Vector2Int position)
             {
@@ -210,13 +184,16 @@ namespace HeavyDowner.Gameplay
                 return new BoardActionResult(true, 0);
             }
 
-            int hitCount = cell.IsBoss ? GetNextBossHitCount(statePosition) : 0;
-            int appliedAttackPower = GetAppliedAttackPower(cell, damage, hitCount);
+            if (cell.IsBoss)
+            {
+                return AttackBoss(cell, mutation, cellMask, damage);
+            }
+
             int currentHealth = remainingHealthByCell.TryGetValue(statePosition, out int savedHealth)
                 ? savedHealth
                 : cell.Health;
-            int remainingHealth = currentHealth - appliedAttackPower;
-            int appliedDamage = Mathf.Min(appliedAttackPower, currentHealth);
+            int remainingHealth = currentHealth - damage;
+            int appliedDamage = Mathf.Min(damage, currentHealth);
             if (appliedDamage > 0)
             {
                 damageTextPool.PlayWorldDamage(appliedDamage, GetCellVisualCenter(cell));
@@ -226,19 +203,10 @@ namespace HeavyDowner.Gameplay
             {
                 mutation.DestroyedMask |= cellMask;
                 remainingHealthByCell.Remove(statePosition);
-                bossHitCountByCell.Remove(statePosition);
-                if (cell.IsBoss)
-                {
-                    bossSkillController.Cancel(statePosition);
-                }
                 SetRowMutation(statePosition.y, mutation);
                 Vector3 visualCenter = GetCellVisualCenter(cell);
                 ClearVisibleCell(cell);
-                if (cell.IsBoss)
-                {
-                    rewardSession.DropEquipment(visualCenter);
-                }
-                else if (cell.IsEnemy)
+                if (cell.IsEnemy)
                 {
                     rewardSession.TryDropEquipment(visualCenter);
                 }
@@ -257,30 +225,62 @@ namespace HeavyDowner.Gameplay
             SetRowMutation(statePosition.y, mutation);
             ShowHealthBar(cell, remainingHealth);
             Tilemap tilemap = cell.IsEnemy ? enemyTilemap : terrainTilemap;
-            int counterDamage = GetCounterDamage(cell, hitCount, out Color bossFlashColor);
-            if (cell.IsBoss && bossFlashColor != default)
-            {
-                hitFlashController.Flash(
-                    tilemap,
-                    ToTilePosition(cell.AnchorPosition),
-                    bossFlashColor,
-                    0.2f);
-            }
-            else
-            {
-                hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
-            }
+            int counterDamage = cell.CounterDamage;
+            hitFlashController.Flash(tilemap, ToTilePosition(cell.AnchorPosition));
 
             if (cell.Type == CellType.Block)
             {
                 float remainingHealthRatio = (float)remainingHealth / cell.Health;
-                float damageRatio = Mathf.Lerp(
-                    minimumBlockDamageRatio,
-                    1f,
-                    remainingHealthRatio);
+                float damageRatio = Mathf.Lerp(minimumBlockDamageRatio, 1f, remainingHealthRatio);
                 counterDamage = Mathf.CeilToInt(cell.CounterDamage * damageRatio);
             }
             return new BoardActionResult(false, counterDamage);
+        }
+
+        private BoardActionResult AttackBoss(CellDefinition cell, RowMutation mutation, ushort cellMask, int damage)
+        {
+            BossEntity boss = GetBossEntity(cell);
+            BossAttackResult result = boss.ReceiveAttack(damage);
+            if (result.AppliedDamage > 0)
+            {
+                damageTextPool.PlayWorldDamage(result.AppliedDamage, GetCellVisualCenter(cell));
+            }
+
+            if (result.IsDead)
+            {
+                mutation.DestroyedMask |= cellMask;
+                bossEntities.Remove(cell.AnchorPosition);
+                SetRowMutation(cell.AnchorPosition.y, mutation);
+                Vector3 visualCenter = GetCellVisualCenter(cell);
+                ClearVisibleCell(cell);
+                rewardSession.DropEquipment(visualCenter);
+                return new BoardActionResult(true, 0);
+            }
+
+            SetRowMutation(cell.AnchorPosition.y, mutation);
+            ShowHealthBar(cell, result.RemainingHealth);
+            if (result.FlashColor != default)
+            {
+                hitFlashController.Flash(enemyTilemap, ToTilePosition(cell.AnchorPosition), result.FlashColor, bossHitFlashDuration);
+            }
+            else
+            {
+                hitFlashController.Flash(enemyTilemap, ToTilePosition(cell.AnchorPosition));
+            }
+
+            return new BoardActionResult(false, result.CounterDamage);
+        }
+
+        private BossEntity GetBossEntity(CellDefinition cell)
+        {
+            if (bossEntities.TryGetValue(cell.AnchorPosition, out BossEntity boss))
+            {
+                return boss;
+            }
+
+            boss = bossAbilitySystem.CreateEntity(cell.Boss, cell.AnchorPosition, cell.Health);
+            bossEntities.Add(cell.AnchorPosition, boss);
+            return boss;
         }
 
         public void AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage)
@@ -349,7 +349,11 @@ namespace HeavyDowner.Gameplay
             enemyTilemap.ClearAllTiles();
             rowMutations.Clear();
             remainingHealthByCell.Clear();
-            bossHitCountByCell.Clear();
+            foreach (BossEntity boss in bossEntities.Values)
+            {
+                boss.CancelAbility();
+            }
+            bossEntities.Clear();
             loadedChunks.Clear();
             chunksToUnload.Clear();
             hitFlashController.Clear();
@@ -439,6 +443,11 @@ namespace HeavyDowner.Gameplay
                             continue;
                         }
 
+                        if (cell.IsBoss)
+                        {
+                            GetBossEntity(cell);
+                        }
+
                         enemyChunkTiles[tileIndex] = cell.Tile;
                         monsterVisuals.Add(new MonsterVisual(cell.AnchorPosition, cell.FootprintSize));
                     }
@@ -489,24 +498,12 @@ namespace HeavyDowner.Gameplay
 
             if (Random01(position, 0xA24BAED5u) < enhancementOrbSpawnChance)
             {
-                cell = new CellDefinition(
-                    CellType.EnhancementOrb,
-                    enhancementOrbTile,
-                    enhancementOrbHealth,
-                    0,
-                    position,
-                    1);
+                cell = new CellDefinition(CellType.EnhancementOrb, enhancementOrbTile, enhancementOrbHealth, 0, position, 1);
                 return true;
             }
 
             int blockTier = GetBlockTier(-position.y);
-            cell = new CellDefinition(
-                CellType.Block,
-                blockTiles[blockTier],
-                blockHealthByTier[blockTier],
-                blockDamage,
-                position,
-                1);
+            cell = new CellDefinition(CellType.Block, blockTiles[blockTier], blockHealthByTier[blockTier], blockDamage, position, 1);
             return true;
         }
 
@@ -555,25 +552,15 @@ namespace HeavyDowner.Gameplay
             }
 
             int verticalRange = MONSTER_BAND_HEIGHT - monsterSize + 1;
-            int verticalOffset = Mathf.Min(
-                verticalRange - 1,
-                Mathf.FloorToInt(Random01(bandSeed, 0x165667B1u) * verticalRange));
+            int verticalOffset = Mathf.Min(verticalRange - 1, Mathf.FloorToInt(Random01(bandSeed, 0x165667B1u) * verticalRange));
             int topRow = -(band * MONSTER_BAND_HEIGHT + 1 + verticalOffset);
             int monsterHealth = GetMonsterHealth(baseMonsterHealth, -topRow);
 
             int halfWidth = world.HorizontalCellCount / 2;
             int horizontalRange = world.HorizontalCellCount - monsterSize + 1;
-            int leftColumn = -halfWidth + Mathf.Min(
-                horizontalRange - 1,
-                Mathf.FloorToInt(Random01(bandSeed, 0x27D4EB2Fu) * horizontalRange));
+            int leftColumn = -halfWidth + Mathf.Min(horizontalRange - 1, Mathf.FloorToInt(Random01(bandSeed, 0x27D4EB2Fu) * horizontalRange));
 
-            cell = new CellDefinition(
-                CellType.Enemy,
-                monsterTile,
-                monsterHealth,
-                monsterCounterDamage,
-                new Vector2Int(leftColumn, topRow),
-                monsterSize);
+            cell = new CellDefinition(CellType.Enemy, monsterTile, monsterHealth, monsterCounterDamage, new Vector2Int(leftColumn, topRow), monsterSize);
             return cell.Contains(position);
         }
 
@@ -595,87 +582,12 @@ namespace HeavyDowner.Gameplay
                 return false;
             }
 
-            BossKind bossKind = encounterNumber % 2 == 1
-                ? BossKind.AbyssBurrower
-                : BossKind.CrystalWarden;
-            TileBase bossTile = bossKind == BossKind.AbyssBurrower
-                ? abyssBurrowerTile
-                : crystalWardenTile;
-            int baseHealth = bossKind == BossKind.AbyssBurrower
-                ? abyssBurrowerBaseHealth
-                : crystalWardenBaseHealth;
-            int counterDamage = bossKind == BossKind.AbyssBurrower
-                ? abyssBurrowerDamage
-                : crystalWardenDamage;
+            int bossIndex = (encounterNumber - 1) % bosses.Length;
+            BossDefinition boss = bosses[bossIndex];
             int halfWidth = world.HorizontalCellCount / 2;
 
-            cell = new CellDefinition(
-                CellType.Boss,
-                bossTile,
-                GetMonsterHealth(baseHealth, bossDepth),
-                counterDamage,
-                new Vector2Int(-halfWidth, -bossDepth),
-                bossSize,
-                bossKind);
+            cell = new CellDefinition(CellType.Boss, boss.IdleTile, GetMonsterHealth(boss.BaseHealth, bossDepth), boss.CounterDamage, new Vector2Int(-halfWidth, -bossDepth), bossSize, boss);
             return cell.Contains(position);
-        }
-
-        private int GetNextBossHitCount(Vector2Int position)
-        {
-            int hitCount = bossHitCountByCell.TryGetValue(position, out int savedHitCount)
-                ? savedHitCount + 1
-                : 1;
-            bossHitCountByCell[position] = hitCount;
-            return hitCount;
-        }
-
-        private int GetAppliedAttackPower(CellDefinition cell, int attackPower, int hitCount)
-        {
-            if (cell.BossKind != BossKind.CrystalWarden || hitCount % 2 == 0)
-            {
-                return attackPower;
-            }
-
-            return Mathf.Max(1, Mathf.CeilToInt(attackPower * (1f - crystalShieldDamageReduction)));
-        }
-
-        private int GetCounterDamage(CellDefinition cell, int hitCount, out Color bossFlashColor)
-        {
-            bossFlashColor = default;
-            if (cell.BossKind == BossKind.AbyssBurrower
-                && hitCount % abyssSlamHitInterval == 0)
-            {
-                bossFlashColor = abyssSlamFlashColor;
-                int skillDamage = Mathf.CeilToInt(
-                    cell.CounterDamage * abyssSlamDamageMultiplier);
-                return bossSkillController.TryPlayAbyssFire(
-                    cell.AnchorPosition,
-                    skillDamage)
-                    ? 0
-                    : cell.CounterDamage;
-            }
-
-            if (cell.BossKind == BossKind.CrystalWarden)
-            {
-                if (hitCount % crystalBurstHitInterval == 0)
-                {
-                    bossFlashColor = crystalBurstFlashColor;
-                    int skillDamage = Mathf.CeilToInt(
-                        cell.CounterDamage * crystalBurstDamageMultiplier);
-                    return bossSkillController.TryPlayCrystalLightning(
-                        cell.AnchorPosition,
-                        skillDamage)
-                        ? 0
-                        : cell.CounterDamage;
-                }
-
-                if (hitCount % 2 == 1)
-                {
-                    bossFlashColor = crystalShieldFlashColor;
-                }
-            }
-
-            return cell.CounterDamage;
         }
 
         private int GetMonsterHealth(int baseHealth, int depth)
@@ -693,10 +605,7 @@ namespace HeavyDowner.Gameplay
                 Vector3Int tilePosition = ToTilePosition(visual.Position);
                 float offset = (visual.Size - 1) * 0.5f;
                 Vector2 cellSize = world.CellSize;
-                Matrix4x4 transformMatrix = Matrix4x4.TRS(
-                    new Vector3(offset * cellSize.x, -offset * cellSize.y),
-                    Quaternion.identity,
-                    new Vector3(visual.Size, visual.Size, 1f));
+                Matrix4x4 transformMatrix = Matrix4x4.TRS(new Vector3(offset * cellSize.x, -offset * cellSize.y), Quaternion.identity, new Vector3(visual.Size, visual.Size, 1f));
                 enemyTilemap.SetTileFlags(tilePosition, TileFlags.None);
                 enemyTilemap.SetTransformMatrix(tilePosition, transformMatrix);
             }
@@ -781,20 +690,14 @@ namespace HeavyDowner.Gameplay
             Vector2 cellSize = world.CellSize;
             Vector3 position = GetCellVisualCenter(cell)
                 + Vector3.up * (footprint * cellSize.y * 0.38f);
-            healthBarPool.Show(
-                cell.AnchorPosition,
-                position,
-                footprint * cellSize.x * 0.78f,
-                (float)currentHealth / cell.Health);
+            healthBarPool.Show(cell.AnchorPosition, position, footprint * cellSize.x * 0.78f, (float)currentHealth / cell.Health);
         }
 
         private Vector3 GetCellVisualCenter(CellDefinition cell)
         {
             float offset = (cell.FootprintSize - 1) * 0.5f;
             Vector2 cellSize = world.CellSize;
-            return world.CellToWorld(cell.AnchorPosition) + new Vector3(
-                offset * cellSize.x,
-                -offset * cellSize.y);
+            return world.CellToWorld(cell.AnchorPosition) + new Vector3(offset * cellSize.x, -offset * cellSize.y);
         }
 
         private static Vector3Int ToTilePosition(Vector2Int position)

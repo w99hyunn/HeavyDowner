@@ -9,9 +9,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int radius = 2;
         [SerializeField, Min(1)] private int damage = 300;
 
-        public override async Awaitable ExecuteAsync(
-            SkillExecutionContext context,
-            CancellationToken cancellationToken)
+        public override async Awaitable ExecuteAsync(SkillExecutionContext context, CancellationToken cancellationToken)
         {
             await Awaitable.MainThreadAsync();
             cancellationToken.ThrowIfCancellationRequested();

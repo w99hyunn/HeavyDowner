@@ -55,11 +55,7 @@ namespace HeavyDowner.Gameplay
             Flash(tilemap, position, color, duration);
         }
 
-        public void Flash(
-            Tilemap tilemap,
-            Vector3Int position,
-            Color flashColor,
-            float flashDuration)
+        public void Flash(Tilemap tilemap, Vector3Int position, Color flashColor, float flashDuration)
         {
             tilemap.SetTileFlags(position, TileFlags.None);
             tilemap.SetColor(position, flashColor);

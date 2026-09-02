@@ -20,9 +20,7 @@ namespace HeavyDowner.Gameplay
             if (!Mathf.Approximately(width, rectWidth))
             {
                 width = rectWidth;
-                ((RectTransform)transform).SetSizeWithCurrentAnchors(
-                    RectTransform.Axis.Horizontal,
-                    width);
+                ((RectTransform)transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             }
 
             gameObject.SetActive(true);

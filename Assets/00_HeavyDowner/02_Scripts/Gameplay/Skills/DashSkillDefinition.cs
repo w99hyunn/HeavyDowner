@@ -14,9 +14,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField, Min(1)] private int cueStepInterval = 3;
         [SerializeField] private SkillCueDefinition stepCue;
 
-        public override async Awaitable ExecuteAsync(
-            SkillExecutionContext context,
-            CancellationToken cancellationToken)
+        public override async Awaitable ExecuteAsync(SkillExecutionContext context, CancellationToken cancellationToken)
         {
             ISkillActor actor = context.Actor;
             Vector2Int origin = actor.CurrentCell;

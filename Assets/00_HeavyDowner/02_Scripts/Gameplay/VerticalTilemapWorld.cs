@@ -28,10 +28,7 @@ namespace HeavyDowner.Gameplay
         public Vector3 CellToWorld(Vector2Int cell)
         {
             Vector3 origin = transform.position;
-            return new Vector3(
-                origin.x + cell.x * grid.cellSize.x,
-                origin.y + cell.y * grid.cellSize.y,
-                origin.z);
+            return new Vector3(origin.x + cell.x * grid.cellSize.x, origin.y + cell.y * grid.cellSize.y, origin.z);
         }
 
         public bool IsPlayableColumn(int column)

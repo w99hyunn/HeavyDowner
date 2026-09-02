@@ -155,10 +155,7 @@ namespace HeavyDowner.Module
             await SaveEquipmentAsync(next);
         }
 
-        public static async Awaitable CommitRunAsync(
-            IReadOnlyList<EquipmentId> acquiredEquipment,
-            int enhancementOrbs,
-            int score)
+        public static async Awaitable CommitRunAsync(IReadOnlyList<EquipmentId> acquiredEquipment, int enhancementOrbs, int score)
         {
             EquipmentSaveData next = new(equipmentData)
             {

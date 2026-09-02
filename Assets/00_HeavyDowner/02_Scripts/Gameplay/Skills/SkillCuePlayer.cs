@@ -11,6 +11,7 @@ namespace HeavyDowner.Gameplay
             public ParticleSystem[] Particles;
             public AudioSource AudioSource;
             public Quaternion InitialRotation;
+            public Vector3 InitialScale;
         }
 
         private sealed class CuePool
@@ -26,7 +27,9 @@ namespace HeavyDowner.Gameplay
             public CuePool Pool;
             public CueObject CueObject;
             public Transform Anchor;
+            public Vector3 AnchorOffset;
             public float EndTime;
+            public bool IsLooping;
         }
 
         private readonly Dictionary<SkillCueDefinition, CuePool> pools = new();
@@ -40,16 +43,13 @@ namespace HeavyDowner.Gameplay
                 ActiveCue activeCue = activeCues[i];
                 if (activeCue.Anchor != null)
                 {
-                    activeCue.CueObject.Root.transform.position = activeCue.Anchor.position;
+                    activeCue.CueObject.Root.transform.position =
+                        activeCue.Anchor.TransformPoint(activeCue.AnchorOffset);
                 }
 
-                activeCue.CueObject.Root.transform.Rotate(
-                    0f,
-                    0f,
-                    activeCue.Pool.Definition.RotationSpeed * Time.deltaTime,
-                    Space.Self);
+                activeCue.CueObject.Root.transform.Rotate(0f, 0f, activeCue.Pool.Definition.RotationSpeed * Time.deltaTime, Space.Self);
 
-                if (activeCue.Anchor == null && Time.time >= activeCue.EndTime)
+                if (!activeCue.IsLooping && Time.time >= activeCue.EndTime)
                 {
                     Release(i);
                 }
@@ -96,24 +96,37 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public void PlayOneShot(SkillCueDefinition definition, Vector3 position)
+        public SkillCueHandle PlayOneShot(SkillCueDefinition definition, Vector3 position)
         {
             CuePool pool = pools[definition];
             CueObject cueObject = Rent(pool, position);
-            float lifetime = definition.Lifetime;
-            if (definition.HasAudio)
-            {
-                float audioLifetime = cueObject.AudioSource.clip.length
-                    / Mathf.Max(0.01f, Mathf.Abs(cueObject.AudioSource.pitch));
-                lifetime = Mathf.Max(lifetime, audioLifetime);
-            }
+            int handleId = nextHandleId++;
 
             activeCues.Add(new ActiveCue
             {
+                Id = handleId,
                 Pool = pool,
                 CueObject = cueObject,
-                EndTime = Time.time + lifetime
+                EndTime = Time.time + GetLifetime(definition, cueObject)
             });
+            return new SkillCueHandle(handleId);
+        }
+
+        public SkillCueHandle PlayOneShot(SkillCueDefinition definition, Transform anchor, Vector3 localPosition)
+        {
+            CuePool pool = pools[definition];
+            CueObject cueObject = Rent(pool, anchor.TransformPoint(localPosition));
+            int handleId = nextHandleId++;
+            activeCues.Add(new ActiveCue
+            {
+                Id = handleId,
+                Pool = pool,
+                CueObject = cueObject,
+                Anchor = anchor,
+                AnchorOffset = localPosition,
+                EndTime = Time.time + GetLifetime(definition, cueObject)
+            });
+            return new SkillCueHandle(handleId);
         }
 
         public SkillCueHandle PlayLoop(SkillCueDefinition definition, Transform anchor)
@@ -126,7 +139,8 @@ namespace HeavyDowner.Gameplay
                 Id = handleId,
                 Pool = pool,
                 CueObject = cueObject,
-                Anchor = anchor
+                Anchor = anchor,
+                IsLooping = true
             });
             return new SkillCueHandle(handleId);
         }
@@ -138,6 +152,19 @@ namespace HeavyDowner.Gameplay
                 if (activeCues[i].Id == handle.Id)
                 {
                     Release(i);
+                    return;
+                }
+            }
+        }
+
+        public void SetScale(SkillCueHandle handle, float scale)
+        {
+            for (int index = activeCues.Count - 1; index >= 0; index--)
+            {
+                if (activeCues[index].Id == handle.Id)
+                {
+                    CueObject cueObject = activeCues[index].CueObject;
+                    cueObject.Root.transform.localScale = cueObject.InitialScale * scale;
                     return;
                 }
             }
@@ -156,6 +183,7 @@ namespace HeavyDowner.Gameplay
             Transform cueTransform = cueObject.Root.transform;
             cueTransform.position = position;
             cueTransform.localRotation = cueObject.InitialRotation;
+            cueTransform.localScale = cueObject.InitialScale;
             cueObject.Root.SetActive(true);
 
             foreach (ParticleSystem particle in cueObject.Particles)
@@ -191,6 +219,10 @@ namespace HeavyDowner.Gameplay
 
             ParticleSystem[] particles = root.GetComponentsInChildren<ParticleSystem>(true);
             root.TryGetComponent<AudioSource>(out AudioSource audioSource);
+            if (audioSource == null)
+            {
+                audioSource = root.AddComponent<AudioSource>();
+            }
 
             root.SetActive(false);
             return new CueObject
@@ -198,8 +230,22 @@ namespace HeavyDowner.Gameplay
                 Root = root,
                 Particles = particles,
                 AudioSource = audioSource,
-                InitialRotation = root.transform.localRotation
+                InitialRotation = root.transform.localRotation,
+                InitialScale = root.transform.localScale
             };
+        }
+
+        private static float GetLifetime(SkillCueDefinition definition, CueObject cueObject)
+        {
+            float lifetime = definition.Lifetime;
+            if (definition.HasAudio)
+            {
+                float audioLifetime = cueObject.AudioSource.clip.length
+                    / Mathf.Max(0.01f, Mathf.Abs(cueObject.AudioSource.pitch));
+                lifetime = Mathf.Max(lifetime, audioLifetime);
+            }
+
+            return lifetime;
         }
     }
 }

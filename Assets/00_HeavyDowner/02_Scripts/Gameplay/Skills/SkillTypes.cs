@@ -49,7 +49,7 @@ namespace HeavyDowner.Gameplay
         void AttackArea(Vector2Int center, int radius, int damage);
     }
 
-    public readonly struct SkillExecutionContext
+    public readonly struct SkillExecutionContext : IGameplayAbilityContext
     {
         public SkillExecutionContext(ISkillActor actor, ISkillBoard board, SkillCuePlayer cues)
         {
@@ -61,6 +61,8 @@ namespace HeavyDowner.Gameplay
         public ISkillActor Actor { get; }
         public ISkillBoard Board { get; }
         public SkillCuePlayer Cues { get; }
+        public Vector3 CuePosition => Actor.SkillTransform.position;
+        public Transform LoopCueAnchor => Actor.SkillTransform;
     }
 
     public readonly struct SkillCueHandle

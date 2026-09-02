@@ -42,18 +42,12 @@ namespace HeavyDowner.UI
 
         private void Refresh()
         {
-            view.SetPlayerData(
-                PlayerDataService.Nickname,
-                PlayerDataService.Currency,
-                PlayerDataService.EnhancementOrbs,
-                PlayerDataService.HighScore);
+            view.SetPlayerData(PlayerDataService.Nickname, PlayerDataService.Currency, PlayerDataService.EnhancementOrbs, PlayerDataService.HighScore);
         }
 
         private void OnAddCurrencyClicked()
         {
-            PopupSingleton.Instance.ShowConfirm(
-                $"기력 {CURRENCY_RECOVERY_AMOUNT}을 회복하시겠습니까?",
-                OnConfirmAddCurrency);
+            PopupSingleton.Instance.ShowConfirm($"기력 {CURRENCY_RECOVERY_AMOUNT}을 회복하시겠습니까?", OnConfirmAddCurrency);
         }
 
         private async void OnConfirmAddCurrency()

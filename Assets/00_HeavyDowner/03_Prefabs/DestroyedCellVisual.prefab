@@ -79,6 +79,15 @@ MonoBehaviour:
   - {x: -0.03, y: 0.23}
   - {x: -0.34, y: -0.27}
   - {x: 0.36, y: 0.22}
+  shardVelocityFactors:
+  - {x: -1.35, y: 0.7}
+  - {x: -0.8, y: 1.05}
+  - {x: -0.35, y: 1.25}
+  - {x: 0.1, y: 0.9}
+  - {x: 0.45, y: 0.6}
+  - {x: 0.75, y: 1.15}
+  - {x: 1.05, y: 0.8}
+  - {x: 1.35, y: 0.55}
   shardScale: 1.3
   jumpSpeed: 2.4
   horizontalSpeed: 1.7

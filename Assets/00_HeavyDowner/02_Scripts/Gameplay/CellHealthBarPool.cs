@@ -22,11 +22,7 @@ namespace HeavyDowner.Gameplay
             }
         }
 
-        public void Show(
-            Vector2Int cellPosition,
-            Vector3 worldPosition,
-            float width,
-            float normalizedHealth)
+        public void Show(Vector2Int cellPosition, Vector3 worldPosition, float width, float normalizedHealth)
         {
             if (!activeHealthBars.TryGetValue(cellPosition, out CellHealthBar healthBar))
             {

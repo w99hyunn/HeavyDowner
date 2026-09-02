@@ -10,6 +10,7 @@ namespace HeavyDowner.Gameplay
         [SerializeField] private DescentBoardController board;
 
         private readonly Dictionary<SkillSlotId, SkillRuntime> skillsBySlot = new();
+        private GameplayAbilitySystem abilitySystem;
         private IngamePlayerController player;
         private SkillCuePlayer cuePlayer;
 
@@ -22,36 +23,23 @@ namespace HeavyDowner.Gameplay
             TryGetComponent<SkillCuePlayer>(out cuePlayer);
 
             SkillExecutionContext context = new(player, board, cuePlayer);
-            List<SkillCueDefinition> cues = new();
+            abilitySystem = new GameplayAbilitySystem(cuePlayer);
             foreach (SkillSlotDefinition slot in slots)
             {
-                slot.Skill.CollectCues(cues);
-                foreach (SkillCueDefinition cue in cues)
-                {
-                    cuePlayer.Prewarm(cue);
-                }
-
-                cues.Clear();
-                SkillRuntime runtime = new(
-                    slot.Skill,
-                    context,
-                    destroyCancellationToken,
-                    HandleSkillStateChanged);
+                SkillRuntime runtime = abilitySystem.GrantAbility(new SkillRuntime(slot.Skill, context, destroyCancellationToken));
+                runtime.StateChanged += HandleSkillStateChanged;
                 skillsBySlot.Add(slot.SlotId, runtime);
             }
         }
 
         private void OnDisable()
         {
-            foreach (SkillRuntime runtime in skillsBySlot.Values)
-            {
-                runtime.Cancel();
-            }
+            abilitySystem.CancelAll();
         }
 
         public SkillDefinition GetSkillDefinition(SkillSlotId slotId)
         {
-            return skillsBySlot[slotId].Definition;
+            return (SkillDefinition)skillsBySlot[slotId].Definition;
         }
 
         public float GetCooldownRemainingNormalized(SkillSlotId slotId)
@@ -74,7 +62,8 @@ namespace HeavyDowner.Gameplay
             }
 
             SkillCapability occupiedCapabilities = GetOccupiedCapabilities();
-            return (runtime.Definition.RequiredFreeCapabilities & occupiedCapabilities) == SkillCapability.None;
+            SkillDefinition skill = (SkillDefinition)runtime.Definition;
+            return (skill.RequiredFreeCapabilities & occupiedCapabilities) == SkillCapability.None;
         }
 
         public void TryActivate(SkillSlotId slotId)
@@ -99,7 +88,7 @@ namespace HeavyDowner.Gameplay
             {
                 if (runtime.IsActive)
                 {
-                    occupiedCapabilities |= runtime.Definition.OccupiedCapabilities;
+                    occupiedCapabilities |= ((SkillDefinition)runtime.Definition).OccupiedCapabilities;
                 }
             }
 
