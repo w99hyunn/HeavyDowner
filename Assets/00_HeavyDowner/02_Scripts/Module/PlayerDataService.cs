@@ -77,16 +77,6 @@ namespace HeavyDowner.Module
                 await CloudSaveService.Instance.Data.Player.SaveAsync(defaults);
         }
 
-        public static async Awaitable SaveNicknameAsync(string nickname)
-        {
-            string value = string.IsNullOrWhiteSpace(nickname) ? DEFAULT_NICKNAME : nickname.Trim();
-            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
-            {
-                [NICKNAME_KEY] = value
-            });
-            Nickname = value;
-        }
-
         public static async Awaitable SaveCurrencyAsync(int currency)
         {
             await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
@@ -99,18 +89,6 @@ namespace HeavyDowner.Module
         public static async Awaitable AddCurrencyAsync(int amount)
         {
             await SaveCurrencyAsync(Currency + amount);
-        }
-
-        public static async Awaitable SaveHighScoreAsync(int score)
-        {
-            if (score <= HighScore)
-                return;
-
-            await CloudSaveService.Instance.Data.Player.SaveAsync(new Dictionary<string, object>
-            {
-                [HIGH_SCORE_KEY] = score
-            });
-            HighScore = score;
         }
 
         public static bool IsEquipmentOwned(EquipmentId id)
