@@ -45,7 +45,7 @@ namespace HeavyDowner.Gameplay
 
     public interface ISkillBoard
     {
-        void AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage);
+        int AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage);
         void AttackArea(Vector2Int center, int radius, int damage);
     }
 

@@ -283,18 +283,29 @@ namespace HeavyDowner.Gameplay
             return boss;
         }
 
-        public void AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage)
+        public int AttackCorridor(Vector2Int origin, int distance, int halfWidth, int damage)
         {
             skillAttackAnchors.Clear();
 
             for (int depth = 1; depth <= distance; depth++)
             {
                 int row = origin.y - depth;
+                AttackSkillCell(new Vector2Int(origin.x, row), damage);
                 for (int offset = -halfWidth; offset <= halfWidth; offset++)
                 {
-                    AttackSkillCell(new Vector2Int(origin.x + offset, row), damage);
+                    if (offset != 0)
+                    {
+                        AttackSkillCell(new Vector2Int(origin.x + offset, row), damage);
+                    }
+                }
+
+                if (!CanEnterSkillCell(new Vector2Int(origin.x, row)))
+                {
+                    return depth - 1;
                 }
             }
+
+            return distance;
         }
 
         public void AttackArea(Vector2Int center, int radius, int damage)
@@ -341,6 +352,18 @@ namespace HeavyDowner.Gameplay
             }
 
             Attack(cell.AnchorPosition, damage);
+        }
+
+        private bool CanEnterSkillCell(Vector2Int position)
+        {
+            if (!TryGetCellDefinition(position, out CellDefinition cell))
+            {
+                return true;
+            }
+
+            RowMutation mutation = GetRowMutation(cell.AnchorPosition.y);
+            ushort cellMask = GetCellMask(cell.AnchorPosition.x);
+            return (mutation.DestroyedMask & cellMask) != 0;
         }
 
         private void InitializeBoard()

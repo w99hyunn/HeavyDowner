@@ -23,10 +23,10 @@ namespace HeavyDowner.Gameplay
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                context.Board.AttackCorridor(origin, distance, halfWidth, damage);
+                int travelDistance = context.Board.AttackCorridor(origin, distance, halfWidth, damage);
                 context.Cues.PlayOneShot(stepCue, actor.SkillTransform.position);
 
-                for (int step = 1; step <= distance; step++)
+                for (int step = 1; step <= travelDistance; step++)
                 {
                     actor.MoveToCell(origin + Vector2Int.down * step);
                     if (step % cueStepInterval == 0)
