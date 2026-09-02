@@ -15,6 +15,7 @@ namespace HeavyDowner.Gameplay
         private IngamePlayerController player;
         private GameplayCuePlayer cuePlayer;
         private SkillExecutionContext executionContext;
+        private bool isActivationBlocked;
 
         public event Action AvailabilityChanged;
         public event Action<SkillSlotId> CooldownStarted;
@@ -59,7 +60,7 @@ namespace HeavyDowner.Gameplay
         public bool CanActivate(SkillSlotId slotId)
         {
             GameplayAbilityRuntime runtime = skillsBySlot[slotId];
-            if (player.IsDead || player.IsHitFrozen || !runtime.IsReady)
+            if (player.IsDead || isActivationBlocked || !runtime.IsReady)
             {
                 return false;
             }
@@ -113,6 +114,17 @@ namespace HeavyDowner.Gameplay
             {
                 CancelMovementAbility(runtime);
             }
+        }
+
+        public void SetActivationBlocked(bool blocked)
+        {
+            if (isActivationBlocked == blocked)
+            {
+                return;
+            }
+
+            isActivationBlocked = blocked;
+            AvailabilityChanged?.Invoke();
         }
 
         private static void CancelMovementAbility(GameplayAbilityRuntime runtime)

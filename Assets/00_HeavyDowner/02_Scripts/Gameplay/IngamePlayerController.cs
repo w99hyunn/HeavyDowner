@@ -53,7 +53,6 @@ namespace HeavyDowner.Gameplay
         public float ShieldNormalized => (float)currentShield / currentMaxHealth;
         public int CurrentDepth => currentDepth;
         public bool IsDead => currentHealth <= 0;
-        public bool IsHitFrozen => isHitFrozen;
         public Vector2Int CurrentCell => world.WorldToCell(transform.position);
         public Transform SkillTransform => transform;
 
@@ -267,10 +266,13 @@ namespace HeavyDowner.Gameplay
             {
                 animatorSpeedBeforeHitFreeze = animator.speed;
                 animator.speed = 0f;
-                return;
+            }
+            else
+            {
+                animator.speed = animatorSpeedBeforeHitFreeze;
             }
 
-            animator.speed = animatorSpeedBeforeHitFreeze;
+            abilitySystem.SetActivationBlocked(frozen);
         }
 
         public void SetMovementLocked(bool locked)

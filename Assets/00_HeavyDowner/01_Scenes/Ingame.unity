@@ -2741,9 +2741,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 542126254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -289.4, y: -3.2}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 155, y: -3.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &785496585
@@ -7290,7 +7290,7 @@ MonoBehaviour:
   bosses:
   - {fileID: 11400000, guid: 5fcad0a38fea4853ac25df8a2c8bd0bf, type: 2}
   - {fileID: 11400000, guid: d0da273bb8b141a99023c4d6ca341fe1, type: 2}
-  bossIntervalMeters: 200
+  bossIntervalMeters: 150
   horseRideItemTile: {fileID: 11400000, guid: 6c660bb24dd446c4b81000c9c13da59b, type: 2}
   horseRideAbility: {fileID: 11400000, guid: d482ddf92bb242a4afe97fb370a7d394, type: 2}
   horseRideItemSpawnChance: 0.25
