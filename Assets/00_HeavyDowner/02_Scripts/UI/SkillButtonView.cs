@@ -11,10 +11,10 @@ namespace HeavyDowner.UI
 
         [SerializeField] private Image iconImage;
         [SerializeField] private Image cooldownOverlay;
+        [SerializeField] private Animator readyAnimator;
         [SerializeField] private SkillSlotId slotId;
 
         private Button button;
-        private Animator readyAnimator;
         private bool wasCoolingDown;
 
         public event Action<SkillSlotId> Clicked;
@@ -24,7 +24,6 @@ namespace HeavyDowner.UI
         private void Awake()
         {
             TryGetComponent<Button>(out button);
-            TryGetComponent<Animator>(out readyAnimator);
         }
 
         private void OnEnable()
